@@ -29,6 +29,10 @@
     "iconColor": {
       "label": "Icon color",
       "desc": "Color of the fingerprint icon in the bar widget."
+    },
+    "controlCenter": {
+      "label": "Show in control center",
+      "desc": "Display a fingerprint shortcut in the control center."
     }
   },
   "enroll": {
