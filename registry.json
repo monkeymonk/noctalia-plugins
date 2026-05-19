@@ -4,7 +4,7 @@
     {
       "id": "fingerprint-manager",
       "name": "Fingerprint Manager",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "official": false,
       "author": "Stephan Zych",
       "description": "Enroll, delete, and test fingerprints via fprintd",
@@ -17,7 +17,7 @@
         "System",
         "Security"
       ],
-      "lastUpdated": "2026-05-19T19:16:13+02:00"
+      "lastUpdated": "2026-05-19T19:27:36+02:00"
     }
   ]
 }
