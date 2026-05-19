@@ -1,7 +1,7 @@
 {
   "id": "fingerprint-manager",
   "name": "Fingerprint Manager",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "minNoctaliaVersion": "4.4.3",
   "author": "Stephan Zych",
   "license": "MIT",
@@ -16,6 +16,7 @@
   "entryPoints": {
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
+    "controlCenterWidget": "ControlCenterWidget.qml",
     "panel": "Panel.qml",
     "settings": "Settings.qml"
   },
@@ -24,7 +25,8 @@
   },
   "metadata": {
     "defaultSettings": {
-      "iconColor": "primary"
+      "iconColor": "primary",
+      "showInControlCenter": true
     }
   }
 }
