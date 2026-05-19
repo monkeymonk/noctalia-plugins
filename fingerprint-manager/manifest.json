@@ -8,6 +8,7 @@
   "repository": "https://github.com/monkeymonk/noctalia-plugins",
   "description": "Enroll, delete, and test fingerprints via fprintd",
   "tags": [
+    "Bar",
     "Panel",
     "System",
     "Security"
