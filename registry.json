@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "plugins": [
+    {
+      "id": "fingerprint-manager",
+      "name": "Fingerprint Manager",
+      "version": "1.0.0",
+      "official": false,
+      "author": "Stephan Zych",
+      "description": "Enroll, delete, and test fingerprints via fprintd",
+      "repository": "https://github.com/monkeymonk/noctalia-plugins",
+      "minNoctaliaVersion": "4.4.3",
+      "license": "MIT",
+      "tags": [
+        "Bar",
+        "Panel",
+        "System",
+        "Security"
+      ],
+      "lastUpdated": "2026-05-19T19:15:50+02:00"
+    }
+  ]
+}
