@@ -1,0 +1,29 @@
+{
+  "id": "fingerprint-manager",
+  "name": "Fingerprint Manager",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "4.4.3",
+  "author": "Stephan Zych",
+  "license": "MIT",
+  "repository": "https://github.com/monkeymonk/noctalia-plugins",
+  "description": "Enroll, delete, and test fingerprints via fprintd",
+  "tags": [
+    "Panel",
+    "System",
+    "Security"
+  ],
+  "entryPoints": {
+    "main": "Main.qml",
+    "barWidget": "BarWidget.qml",
+    "panel": "Panel.qml",
+    "settings": "Settings.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "iconColor": "primary"
+    }
+  }
+}

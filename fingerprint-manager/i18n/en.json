@@ -1,0 +1,71 @@
+{
+  "title": "Fingerprint Manager",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} enrolled"
+  },
+  "bar": {
+    "tooltip": "Fingerprint Manager"
+  },
+  "contextMenu": {
+    "widget-settings": "Widget settings"
+  },
+  "empty": "No fingerprints enrolled yet.",
+  "action": {
+    "refresh": "Refresh",
+    "enroll": "Enroll finger",
+    "test": "Test match",
+    "delete": "Delete",
+    "delete-all": "Delete all",
+    "cancel": "Cancel"
+  },
+  "picker": {
+    "title": "Pick a finger to enroll"
+  },
+  "confirm": {
+    "delete-all": "Delete ALL enrolled fingerprints?",
+    "delete-finger": "Delete the fingerprint for {finger}?"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Icon color",
+      "desc": "Color of the fingerprint icon in the bar widget."
+    }
+  },
+  "enroll": {
+    "title": "Enrolling {finger}",
+    "hint": {
+      "touch": "Place your finger on the sensor.",
+      "again": "Good — lift and place again.",
+      "retry": "Adjust position and try again."
+    }
+  },
+  "status": {
+    "enrolled": "Enrollment successful.",
+    "enroll-failed": "Enrollment cancelled or failed.",
+    "deleting": "Deleting {finger}…",
+    "deleting-all": "Deleting all fingerprints…",
+    "deleted": "Fingerprint deleted.",
+    "deleted-all": "All fingerprints deleted.",
+    "delete-failed": "Delete failed.",
+    "verify-start": "Place finger on the sensor…",
+    "verify-retry": "Try again — keep finger steady.",
+    "match": "Match — fingerprint recognised.",
+    "no-match": "No match."
+  },
+  "error": {
+    "no-device": "No fingerprint device found. Is fprintd running?",
+    "no-fprintd": "fprintd is not installed. See the plugin README for setup."
+  },
+  "finger": {
+    "left-thumb": "Left thumb",
+    "left-index-finger": "Left index",
+    "left-middle-finger": "Left middle",
+    "left-ring-finger": "Left ring",
+    "left-little-finger": "Left little",
+    "right-thumb": "Right thumb",
+    "right-index-finger": "Right index",
+    "right-middle-finger": "Right middle",
+    "right-ring-finger": "Right ring",
+    "right-little-finger": "Right little"
+  }
+}
