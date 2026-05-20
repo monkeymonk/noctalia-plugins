@@ -51,13 +51,13 @@ A line like `No fingerprints enrolled for user …` means the daemon found your 
 
 ## Generating the registry preview
 
-`preview.png` (16:9 @ 960x540) is the image Noctalia shows in the plugin registry. To regenerate it, open the panel in Noctalia and run:
+`preview.png` (16:9 @ 960x540) is the image Noctalia shows in the plugin registry. To regenerate it:
 
 ```bash
 ./scripts/make-preview.sh
 ```
 
-`slurp` will prompt you to drag a selection over the panel; the script captures it with `grim` and resizes to the registry-mandated dimensions. Requires `grim`, `slurp`, and ImageMagick.
+The script opens the panel via IPC, then `slurp` prompts you to drag a selection over it; the captured region is cropped and scaled to the registry-mandated dimensions. Requires `qs`, `grim`, `slurp`, and ImageMagick.
 
 ## Translations
 
