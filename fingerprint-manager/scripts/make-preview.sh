@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 # Capture a 16:9 @ 960x540 preview.png for the Noctalia plugin registry.
 #
-# Usage:
-#   1. Open the Fingerprint Manager panel in Noctalia.
-#   2. Run this script. `slurp` will prompt you to drag a selection over
-#      the panel (aim for roughly 16:9 — the script crops + scales the rest).
+# Opens the Fingerprint Manager panel via IPC, then prompts you (via slurp)
+# to drag a selection over it; the captured region is cropped + scaled to
+# the registry-mandated dimensions.
 #
-# Requires: grim, slurp, and ImageMagick (`magick` or `convert`).
+# Requires: qs, grim, slurp, and ImageMagick (`magick` or `convert`).
 
 set -euo pipefail
 
@@ -15,7 +14,7 @@ out="preview.png"
 tmp=$(mktemp --suffix=.png)
 trap 'rm -f "$tmp"' EXIT
 
-for cmd in grim slurp; do
+for cmd in qs grim slurp; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
         echo "error: $cmd not found in PATH" >&2
         exit 1
@@ -30,6 +29,9 @@ else
     echo "error: ImageMagick (magick or convert) not found in PATH" >&2
     exit 1
 fi
+
+qs -c noctalia-shell ipc call plugin:fingerprint-manager openPanel
+sleep 0.3  # let the panel finish rendering before slurp grabs the screen
 
 geom=$(slurp)
 grim -g "$geom" "$tmp"
