@@ -1,0 +1,280 @@
+{
+  "title": "Niri Config",
+  "subtitle": {
+    "preview": "Preview mode · edits are shown, never written",
+    "apply": "Apply mode · saves are validated and backed up",
+    "pending": "{n} unsaved change(s) — press Apply",
+    "clean": "All changes applied · validated & backed up"
+  },
+  "bar": {
+    "tooltip": "Niri Config"
+  },
+  "contextMenu": {
+    "widget-settings": "Widget settings"
+  },
+  "section": {
+    "shortcuts": "Shortcuts",
+    "monitors": "Monitors",
+    "input": "Input",
+    "workspaces": "Workspaces",
+    "rules": "Window rules",
+    "layout": "Layout",
+    "animation": "Animation",
+    "autostart": "Autostart",
+    "scripts": "Scripts",
+    "misc": "Misc"
+  },
+  "action": {
+    "reload": "Reload config",
+    "close": "Close",
+    "apply-once": "Apply this once",
+    "add-shortcut": "Add",
+    "enable": "Enable",
+    "disable": "Disable",
+    "edit": "Edit",
+    "delete": "Delete",
+    "capture": "Capture",
+    "cancel": "Cancel",
+    "save": "Save",
+    "use": "Use",
+    "apply": "Apply",
+    "undo": "Undo",
+    "docs": "Open niri docs for this section",
+    "open-editor": "Open in editor",
+    "edit-file": "Edit file",
+    "open-folder": "Open folder"
+  },
+  "status": {
+    "saving": "Saving {what}…",
+    "saved": "Saved {what} — niri reloaded.",
+    "saved-file": "Saved {what}.",
+    "save-failed": "Save rejected by niri validate — restored from backup.",
+    "staged": "{what} staged — press Apply to write it.",
+    "applying": "Applying {n} change(s)…",
+    "applied": "Applied — niri reloaded.",
+    "apply-failed": "Rejected by niri validate — restored from backup. Fix and re-apply.",
+    "undone": "Reverted to the previous config.",
+    "write-failed": "Write failed: {what}."
+  },
+  "preview": {
+    "title": "Preview — nothing written",
+    "subtitle": "This is the full new content of {path}. Switch to Apply mode in settings to write it."
+  },
+  "shortcuts": {
+    "count": "{n} shortcuts",
+    "file": "binds in {p}",
+    "none": "No binds {} block found in your config.",
+    "search": "Filter shortcuts…"
+  },
+  "summary": {
+    "add": "new shortcut {c}",
+    "edit": "shortcut {c}",
+    "delete": "delete {c}",
+    "enable": "enable {c}",
+    "disable": "disable {c}"
+  },
+  "raw": {
+    "header": "Read-only view",
+    "note": "A dedicated editor for this section is coming. For now it's shown verbatim and never modified.",
+    "empty": "No configuration found for this section."
+  },
+  "bindeditor": {
+    "add": "Add shortcut",
+    "edit": "Edit shortcut",
+    "combo": "Key combination",
+    "combo-ph": "e.g. Mod+Shift+T",
+    "recording": "Press keys…",
+    "special": "Special key",
+    "conflict": "⚠ Already bound: {desc}",
+    "action": "Action",
+    "no-action": "(choose an action)",
+    "choose-action": "Choose",
+    "command-ph": "command to run",
+    "pick-app": "Pick app",
+    "arg-ws": "workspace number or name",
+    "arg": "argument",
+    "title-attr": "Overlay title (optional)",
+    "title-ph": "shown in the hotkey overlay",
+    "repeat-off": "Disable key repeat",
+    "allow-locked": "Allow when screen locked"
+  },
+  "actionpicker": {
+    "title": "Pick an action",
+    "search": "Search actions…"
+  },
+  "apppicker": {
+    "title": "Pick an application",
+    "search": "Search apps…",
+    "loading": "Loading apps…",
+    "raw": "…or type a command"
+  },
+  "monitors": {
+    "count": "{n} monitors detected",
+    "hint": "Preview applies live and reverts on reload. Save writes to the file that defines the output (or cfg/display.kdl).",
+    "error": "Could not query niri outputs.",
+    "mode": "Resolution & refresh",
+    "scale": "Scale",
+    "transform": "Transform",
+    "posx": "Position X",
+    "posy": "Position Y",
+    "vrr": "Variable refresh rate (VRR)",
+    "preview": "Preview live",
+    "summary": "monitor {n}",
+    "count2": "{n} monitors",
+    "hint2": "Preview applies live (reverts on reload). Save writes the output block; Add lets you configure a disconnected monitor for another setup.",
+    "add": "Add config",
+    "remove": "Remove config",
+    "remove-summary": "remove monitor config",
+    "add-summary": "add monitor {n}",
+    "disconnected": "not connected",
+    "add-title": "Add monitor config",
+    "add-hint": "Use the exact connector or model name (run `niri msg outputs`).",
+    "connected": "connected",
+    "profiles": "Profiles (Monique)",
+    "profiles-hint": "Monitors are managed by Monique — pick a profile to apply it, or use “New / edit” to create/update profiles.",
+    "open-monique": "New / edit",
+    "no-profiles": "No profiles yet — use “New / edit” to create one in Monique.",
+    "none": "No monitors."
+  },
+  "anim": {
+    "none": "No animations {} block found.",
+    "global": "Global",
+    "off": "Disable all animations",
+    "slowdown": "Slowdown (1.0 = normal)",
+    "enabled": "Enabled",
+    "duration": "Duration (ms)",
+    "curve": "Curve",
+    "spring-hint": "Spring tuning — edit damping/stiffness in the file (header ✎ button).",
+    "summary-global": "animation settings",
+    "summary-event": "{n} animation"
+  },
+  "rules": {
+    "count": "{n} window rules",
+    "add": "Add rule",
+    "hint": "Add a rule by capturing a live window — its app-id/title pre-fill the match.",
+    "none": "No window rules yet.",
+    "summary-add": "new window rule",
+    "summary-edit": "window rule",
+    "summary-del": "delete rule",
+    "summary-en": "enable rule",
+    "summary-dis": "disable rule"
+  },
+  "ruleeditor": {
+    "add": "Add window rule",
+    "edit": "Edit window rule",
+    "match": "Match a window",
+    "capture": "Capture window",
+    "appid": "app-id (regex)",
+    "title": "title (regex, optional)",
+    "props": "When it opens",
+    "floating": "Open floating",
+    "maximized": "Open maximized",
+    "fullscreen": "Open fullscreen",
+    "workspace": "On workspace",
+    "output": "On output",
+    "colwidth": "Column width (0–1)",
+    "winheight": "Window height (0–1)"
+  },
+  "windowpicker": {
+    "title": "Pick an open window",
+    "hint": "Its app-id and title will pre-fill the match.",
+    "search": "Filter windows…",
+    "none": "No open windows reported by niri."
+  },
+  "ws": {
+    "count": "{n} named workspaces",
+    "add": "Add",
+    "hint": "Named workspaces are created in order; niri boots onto the first one.",
+    "none": "No named workspaces declared.",
+    "new": "New workspace",
+    "rename": "Rename workspace",
+    "name-ph": "workspace name",
+    "summary-add": "workspace {n}",
+    "summary-rename": "rename workspace",
+    "summary-del": "delete {n}"
+  },
+  "autostart": {
+    "count": "{n} startup entries",
+    "add": "Add",
+    "hint": "Programs niri launches at startup. Pick an app or type a command.",
+    "none": "No startup entries.",
+    "newt": "New startup entry",
+    "editt": "Edit startup entry",
+    "cmd-ph": "command to run",
+    "summary-add": "autostart entry",
+    "summary-edit": "autostart entry",
+    "summary-del": "delete entry",
+    "summary-en": "enable entry",
+    "summary-dis": "disable entry"
+  },
+  "scripts": {
+    "count": "{n} scripts",
+    "new": "New script",
+    "create": "New script",
+    "edit": "Edit script",
+    "hint": "Saved to ~/.config/niri/scripts/ and made executable. Reference one from a shortcut as a spawn command.",
+    "none": "No scripts yet.",
+    "name": "Name",
+    "template": "Template",
+    "appid": "app-id",
+    "command": "launch command",
+    "body": "Script",
+    "summary": "script {n}",
+    "summary-del": "delete {n}"
+  },
+  "input": {
+    "save": "Save changes",
+    "none": "No input {} block found.",
+    "summary": "input settings",
+    "keyboard": "Keyboard",
+    "layout": "Layout",
+    "variant": "Variant",
+    "options": "XKB options",
+    "repeat-delay": "Repeat delay (ms)",
+    "repeat-rate": "Repeat rate",
+    "numlock": "Enable numlock at startup",
+    "touchpad": "Touchpad",
+    "tap": "Tap to click",
+    "natural": "Natural scrolling",
+    "dwt": "Disable while typing",
+    "accel": "Acceleration (-1.0 … 1.0)",
+    "mouse": "Mouse",
+    "left-handed": "Left-handed",
+    "middle-emu": "Middle-click emulation",
+    "general": "General",
+    "ffm": "Focus follows mouse",
+    "ws-baf": "Workspace back-and-forth"
+  },
+  "layout": {
+    "summary": "layout settings",
+    "none": "No layout {} block found.",
+    "gaps": "Gaps (px)",
+    "center": "Center focused column",
+    "bg": "Background color",
+    "focus-ring": "Focus ring width",
+    "border": "Border width"
+  },
+  "error": {
+    "no-niri": "niri not found on PATH"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Icon color",
+      "desc": "Color of the icon in the bar widget."
+    },
+    "controlCenter": {
+      "label": "Show in control center",
+      "desc": "Display a shortcut in the control center."
+    },
+    "writeMode": {
+      "label": "Write mode",
+      "desc": "How the plugin applies your edits. Preview never writes to disk.",
+      "preview": "Preview only (never writes — safest)",
+      "apply": "Apply in place (.bak + niri validate gate)"
+    },
+    "editor": {
+      "label": "External editor command",
+      "desc": "Used by the 'Open in editor' buttons (Scripts, Misc). e.g. 'ghostty -e nvim'. Empty = $VISUAL/$EDITOR or xdg-open."
+    }
+  }
+}

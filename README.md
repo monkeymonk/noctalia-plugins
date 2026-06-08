@@ -9,6 +9,7 @@ Layout follows the upstream [noctalia-plugins](https://github.com/noctalia-dev/n
 | Plugin | Description |
 | --- | --- |
 | [Fingerprint Manager](./fingerprint-manager/README.md) | Enroll, delete, and test fingerprints via `fprintd`. |
+| [Niri Config](./niri-config/README.md) | GUI editor for your [niri](https://github.com/YaLTeR/niri) config — shortcuts, monitors, input, window rules, layout and more, with a staged-apply + `niri validate` + auto-rollback safety model. |
 
 ## Installation
 

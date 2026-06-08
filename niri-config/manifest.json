@@ -1,0 +1,33 @@
+{
+  "id": "niri-config",
+  "name": "Niri Config",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "4.4.3",
+  "author": "Stephan Zych",
+  "license": "MIT",
+  "repository": "https://github.com/monkeymonk/noctalia-plugins",
+  "description": "View and edit your niri config — shortcuts, monitors, input and more — with live capture and a safe validate-backed save",
+  "tags": [
+    "Bar",
+    "Panel",
+    "System",
+    "niri"
+  ],
+  "entryPoints": {
+    "main": "Main.qml",
+    "barWidget": "BarWidget.qml",
+    "controlCenterWidget": "ControlCenterWidget.qml",
+    "panel": "Panel.qml",
+    "settings": "Settings.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "iconColor": "primary",
+      "showInControlCenter": true,
+      "externalEditor": ""
+    }
+  }
+}
