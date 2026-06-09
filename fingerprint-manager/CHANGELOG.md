@@ -4,6 +4,12 @@ All notable changes to this plugin are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] — 2026-06-09
+
+### Added
+
+- Translations for 12 languages (fr, de, es, it, nl, pt, ru, pl, ja, ko-KR, zh-CN, zh-TW); English remains the fallback.
+
 ## [1.1.0] — 2026-05-19
 
 ### Added

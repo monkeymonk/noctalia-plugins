@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- Translations for 12 languages (fr, de, es, it, nl, pt, ru, pl, ja, ko-KR,
+  zh-CN, zh-TW); English remains the fallback.
+
 ## 1.0.0
 
 Initial release — a full GUI editor for the niri configuration.
