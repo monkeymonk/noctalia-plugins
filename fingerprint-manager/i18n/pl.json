@@ -1,0 +1,75 @@
+{
+  "title": "Menedżer odcisków palców",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} zarejestrowanych"
+  },
+  "bar": {
+    "tooltip": "Menedżer odcisków palców"
+  },
+  "contextMenu": {
+    "widget-settings": "Ustawienia widżetu"
+  },
+  "empty": "Brak zarejestrowanych odcisków palców.",
+  "action": {
+    "refresh": "Odśwież",
+    "enroll": "Zarejestruj palec",
+    "test": "Testuj dopasowanie",
+    "delete": "Usuń",
+    "delete-all": "Usuń wszystkie",
+    "cancel": "Anuluj"
+  },
+  "picker": {
+    "title": "Wybierz palec do zarejestrowania"
+  },
+  "confirm": {
+    "delete-all": "Usunąć WSZYSTKIE zarejestrowane odciski palców?",
+    "delete-finger": "Usunąć odcisk palca dla {finger}?"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Kolor ikony",
+      "desc": "Kolor ikony odcisku palca w widżecie paska."
+    },
+    "controlCenter": {
+      "label": "Pokaż w centrum sterowania",
+      "desc": "Wyświetlaj skrót odcisku palca w centrum sterowania."
+    }
+  },
+  "enroll": {
+    "title": "Rejestrowanie {finger}",
+    "hint": {
+      "touch": "Przyłóż palec do czytnika.",
+      "again": "Dobrze — unieś i przyłóż ponownie.",
+      "retry": "Zmień pozycję i spróbuj ponownie."
+    }
+  },
+  "status": {
+    "enrolled": "Rejestracja zakończona sukcesem.",
+    "enroll-failed": "Rejestracja anulowana lub nieudana.",
+    "deleting": "Usuwanie {finger}…",
+    "deleting-all": "Usuwanie wszystkich odcisków palców…",
+    "deleted": "Odcisk palca usunięty.",
+    "deleted-all": "Wszystkie odciski palców usunięte.",
+    "delete-failed": "Usuwanie nie powiodło się.",
+    "verify-start": "Przyłóż palec do czytnika…",
+    "verify-retry": "Spróbuj ponownie — trzymaj palec nieruchomo.",
+    "match": "Dopasowanie — odcisk palca rozpoznany.",
+    "no-match": "Brak dopasowania."
+  },
+  "error": {
+    "no-device": "Nie znaleziono czytnika linii papilarnych. Czy fprintd działa?",
+    "no-fprintd": "fprintd nie jest zainstalowany. Sprawdź README wtyczki, aby skonfigurować."
+  },
+  "finger": {
+    "left-thumb": "Lewy kciuk",
+    "left-index-finger": "Lewy wskazujący",
+    "left-middle-finger": "Lewy środkowy",
+    "left-ring-finger": "Lewy serdeczny",
+    "left-little-finger": "Lewy mały",
+    "right-thumb": "Prawy kciuk",
+    "right-index-finger": "Prawy wskazujący",
+    "right-middle-finger": "Prawy środkowy",
+    "right-ring-finger": "Prawy serdeczny",
+    "right-little-finger": "Prawy mały"
+  }
+}

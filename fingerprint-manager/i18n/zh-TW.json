@@ -1,0 +1,75 @@
+{
+  "title": "指紋管理員",
+  "subtitle": {
+    "summary": "{user} · 已登錄 {count}/{max}"
+  },
+  "bar": {
+    "tooltip": "指紋管理員"
+  },
+  "contextMenu": {
+    "widget-settings": "元件設定"
+  },
+  "empty": "尚未登錄任何指紋。",
+  "action": {
+    "refresh": "重新整理",
+    "enroll": "登錄指紋",
+    "test": "測試比對",
+    "delete": "刪除",
+    "delete-all": "全部刪除",
+    "cancel": "取消"
+  },
+  "picker": {
+    "title": "選擇要登錄的手指"
+  },
+  "confirm": {
+    "delete-all": "確定刪除所有已登錄的指紋？",
+    "delete-finger": "確定刪除 {finger} 的指紋？"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "圖示顏色",
+      "desc": "工具列元件中指紋圖示的顏色。"
+    },
+    "controlCenter": {
+      "label": "顯示於控制中心",
+      "desc": "在控制中心顯示指紋捷徑。"
+    }
+  },
+  "enroll": {
+    "title": "正在登錄 {finger}",
+    "hint": {
+      "touch": "請將手指放在感應器上。",
+      "again": "成功 — 請抬起並再次放上。",
+      "retry": "請調整位置後重試。"
+    }
+  },
+  "status": {
+    "enrolled": "登錄成功。",
+    "enroll-failed": "登錄已取消或失敗。",
+    "deleting": "正在刪除 {finger}…",
+    "deleting-all": "正在刪除所有指紋…",
+    "deleted": "指紋已刪除。",
+    "deleted-all": "所有指紋已刪除。",
+    "delete-failed": "刪除失敗。",
+    "verify-start": "請將手指放在感應器上…",
+    "verify-retry": "請再試一次 — 保持手指穩定。",
+    "match": "比對成功 — 指紋已識別。",
+    "no-match": "比對失敗。"
+  },
+  "error": {
+    "no-device": "找不到指紋裝置。fprintd 是否正在執行？",
+    "no-fprintd": "fprintd 未安裝。請參閱外掛 README 的設定說明。"
+  },
+  "finger": {
+    "left-thumb": "左拇指",
+    "left-index-finger": "左食指",
+    "left-middle-finger": "左中指",
+    "left-ring-finger": "左無名指",
+    "left-little-finger": "左小指",
+    "right-thumb": "右拇指",
+    "right-index-finger": "右食指",
+    "right-middle-finger": "右中指",
+    "right-ring-finger": "右無名指",
+    "right-little-finger": "右小指"
+  }
+}

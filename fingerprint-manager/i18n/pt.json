@@ -1,0 +1,75 @@
+{
+  "title": "Gestor de Impressões Digitais",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} registadas"
+  },
+  "bar": {
+    "tooltip": "Gestor de Impressões Digitais"
+  },
+  "contextMenu": {
+    "widget-settings": "Definições do widget"
+  },
+  "empty": "Nenhuma impressão digital registada.",
+  "action": {
+    "refresh": "Atualizar",
+    "enroll": "Registar dedo",
+    "test": "Testar correspondência",
+    "delete": "Eliminar",
+    "delete-all": "Eliminar todas",
+    "cancel": "Cancelar"
+  },
+  "picker": {
+    "title": "Escolha um dedo para registar"
+  },
+  "confirm": {
+    "delete-all": "Eliminar TODAS as impressões digitais registadas?",
+    "delete-finger": "Eliminar a impressão digital de {finger}?"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Cor do ícone",
+      "desc": "Cor do ícone de impressão digital no widget da barra."
+    },
+    "controlCenter": {
+      "label": "Mostrar no centro de controlo",
+      "desc": "Mostrar um atalho de impressão digital no centro de controlo."
+    }
+  },
+  "enroll": {
+    "title": "A registar {finger}",
+    "hint": {
+      "touch": "Coloque o dedo no sensor.",
+      "again": "Bem — levante e coloque novamente.",
+      "retry": "Ajuste a posição e tente de novo."
+    }
+  },
+  "status": {
+    "enrolled": "Registo concluído com sucesso.",
+    "enroll-failed": "Registo cancelado ou falhado.",
+    "deleting": "A eliminar {finger}…",
+    "deleting-all": "A eliminar todas as impressões digitais…",
+    "deleted": "Impressão digital eliminada.",
+    "deleted-all": "Todas as impressões digitais eliminadas.",
+    "delete-failed": "Falha ao eliminar.",
+    "verify-start": "Coloque o dedo no sensor…",
+    "verify-retry": "Tente de novo — mantenha o dedo firme.",
+    "match": "Correspondência — impressão digital reconhecida.",
+    "no-match": "Sem correspondência."
+  },
+  "error": {
+    "no-device": "Nenhum dispositivo de impressão digital encontrado. O fprintd está em execução?",
+    "no-fprintd": "fprintd não está instalado. Consulte o README do plugin para instruções."
+  },
+  "finger": {
+    "left-thumb": "Polegar esquerdo",
+    "left-index-finger": "Indicador esquerdo",
+    "left-middle-finger": "Médio esquerdo",
+    "left-ring-finger": "Anelar esquerdo",
+    "left-little-finger": "Mindinho esquerdo",
+    "right-thumb": "Polegar direito",
+    "right-index-finger": "Indicador direito",
+    "right-middle-finger": "Médio direito",
+    "right-ring-finger": "Anelar direito",
+    "right-little-finger": "Mindinho direito"
+  }
+}

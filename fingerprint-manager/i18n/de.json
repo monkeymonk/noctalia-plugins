@@ -1,0 +1,75 @@
+{
+  "title": "Fingerabdruck-Manager",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} registriert"
+  },
+  "bar": {
+    "tooltip": "Fingerabdruck-Manager"
+  },
+  "contextMenu": {
+    "widget-settings": "Widget-Einstellungen"
+  },
+  "empty": "Noch keine Fingerabdrücke registriert.",
+  "action": {
+    "refresh": "Aktualisieren",
+    "enroll": "Finger registrieren",
+    "test": "Übereinstimmung testen",
+    "delete": "Löschen",
+    "delete-all": "Alle löschen",
+    "cancel": "Abbrechen"
+  },
+  "picker": {
+    "title": "Finger zum Registrieren auswählen"
+  },
+  "confirm": {
+    "delete-all": "ALLE registrierten Fingerabdrücke löschen?",
+    "delete-finger": "Fingerabdruck für {finger} löschen?"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Symbolfarbe",
+      "desc": "Farbe des Fingerabdruck-Symbols im Leisten-Widget."
+    },
+    "controlCenter": {
+      "label": "Im Kontrollzentrum anzeigen",
+      "desc": "Fingerabdruck-Schnellzugriff im Kontrollzentrum einblenden."
+    }
+  },
+  "enroll": {
+    "title": "{finger} wird registriert",
+    "hint": {
+      "touch": "Finger auf den Sensor legen.",
+      "again": "Gut — Finger abheben und erneut auflegen.",
+      "retry": "Position anpassen und erneut versuchen."
+    }
+  },
+  "status": {
+    "enrolled": "Registrierung erfolgreich.",
+    "enroll-failed": "Registrierung abgebrochen oder fehlgeschlagen.",
+    "deleting": "{finger} wird gelöscht…",
+    "deleting-all": "Alle Fingerabdrücke werden gelöscht…",
+    "deleted": "Fingerabdruck gelöscht.",
+    "deleted-all": "Alle Fingerabdrücke gelöscht.",
+    "delete-failed": "Löschen fehlgeschlagen.",
+    "verify-start": "Finger auf den Sensor legen…",
+    "verify-retry": "Erneut versuchen — Finger ruhig halten.",
+    "match": "Treffer — Fingerabdruck erkannt.",
+    "no-match": "Kein Treffer."
+  },
+  "error": {
+    "no-device": "Kein Fingerabdruckgerät gefunden. Läuft fprintd?",
+    "no-fprintd": "fprintd ist nicht installiert. Siehe Plugin-README zur Einrichtung."
+  },
+  "finger": {
+    "left-thumb": "Linker Daumen",
+    "left-index-finger": "Linker Zeigefinger",
+    "left-middle-finger": "Linker Mittelfinger",
+    "left-ring-finger": "Linker Ringfinger",
+    "left-little-finger": "Linker kleiner Finger",
+    "right-thumb": "Rechter Daumen",
+    "right-index-finger": "Rechter Zeigefinger",
+    "right-middle-finger": "Rechter Mittelfinger",
+    "right-ring-finger": "Rechter Ringfinger",
+    "right-little-finger": "Rechter kleiner Finger"
+  }
+}

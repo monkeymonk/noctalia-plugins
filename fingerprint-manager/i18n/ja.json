@@ -1,0 +1,75 @@
+{
+  "title": "指紋マネージャー",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} 登録済み"
+  },
+  "bar": {
+    "tooltip": "指紋マネージャー"
+  },
+  "contextMenu": {
+    "widget-settings": "ウィジェット設定"
+  },
+  "empty": "指紋がまだ登録されていません。",
+  "action": {
+    "refresh": "更新",
+    "enroll": "指を登録",
+    "test": "照合テスト",
+    "delete": "削除",
+    "delete-all": "すべて削除",
+    "cancel": "キャンセル"
+  },
+  "picker": {
+    "title": "登録する指を選択"
+  },
+  "confirm": {
+    "delete-all": "登録済みの指紋をすべて削除しますか？",
+    "delete-finger": "{finger} の指紋を削除しますか？"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "アイコンの色",
+      "desc": "バーウィジェットの指紋アイコンの色。"
+    },
+    "controlCenter": {
+      "label": "コントロールセンターに表示",
+      "desc": "コントロールセンターに指紋ショートカットを表示します。"
+    }
+  },
+  "enroll": {
+    "title": "{finger} を登録中",
+    "hint": {
+      "touch": "センサーに指を置いてください。",
+      "again": "完了 — 指を離してもう一度置いてください。",
+      "retry": "位置を調整してもう一度試してください。"
+    }
+  },
+  "status": {
+    "enrolled": "登録が完了しました。",
+    "enroll-failed": "登録がキャンセルまたは失敗しました。",
+    "deleting": "{finger} を削除中…",
+    "deleting-all": "すべての指紋を削除中…",
+    "deleted": "指紋を削除しました。",
+    "deleted-all": "すべての指紋を削除しました。",
+    "delete-failed": "削除に失敗しました。",
+    "verify-start": "センサーに指を置いてください…",
+    "verify-retry": "もう一度 — 指をしっかり置いてください。",
+    "match": "一致 — 指紋が認識されました。",
+    "no-match": "一致しませんでした。"
+  },
+  "error": {
+    "no-device": "指紋デバイスが見つかりません。fprintd は実行中ですか？",
+    "no-fprintd": "fprintd がインストールされていません。セットアップはプラグインの README を参照してください。"
+  },
+  "finger": {
+    "left-thumb": "左親指",
+    "left-index-finger": "左人差し指",
+    "left-middle-finger": "左中指",
+    "left-ring-finger": "左薬指",
+    "left-little-finger": "左小指",
+    "right-thumb": "右親指",
+    "right-index-finger": "右人差し指",
+    "right-middle-finger": "右中指",
+    "right-ring-finger": "右薬指",
+    "right-little-finger": "右小指"
+  }
+}

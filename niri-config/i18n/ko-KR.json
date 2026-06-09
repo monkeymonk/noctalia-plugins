@@ -1,0 +1,280 @@
+{
+  "title": "Niri Config",
+  "subtitle": {
+    "preview": "미리보기 모드 · 편집 내용이 표시되지만 저장되지 않음",
+    "apply": "적용 모드 · 저장 시 검증 및 백업됨",
+    "pending": "{n}개의 미저장 변경사항 — Apply 버튼을 누르세요",
+    "clean": "모든 변경사항 적용됨 · 검증 및 백업 완료"
+  },
+  "bar": {
+    "tooltip": "Niri Config"
+  },
+  "contextMenu": {
+    "widget-settings": "위젯 설정"
+  },
+  "section": {
+    "shortcuts": "단축키",
+    "monitors": "모니터",
+    "input": "입력",
+    "workspaces": "작업공간",
+    "rules": "창 규칙",
+    "layout": "레이아웃",
+    "animation": "애니메이션",
+    "autostart": "자동 시작",
+    "scripts": "스크립트",
+    "misc": "기타"
+  },
+  "action": {
+    "reload": "설정 다시 불러오기",
+    "close": "닫기",
+    "apply-once": "한 번만 적용",
+    "add-shortcut": "추가",
+    "enable": "활성화",
+    "disable": "비활성화",
+    "edit": "편집",
+    "delete": "삭제",
+    "capture": "캡처",
+    "cancel": "취소",
+    "save": "저장",
+    "use": "사용",
+    "apply": "적용",
+    "undo": "실행 취소",
+    "docs": "이 섹션의 niri 문서 열기",
+    "open-editor": "편집기에서 열기",
+    "edit-file": "파일 편집",
+    "open-folder": "폴더 열기"
+  },
+  "status": {
+    "saving": "{what} 저장 중…",
+    "saved": "{what} 저장됨 — niri 다시 불러옴.",
+    "saved-file": "{what} 저장됨.",
+    "save-failed": "niri validate에서 거부됨 — 백업에서 복원했습니다.",
+    "staged": "{what} 준비됨 — Apply를 눌러 저장하세요.",
+    "applying": "{n}개의 변경사항 적용 중…",
+    "applied": "적용됨 — niri 다시 불러옴.",
+    "apply-failed": "niri validate에서 거부됨 — 백업에서 복원했습니다. 수정 후 다시 적용하세요.",
+    "undone": "이전 설정으로 되돌렸습니다.",
+    "write-failed": "쓰기 실패: {what}."
+  },
+  "preview": {
+    "title": "미리보기 — 저장되지 않음",
+    "subtitle": "{path}의 전체 새 내용입니다. 설정에서 Apply 모드로 전환하면 저장됩니다."
+  },
+  "shortcuts": {
+    "count": "{n}개의 단축키",
+    "file": "{p}의 바인드",
+    "none": "설정에서 binds {} 블록을 찾을 수 없습니다.",
+    "search": "단축키 필터…"
+  },
+  "summary": {
+    "add": "새 단축키 {c}",
+    "edit": "단축키 {c}",
+    "delete": "{c} 삭제",
+    "enable": "{c} 활성화",
+    "disable": "{c} 비활성화"
+  },
+  "raw": {
+    "header": "읽기 전용 보기",
+    "note": "이 섹션의 전용 편집기가 곧 제공될 예정입니다. 현재는 원문 그대로 표시되며 수정되지 않습니다.",
+    "empty": "이 섹션에 대한 설정을 찾을 수 없습니다."
+  },
+  "bindeditor": {
+    "add": "단축키 추가",
+    "edit": "단축키 편집",
+    "combo": "키 조합",
+    "combo-ph": "예: Mod+Shift+T",
+    "recording": "키를 누르세요…",
+    "special": "특수 키",
+    "conflict": "⚠ 이미 바인딩됨: {desc}",
+    "action": "동작",
+    "no-action": "(동작 선택)",
+    "choose-action": "선택",
+    "command-ph": "실행할 명령",
+    "pick-app": "앱 선택",
+    "arg-ws": "작업공간 번호 또는 이름",
+    "arg": "인수",
+    "title-attr": "오버레이 제목 (선택사항)",
+    "title-ph": "단축키 오버레이에 표시됨",
+    "repeat-off": "키 반복 비활성화",
+    "allow-locked": "화면 잠금 중 허용"
+  },
+  "actionpicker": {
+    "title": "동작 선택",
+    "search": "동작 검색…"
+  },
+  "apppicker": {
+    "title": "앱 선택",
+    "search": "앱 검색…",
+    "loading": "앱 불러오는 중…",
+    "raw": "…또는 명령 직접 입력"
+  },
+  "monitors": {
+    "count": "{n}개의 모니터 감지됨",
+    "hint": "미리보기는 즉시 적용되며 다시 불러오면 되돌아갑니다. 저장하면 출력을 정의하는 파일(또는 cfg/display.kdl)에 씁니다.",
+    "error": "niri 출력을 조회할 수 없습니다.",
+    "mode": "해상도 및 주사율",
+    "scale": "배율",
+    "transform": "변환",
+    "posx": "위치 X",
+    "posy": "위치 Y",
+    "vrr": "가변 주사율 (VRR)",
+    "preview": "실시간 미리보기",
+    "summary": "모니터 {n}",
+    "count2": "모니터 {n}개",
+    "hint2": "미리보기는 즉시 적용됩니다(다시 불러오면 되돌아감). 저장하면 출력 블록을 씁니다. 추가를 사용하면 연결되지 않은 모니터를 다른 설정으로 구성할 수 있습니다.",
+    "add": "설정 추가",
+    "remove": "설정 제거",
+    "remove-summary": "모니터 설정 제거",
+    "add-summary": "모니터 {n} 추가",
+    "disconnected": "연결되지 않음",
+    "add-title": "모니터 설정 추가",
+    "add-hint": "정확한 커넥터 또는 모델 이름을 사용하세요 (`niri msg outputs` 실행).",
+    "connected": "연결됨",
+    "profiles": "프로필 (Monique)",
+    "profiles-hint": "모니터는 Monique로 관리됩니다 — 프로필을 선택해 적용하거나 “새로 만들기 / 편집”으로 프로필을 만들거나 수정하세요.",
+    "open-monique": "새로 만들기 / 편집",
+    "no-profiles": "프로필이 없습니다 — “새로 만들기 / 편집”으로 Monique에서 프로필을 만드세요.",
+    "none": "모니터 없음."
+  },
+  "anim": {
+    "none": "animations {} 블록을 찾을 수 없습니다.",
+    "global": "전체",
+    "off": "모든 애니메이션 비활성화",
+    "slowdown": "느리기 (1.0 = 기본)",
+    "enabled": "활성화됨",
+    "duration": "지속 시간 (ms)",
+    "curve": "곡선",
+    "spring-hint": "스프링 조정 — 파일에서 감쇠/강성을 편집하세요 (헤더 ✎ 버튼).",
+    "summary-global": "애니메이션 설정",
+    "summary-event": "{n} 애니메이션"
+  },
+  "rules": {
+    "count": "{n}개의 창 규칙",
+    "add": "규칙 추가",
+    "hint": "실행 중인 창을 캡처해 규칙을 추가합니다 — app-id/제목이 자동으로 채워집니다.",
+    "none": "창 규칙이 없습니다.",
+    "summary-add": "새 창 규칙",
+    "summary-edit": "창 규칙",
+    "summary-del": "규칙 삭제",
+    "summary-en": "규칙 활성화",
+    "summary-dis": "규칙 비활성화"
+  },
+  "ruleeditor": {
+    "add": "창 규칙 추가",
+    "edit": "창 규칙 편집",
+    "match": "창 일치 조건",
+    "capture": "창 캡처",
+    "appid": "app-id (정규식)",
+    "title": "제목 (정규식, 선택사항)",
+    "props": "창이 열릴 때",
+    "floating": "플로팅으로 열기",
+    "maximized": "최대화하여 열기",
+    "fullscreen": "전체화면으로 열기",
+    "workspace": "작업공간 지정",
+    "output": "출력 지정",
+    "colwidth": "열 너비 (0–1)",
+    "winheight": "창 높이 (0–1)"
+  },
+  "windowpicker": {
+    "title": "열린 창 선택",
+    "hint": "app-id와 제목이 일치 조건에 자동으로 채워집니다.",
+    "search": "창 필터…",
+    "none": "niri에서 열린 창이 없습니다."
+  },
+  "ws": {
+    "count": "{n}개의 이름 있는 작업공간",
+    "add": "추가",
+    "hint": "이름 있는 작업공간은 순서대로 생성되며 niri는 첫 번째 작업공간으로 시작합니다.",
+    "none": "이름 있는 작업공간이 없습니다.",
+    "new": "새 작업공간",
+    "rename": "작업공간 이름 변경",
+    "name-ph": "작업공간 이름",
+    "summary-add": "작업공간 {n}",
+    "summary-rename": "작업공간 이름 변경",
+    "summary-del": "{n} 삭제"
+  },
+  "autostart": {
+    "count": "{n}개의 시작 항목",
+    "add": "추가",
+    "hint": "niri가 시작할 때 실행할 프로그램입니다. 앱을 선택하거나 명령을 입력하세요.",
+    "none": "시작 항목이 없습니다.",
+    "newt": "새 시작 항목",
+    "editt": "시작 항목 편집",
+    "cmd-ph": "실행할 명령",
+    "summary-add": "자동 시작 항목",
+    "summary-edit": "자동 시작 항목",
+    "summary-del": "항목 삭제",
+    "summary-en": "항목 활성화",
+    "summary-dis": "항목 비활성화"
+  },
+  "scripts": {
+    "count": "{n}개의 스크립트",
+    "new": "새 스크립트",
+    "create": "새 스크립트",
+    "edit": "스크립트 편집",
+    "hint": "~/.config/niri/scripts/에 저장되고 실행 가능으로 설정됩니다. 단축키의 spawn 명령으로 참조하세요.",
+    "none": "스크립트가 없습니다.",
+    "name": "이름",
+    "template": "템플릿",
+    "appid": "app-id",
+    "command": "실행 명령",
+    "body": "스크립트",
+    "summary": "스크립트 {n}",
+    "summary-del": "{n} 삭제"
+  },
+  "input": {
+    "save": "변경사항 저장",
+    "none": "input {} 블록을 찾을 수 없습니다.",
+    "summary": "입력 설정",
+    "keyboard": "키보드",
+    "layout": "레이아웃",
+    "variant": "변형",
+    "options": "XKB 옵션",
+    "repeat-delay": "반복 지연 (ms)",
+    "repeat-rate": "반복 속도",
+    "numlock": "시작 시 Numlock 활성화",
+    "touchpad": "터치패드",
+    "tap": "탭으로 클릭",
+    "natural": "자연스러운 스크롤",
+    "dwt": "입력 중 비활성화",
+    "accel": "가속도 (-1.0 … 1.0)",
+    "mouse": "마우스",
+    "left-handed": "왼손잡이",
+    "middle-emu": "가운데 클릭 에뮬레이션",
+    "general": "일반",
+    "ffm": "마우스 포커스 따라가기",
+    "ws-baf": "작업공간 앞뒤 이동"
+  },
+  "layout": {
+    "summary": "레이아웃 설정",
+    "none": "layout {} 블록을 찾을 수 없습니다.",
+    "gaps": "간격 (px)",
+    "center": "포커스된 열 가운데 정렬",
+    "bg": "배경색",
+    "focus-ring": "포커스 링 너비",
+    "border": "테두리 너비"
+  },
+  "error": {
+    "no-niri": "PATH에서 niri를 찾을 수 없습니다"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "아이콘 색상",
+      "desc": "바 위젯의 아이콘 색상입니다."
+    },
+    "controlCenter": {
+      "label": "컨트롤 센터에 표시",
+      "desc": "컨트롤 센터에 바로가기를 표시합니다."
+    },
+    "writeMode": {
+      "label": "쓰기 모드",
+      "desc": "플러그인이 편집 내용을 적용하는 방식입니다. 미리보기는 디스크에 쓰지 않습니다.",
+      "preview": "미리보기만 (저장 안 함 — 가장 안전)",
+      "apply": "직접 적용 (.bak + niri validate 검증)"
+    },
+    "editor": {
+      "label": "외부 편집기 명령",
+      "desc": "'편집기에서 열기' 버튼(스크립트, 기타)에 사용됩니다. 예: 'ghostty -e nvim'. 비워두면 $VISUAL/$EDITOR 또는 xdg-open을 사용합니다."
+    }
+  }
+}

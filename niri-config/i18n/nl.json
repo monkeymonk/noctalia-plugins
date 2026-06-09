@@ -1,0 +1,280 @@
+{
+  "title": "Niri Config",
+  "subtitle": {
+    "preview": "Voorbeeldmodus · wijzigingen worden getoond, nooit geschreven",
+    "apply": "Toepassingsmodus · opslaan wordt gevalideerd en geback-upt",
+    "pending": "{n} niet-opgeslagen wijziging(en) — druk op Toepassen",
+    "clean": "Alle wijzigingen toegepast · gevalideerd & geback-upt"
+  },
+  "bar": {
+    "tooltip": "Niri Config"
+  },
+  "contextMenu": {
+    "widget-settings": "Widgetinstellingen"
+  },
+  "section": {
+    "shortcuts": "Sneltoetsen",
+    "monitors": "Monitoren",
+    "input": "Invoer",
+    "workspaces": "Werkruimten",
+    "rules": "Vensterregels",
+    "layout": "Indeling",
+    "animation": "Animatie",
+    "autostart": "Autostart",
+    "scripts": "Scripts",
+    "misc": "Overig"
+  },
+  "action": {
+    "reload": "Configuratie herladen",
+    "close": "Sluiten",
+    "apply-once": "Eenmalig toepassen",
+    "add-shortcut": "Toevoegen",
+    "enable": "Inschakelen",
+    "disable": "Uitschakelen",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "capture": "Vastleggen",
+    "cancel": "Annuleren",
+    "save": "Opslaan",
+    "use": "Gebruiken",
+    "apply": "Toepassen",
+    "undo": "Ongedaan maken",
+    "docs": "niri-documentatie voor dit onderdeel openen",
+    "open-editor": "Openen in editor",
+    "edit-file": "Bestand bewerken",
+    "open-folder": "Map openen"
+  },
+  "status": {
+    "saving": "{what} opslaan…",
+    "saved": "{what} opgeslagen — niri herladen.",
+    "saved-file": "{what} opgeslagen.",
+    "save-failed": "Opslaan afgewezen door niri validate — hersteld vanuit back-up.",
+    "staged": "{what} klaargezet — druk op Toepassen om te schrijven.",
+    "applying": "{n} wijziging(en) toepassen…",
+    "applied": "Toegepast — niri herladen.",
+    "apply-failed": "Afgewezen door niri validate — hersteld vanuit back-up. Corrigeer en probeer opnieuw.",
+    "undone": "Teruggezet naar de vorige configuratie.",
+    "write-failed": "Schrijven mislukt: {what}."
+  },
+  "preview": {
+    "title": "Voorbeeld — niets geschreven",
+    "subtitle": "Dit is de volledige nieuwe inhoud van {path}. Schakel over naar Toepassingsmodus in de instellingen om te schrijven."
+  },
+  "shortcuts": {
+    "count": "{n} sneltoetsen",
+    "file": "binds in {p}",
+    "none": "Geen binds {} blok gevonden in uw configuratie.",
+    "search": "Sneltoetsen filteren…"
+  },
+  "summary": {
+    "add": "nieuwe sneltoets {c}",
+    "edit": "sneltoets {c}",
+    "delete": "{c} verwijderen",
+    "enable": "{c} inschakelen",
+    "disable": "{c} uitschakelen"
+  },
+  "raw": {
+    "header": "Alleen-lezenweergave",
+    "note": "Een toegewijde editor voor dit onderdeel is in aantocht. Momenteel wordt het ongewijzigd weergegeven en nooit aangepast.",
+    "empty": "Geen configuratie gevonden voor dit onderdeel."
+  },
+  "bindeditor": {
+    "add": "Sneltoets toevoegen",
+    "edit": "Sneltoets bewerken",
+    "combo": "Toetscombinatie",
+    "combo-ph": "bijv. Mod+Shift+T",
+    "recording": "Toetsen indrukken…",
+    "special": "Speciale toets",
+    "conflict": "⚠ Al gebonden: {desc}",
+    "action": "Actie",
+    "no-action": "(kies een actie)",
+    "choose-action": "Kiezen",
+    "command-ph": "uit te voeren opdracht",
+    "pick-app": "App kiezen",
+    "arg-ws": "werkruimtenummer of -naam",
+    "arg": "argument",
+    "title-attr": "Overlaytitel (optioneel)",
+    "title-ph": "getoond in de sneltoetsoverlay",
+    "repeat-off": "Toetsherhaling uitschakelen",
+    "allow-locked": "Toestaan wanneer scherm vergrendeld is"
+  },
+  "actionpicker": {
+    "title": "Kies een actie",
+    "search": "Acties zoeken…"
+  },
+  "apppicker": {
+    "title": "Kies een applicatie",
+    "search": "Apps zoeken…",
+    "loading": "Apps laden…",
+    "raw": "…of typ een opdracht"
+  },
+  "monitors": {
+    "count": "{n} monitoren gedetecteerd",
+    "hint": "Voorbeeld wordt live toegepast en ongedaan gemaakt bij herladen. Opslaan schrijft naar het bestand dat de uitvoer definieert (of cfg/display.kdl).",
+    "error": "Kon niri-uitvoer niet opvragen.",
+    "mode": "Resolutie & verversingsfrequentie",
+    "scale": "Schaal",
+    "transform": "Transformatie",
+    "posx": "Positie X",
+    "posy": "Positie Y",
+    "vrr": "Variabele verversingsfrequentie (VRR)",
+    "preview": "Live voorbeeld",
+    "summary": "monitor {n}",
+    "count2": "{n} monitoren",
+    "hint2": "Voorbeeld wordt live toegepast (ongedaan gemaakt bij herladen). Opslaan schrijft het uitvoerblok; Toevoegen laat u een losgekoppelde monitor configureren voor een andere opstelling.",
+    "add": "Configuratie toevoegen",
+    "remove": "Configuratie verwijderen",
+    "remove-summary": "monitorconfiguratie verwijderen",
+    "add-summary": "monitor {n} toevoegen",
+    "disconnected": "niet verbonden",
+    "add-title": "Monitorconfiguratie toevoegen",
+    "add-hint": "Gebruik de exacte connectornaam of modelnaam (voer `niri msg outputs` uit).",
+    "connected": "verbonden",
+    "profiles": "Profielen (Monique)",
+    "profiles-hint": "Monitoren worden beheerd door Monique — kies een profiel om het toe te passen, of gebruik “Nieuw / bewerken” om profielen aan te maken of bij te werken.",
+    "open-monique": "Nieuw / bewerken",
+    "no-profiles": "Nog geen profielen — gebruik “Nieuw / bewerken” om er een aan te maken in Monique.",
+    "none": "Geen monitoren."
+  },
+  "anim": {
+    "none": "Geen animaties {} blok gevonden.",
+    "global": "Globaal",
+    "off": "Alle animaties uitschakelen",
+    "slowdown": "Vertraging (1.0 = normaal)",
+    "enabled": "Ingeschakeld",
+    "duration": "Duur (ms)",
+    "curve": "Curve",
+    "spring-hint": "Veerafstemming — bewerk demping/stijfheid in het bestand (koptekst ✎-knop).",
+    "summary-global": "animatie-instellingen",
+    "summary-event": "{n} animatie"
+  },
+  "rules": {
+    "count": "{n} vensterregels",
+    "add": "Regel toevoegen",
+    "hint": "Voeg een regel toe door een actief venster vast te leggen — de app-id/titel worden vooringevuld.",
+    "none": "Nog geen vensterregels.",
+    "summary-add": "nieuwe vensterregel",
+    "summary-edit": "vensterregel",
+    "summary-del": "regel verwijderen",
+    "summary-en": "regel inschakelen",
+    "summary-dis": "regel uitschakelen"
+  },
+  "ruleeditor": {
+    "add": "Vensterregel toevoegen",
+    "edit": "Vensterregel bewerken",
+    "match": "Venster koppelen",
+    "capture": "Venster vastleggen",
+    "appid": "app-id (regex)",
+    "title": "titel (regex, optioneel)",
+    "props": "Wanneer het opent",
+    "floating": "Zwevend openen",
+    "maximized": "Gemaximaliseerd openen",
+    "fullscreen": "Volledig scherm openen",
+    "workspace": "Op werkruimte",
+    "output": "Op uitvoer",
+    "colwidth": "Kolombreedte (0–1)",
+    "winheight": "Vensterhoogte (0–1)"
+  },
+  "windowpicker": {
+    "title": "Kies een open venster",
+    "hint": "De app-id en titel worden vooringevuld in de koppeling.",
+    "search": "Vensters filteren…",
+    "none": "Geen open vensters gerapporteerd door niri."
+  },
+  "ws": {
+    "count": "{n} benoemde werkruimten",
+    "add": "Toevoegen",
+    "hint": "Benoemde werkruimten worden op volgorde aangemaakt; niri start op de eerste.",
+    "none": "Geen benoemde werkruimten gedeclareerd.",
+    "new": "Nieuwe werkruimte",
+    "rename": "Werkruimte hernoemen",
+    "name-ph": "naam van werkruimte",
+    "summary-add": "werkruimte {n}",
+    "summary-rename": "werkruimte hernoemen",
+    "summary-del": "{n} verwijderen"
+  },
+  "autostart": {
+    "count": "{n} opstartitems",
+    "add": "Toevoegen",
+    "hint": "Programma's die niri bij het opstarten start. Kies een app of typ een opdracht.",
+    "none": "Geen opstartitems.",
+    "newt": "Nieuw opstartitem",
+    "editt": "Opstartitem bewerken",
+    "cmd-ph": "uit te voeren opdracht",
+    "summary-add": "opstartitem",
+    "summary-edit": "opstartitem",
+    "summary-del": "item verwijderen",
+    "summary-en": "item inschakelen",
+    "summary-dis": "item uitschakelen"
+  },
+  "scripts": {
+    "count": "{n} scripts",
+    "new": "Nieuw script",
+    "create": "Nieuw script",
+    "edit": "Script bewerken",
+    "hint": "Opgeslagen in ~/.config/niri/scripts/ en uitvoerbaar gemaakt. Verwijs ernaar vanuit een sneltoets als spawn-opdracht.",
+    "none": "Nog geen scripts.",
+    "name": "Naam",
+    "template": "Sjabloon",
+    "appid": "app-id",
+    "command": "startopdracht",
+    "body": "Script",
+    "summary": "script {n}",
+    "summary-del": "{n} verwijderen"
+  },
+  "input": {
+    "save": "Wijzigingen opslaan",
+    "none": "Geen invoer {} blok gevonden.",
+    "summary": "invoerinstellingen",
+    "keyboard": "Toetsenbord",
+    "layout": "Indeling",
+    "variant": "Variant",
+    "options": "XKB-opties",
+    "repeat-delay": "Herhalingsvertraging (ms)",
+    "repeat-rate": "Herhalingssnelheid",
+    "numlock": "Numlock inschakelen bij opstarten",
+    "touchpad": "Touchpad",
+    "tap": "Tikken om te klikken",
+    "natural": "Natuurlijk scrollen",
+    "dwt": "Uitschakelen tijdens typen",
+    "accel": "Versnelling (-1.0 … 1.0)",
+    "mouse": "Muis",
+    "left-handed": "Linkshandig",
+    "middle-emu": "Middelklik-emulatie",
+    "general": "Algemeen",
+    "ffm": "Focus volgt muis",
+    "ws-baf": "Werkruimte heen-en-terug"
+  },
+  "layout": {
+    "summary": "indelingsinstellingen",
+    "none": "Geen indeling {} blok gevonden.",
+    "gaps": "Tussenruimte (px)",
+    "center": "Gefocuste kolom centreren",
+    "bg": "Achtergrondkleur",
+    "focus-ring": "Focusringbreedte",
+    "border": "Randbreedte"
+  },
+  "error": {
+    "no-niri": "niri niet gevonden in PATH"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Icoontkleur",
+      "desc": "Kleur van het icoon in de balk."
+    },
+    "controlCenter": {
+      "label": "Tonen in controlecentrum",
+      "desc": "Snelkoppeling weergeven in het controlecentrum."
+    },
+    "writeMode": {
+      "label": "Schrijfmodus",
+      "desc": "Hoe de plugin uw wijzigingen toepast. Voorbeeld schrijft nooit naar schijf.",
+      "preview": "Alleen voorbeeld (schrijft nooit — veiligst)",
+      "apply": "Ter plaatse toepassen (.bak + niri validate controle)"
+    },
+    "editor": {
+      "label": "Externe editoropdracht",
+      "desc": "Gebruikt door de 'Openen in editor'-knoppen (Scripts, Overig). bijv. 'ghostty -e nvim'. Leeg = $VISUAL/$EDITOR of xdg-open."
+    }
+  }
+}
