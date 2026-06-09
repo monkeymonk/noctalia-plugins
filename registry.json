@@ -4,7 +4,7 @@
     {
       "id": "fingerprint-manager",
       "name": "Fingerprint Manager",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "official": false,
       "author": "Stephan Zych",
       "description": "Enroll, delete, and test fingerprints via fprintd",
@@ -17,12 +17,12 @@
         "System",
         "Security"
       ],
-      "lastUpdated": "2026-06-09T08:59:08+02:00"
+      "lastUpdated": "2026-06-09T09:23:31+02:00"
     },
     {
       "id": "niri-config",
       "name": "Niri Config",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "official": false,
       "author": "Stephan Zych",
       "description": "View and edit your niri config \u2014 shortcuts, monitors, input and more \u2014 with live capture and a safe validate-backed save",
@@ -35,7 +35,7 @@
         "System",
         "niri"
       ],
-      "lastUpdated": "2026-06-09T08:59:08+02:00"
+      "lastUpdated": "2026-06-09T09:23:31+02:00"
     }
   ]
 }
