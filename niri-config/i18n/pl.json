@@ -1,0 +1,280 @@
+{
+  "title": "Konfiguracja niri",
+  "subtitle": {
+    "preview": "Tryb podglądu · zmiany są widoczne, lecz nie zapisywane",
+    "apply": "Tryb zastosowania · zapisy są walidowane i tworzona jest kopia zapasowa",
+    "pending": "{n} niezapisanych zmian — naciśnij Zastosuj",
+    "clean": "Wszystkie zmiany zastosowane · zwalidowane i zapisano kopię zapasową"
+  },
+  "bar": {
+    "tooltip": "Konfiguracja niri"
+  },
+  "contextMenu": {
+    "widget-settings": "Ustawienia widżetu"
+  },
+  "section": {
+    "shortcuts": "Skróty",
+    "monitors": "Monitory",
+    "input": "Wejście",
+    "workspaces": "Obszary robocze",
+    "rules": "Reguły okien",
+    "layout": "Układ",
+    "animation": "Animacja",
+    "autostart": "Autostart",
+    "scripts": "Skrypty",
+    "misc": "Różne"
+  },
+  "action": {
+    "reload": "Przeładuj konfigurację",
+    "close": "Zamknij",
+    "apply-once": "Zastosuj jednorazowo",
+    "add-shortcut": "Dodaj",
+    "enable": "Włącz",
+    "disable": "Wyłącz",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "capture": "Przechwyć",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "use": "Użyj",
+    "apply": "Zastosuj",
+    "undo": "Cofnij",
+    "docs": "Otwórz dokumentację niri dla tej sekcji",
+    "open-editor": "Otwórz w edytorze",
+    "edit-file": "Edytuj plik",
+    "open-folder": "Otwórz folder"
+  },
+  "status": {
+    "saving": "Zapisywanie {what}…",
+    "saved": "Zapisano {what} — niri przeładowane.",
+    "saved-file": "Zapisano {what}.",
+    "save-failed": "Zapis odrzucony przez niri validate — przywrócono z kopii zapasowej.",
+    "staged": "{what} w kolejce — naciśnij Zastosuj, aby zapisać.",
+    "applying": "Stosowanie {n} zmian…",
+    "applied": "Zastosowano — niri przeładowane.",
+    "apply-failed": "Odrzucono przez niri validate — przywrócono z kopii zapasowej. Popraw i zastosuj ponownie.",
+    "undone": "Przywrócono poprzednią konfigurację.",
+    "write-failed": "Zapis nie powiódł się: {what}."
+  },
+  "preview": {
+    "title": "Podgląd — nic nie zapisano",
+    "subtitle": "To jest pełna nowa zawartość {path}. Przełącz się na tryb zastosowania w ustawieniach, aby zapisać."
+  },
+  "shortcuts": {
+    "count": "{n} skrótów",
+    "file": "powiązania w {p}",
+    "none": "Nie znaleziono bloku binds {} w konfiguracji.",
+    "search": "Filtruj skróty…"
+  },
+  "summary": {
+    "add": "nowy skrót {c}",
+    "edit": "skrót {c}",
+    "delete": "usuń {c}",
+    "enable": "włącz {c}",
+    "disable": "wyłącz {c}"
+  },
+  "raw": {
+    "header": "Widok tylko do odczytu",
+    "note": "Dedykowany edytor dla tej sekcji jest w przygotowaniu. Na razie treść jest wyświetlana dosłownie i nie jest modyfikowana.",
+    "empty": "Nie znaleziono konfiguracji dla tej sekcji."
+  },
+  "bindeditor": {
+    "add": "Dodaj skrót",
+    "edit": "Edytuj skrót",
+    "combo": "Kombinacja klawiszy",
+    "combo-ph": "np. Mod+Shift+T",
+    "recording": "Naciśnij klawisze…",
+    "special": "Klawisz specjalny",
+    "conflict": "⚠ Już przypisany: {desc}",
+    "action": "Akcja",
+    "no-action": "(wybierz akcję)",
+    "choose-action": "Wybierz",
+    "command-ph": "polecenie do uruchomienia",
+    "pick-app": "Wybierz aplikację",
+    "arg-ws": "numer lub nazwa obszaru roboczego",
+    "arg": "argument",
+    "title-attr": "Tytuł nakładki (opcjonalnie)",
+    "title-ph": "widoczny w nakładce skrótów",
+    "repeat-off": "Wyłącz powtarzanie klawisza",
+    "allow-locked": "Zezwól przy zablokowanym ekranie"
+  },
+  "actionpicker": {
+    "title": "Wybierz akcję",
+    "search": "Szukaj akcji…"
+  },
+  "apppicker": {
+    "title": "Wybierz aplikację",
+    "search": "Szukaj aplikacji…",
+    "loading": "Ładowanie aplikacji…",
+    "raw": "…lub wpisz polecenie"
+  },
+  "monitors": {
+    "count": "Wykryto {n} monitorów",
+    "hint": "Podgląd stosuje się na żywo i cofa przy przeładowaniu. Zapisanie pisze do pliku definiującego wyjście (lub cfg/display.kdl).",
+    "error": "Nie można pobrać informacji o wyjściach niri.",
+    "mode": "Rozdzielczość i częstotliwość odświeżania",
+    "scale": "Skala",
+    "transform": "Transformacja",
+    "posx": "Pozycja X",
+    "posy": "Pozycja Y",
+    "vrr": "Zmienna częstotliwość odświeżania (VRR)",
+    "preview": "Podgląd na żywo",
+    "summary": "monitor {n}",
+    "count2": "{n} monitorów",
+    "hint2": "Podgląd stosuje się na żywo (cofa przy przeładowaniu). Zapisanie zapisuje blok wyjścia; Dodaj pozwala skonfigurować odłączony monitor dla innej konfiguracji.",
+    "add": "Dodaj konfigurację",
+    "remove": "Usuń konfigurację",
+    "remove-summary": "usuń konfigurację monitora",
+    "add-summary": "dodaj monitor {n}",
+    "disconnected": "niepodłączony",
+    "add-title": "Dodaj konfigurację monitora",
+    "add-hint": "Podaj dokładną nazwę złącza lub modelu (uruchom `niri msg outputs`).",
+    "connected": "podłączony",
+    "profiles": "Profile (Monique)",
+    "profiles-hint": "Monitorami zarządza Monique — wybierz profil, aby go zastosować, lub użyj „Nowy / edytuj”, aby tworzyć/aktualizować profile.",
+    "open-monique": "Nowy / edytuj",
+    "no-profiles": "Brak profili — użyj „Nowy / edytuj”, aby utworzyć jeden w Monique.",
+    "none": "Brak monitorów."
+  },
+  "anim": {
+    "none": "Nie znaleziono bloku animations {}.",
+    "global": "Globalnie",
+    "off": "Wyłącz wszystkie animacje",
+    "slowdown": "Spowolnienie (1.0 = normalne)",
+    "enabled": "Włączone",
+    "duration": "Czas trwania (ms)",
+    "curve": "Krzywa",
+    "spring-hint": "Strojenie sprężyny — edytuj tłumienie/sztywność w pliku (przycisk ✎ w nagłówku).",
+    "summary-global": "ustawienia animacji",
+    "summary-event": "animacja {n}"
+  },
+  "rules": {
+    "count": "{n} reguł okien",
+    "add": "Dodaj regułę",
+    "hint": "Dodaj regułę, przechwytując aktywne okno — jego app-id/tytuł wypełni dopasowanie.",
+    "none": "Brak reguł okien.",
+    "summary-add": "nowa reguła okna",
+    "summary-edit": "reguła okna",
+    "summary-del": "usuń regułę",
+    "summary-en": "włącz regułę",
+    "summary-dis": "wyłącz regułę"
+  },
+  "ruleeditor": {
+    "add": "Dodaj regułę okna",
+    "edit": "Edytuj regułę okna",
+    "match": "Dopasuj okno",
+    "capture": "Przechwyć okno",
+    "appid": "app-id (wyrażenie regularne)",
+    "title": "tytuł (wyrażenie regularne, opcjonalnie)",
+    "props": "Po otwarciu",
+    "floating": "Otwórz pływające",
+    "maximized": "Otwórz zmaksymalizowane",
+    "fullscreen": "Otwórz na pełnym ekranie",
+    "workspace": "Na obszarze roboczym",
+    "output": "Na wyjściu",
+    "colwidth": "Szerokość kolumny (0–1)",
+    "winheight": "Wysokość okna (0–1)"
+  },
+  "windowpicker": {
+    "title": "Wybierz otwarte okno",
+    "hint": "Jego app-id i tytuł wypełnią dopasowanie.",
+    "search": "Filtruj okna…",
+    "none": "niri nie zgłasza żadnych otwartych okien."
+  },
+  "ws": {
+    "count": "{n} nazwanych obszarów roboczych",
+    "add": "Dodaj",
+    "hint": "Nazwane obszary robocze są tworzone w kolejności; niri uruchamia się na pierwszym.",
+    "none": "Brak zadeklarowanych nazwanych obszarów roboczych.",
+    "new": "Nowy obszar roboczy",
+    "rename": "Zmień nazwę obszaru roboczego",
+    "name-ph": "nazwa obszaru roboczego",
+    "summary-add": "obszar roboczy {n}",
+    "summary-rename": "zmień nazwę obszaru roboczego",
+    "summary-del": "usuń {n}"
+  },
+  "autostart": {
+    "count": "{n} wpisów startowych",
+    "add": "Dodaj",
+    "hint": "Programy uruchamiane przez niri przy starcie. Wybierz aplikację lub wpisz polecenie.",
+    "none": "Brak wpisów startowych.",
+    "newt": "Nowy wpis startowy",
+    "editt": "Edytuj wpis startowy",
+    "cmd-ph": "polecenie do uruchomienia",
+    "summary-add": "wpis autostartu",
+    "summary-edit": "wpis autostartu",
+    "summary-del": "usuń wpis",
+    "summary-en": "włącz wpis",
+    "summary-dis": "wyłącz wpis"
+  },
+  "scripts": {
+    "count": "{n} skryptów",
+    "new": "Nowy skrypt",
+    "create": "Nowy skrypt",
+    "edit": "Edytuj skrypt",
+    "hint": "Zapisywane do ~/.config/niri/scripts/ i ustawiane jako wykonywalne. Odwołaj się do skryptu ze skrótu jako polecenie spawn.",
+    "none": "Brak skryptów.",
+    "name": "Nazwa",
+    "template": "Szablon",
+    "appid": "app-id",
+    "command": "polecenie uruchomienia",
+    "body": "Skrypt",
+    "summary": "skrypt {n}",
+    "summary-del": "usuń {n}"
+  },
+  "input": {
+    "save": "Zapisz zmiany",
+    "none": "Nie znaleziono bloku input {}.",
+    "summary": "ustawienia wejścia",
+    "keyboard": "Klawiatura",
+    "layout": "Układ",
+    "variant": "Wariant",
+    "options": "Opcje XKB",
+    "repeat-delay": "Opóźnienie powtarzania (ms)",
+    "repeat-rate": "Częstotliwość powtarzania",
+    "numlock": "Włącz numlock przy starcie",
+    "touchpad": "Touchpad",
+    "tap": "Stukanie jako kliknięcie",
+    "natural": "Naturalne przewijanie",
+    "dwt": "Wyłącz podczas pisania",
+    "accel": "Przyspieszenie (-1,0 … 1,0)",
+    "mouse": "Mysz",
+    "left-handed": "Leworęczność",
+    "middle-emu": "Emulacja środkowego przycisku",
+    "general": "Ogólne",
+    "ffm": "Fokus podąża za myszą",
+    "ws-baf": "Obszar roboczy tam i z powrotem"
+  },
+  "layout": {
+    "summary": "ustawienia układu",
+    "none": "Nie znaleziono bloku layout {}.",
+    "gaps": "Odstępy (px)",
+    "center": "Wyśrodkuj aktywną kolumnę",
+    "bg": "Kolor tła",
+    "focus-ring": "Szerokość pierścienia fokusu",
+    "border": "Szerokość obramowania"
+  },
+  "error": {
+    "no-niri": "niri nie znaleziony w PATH"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Kolor ikony",
+      "desc": "Kolor ikony w widżecie paska."
+    },
+    "controlCenter": {
+      "label": "Pokaż w centrum sterowania",
+      "desc": "Wyświetlaj skrót w centrum sterowania."
+    },
+    "writeMode": {
+      "label": "Tryb zapisu",
+      "desc": "Sposób, w jaki wtyczka stosuje zmiany. Podgląd nigdy nie zapisuje na dysk.",
+      "preview": "Tylko podgląd (nigdy nie zapisuje — najbezpieczniejszy)",
+      "apply": "Zastosuj w miejscu (.bak + bramka niri validate)"
+    },
+    "editor": {
+      "label": "Polecenie zewnętrznego edytora",
+      "desc": "Używane przez przyciski „Otwórz w edytorze” (Skrypty, Różne). np. 'ghostty -e nvim'. Puste = $VISUAL/$EDITOR lub xdg-open."
+    }
+  }
+}

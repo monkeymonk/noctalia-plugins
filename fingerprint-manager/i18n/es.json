@@ -1,0 +1,75 @@
+{
+  "title": "Gestor de huellas",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} registradas"
+  },
+  "bar": {
+    "tooltip": "Gestor de huellas"
+  },
+  "contextMenu": {
+    "widget-settings": "Ajustes del widget"
+  },
+  "empty": "No hay huellas registradas.",
+  "action": {
+    "refresh": "Actualizar",
+    "enroll": "Registrar dedo",
+    "test": "Probar coincidencia",
+    "delete": "Eliminar",
+    "delete-all": "Eliminar todas",
+    "cancel": "Cancelar"
+  },
+  "picker": {
+    "title": "Elige un dedo para registrar"
+  },
+  "confirm": {
+    "delete-all": "¿Eliminar TODAS las huellas registradas?",
+    "delete-finger": "¿Eliminar la huella de {finger}?"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Color del icono",
+      "desc": "Color del icono de huella en el widget de la barra."
+    },
+    "controlCenter": {
+      "label": "Mostrar en el centro de control",
+      "desc": "Muestra un acceso directo de huellas en el centro de control."
+    }
+  },
+  "enroll": {
+    "title": "Registrando {finger}",
+    "hint": {
+      "touch": "Coloca el dedo en el sensor.",
+      "again": "Bien — levanta y vuelve a colocar.",
+      "retry": "Ajusta la posición e inténtalo de nuevo."
+    }
+  },
+  "status": {
+    "enrolled": "Registro completado.",
+    "enroll-failed": "Registro cancelado o fallido.",
+    "deleting": "Eliminando {finger}…",
+    "deleting-all": "Eliminando todas las huellas…",
+    "deleted": "Huella eliminada.",
+    "deleted-all": "Todas las huellas eliminadas.",
+    "delete-failed": "Error al eliminar.",
+    "verify-start": "Coloca el dedo en el sensor…",
+    "verify-retry": "Inténtalo de nuevo — mantén el dedo quieto.",
+    "match": "Coincidencia — huella reconocida.",
+    "no-match": "Sin coincidencia."
+  },
+  "error": {
+    "no-device": "No se encontró ningún dispositivo de huellas. ¿Está fprintd en ejecución?",
+    "no-fprintd": "fprintd no está instalado. Consulta el README del plugin para la configuración."
+  },
+  "finger": {
+    "left-thumb": "Pulgar izquierdo",
+    "left-index-finger": "Índice izquierdo",
+    "left-middle-finger": "Corazón izquierdo",
+    "left-ring-finger": "Anular izquierdo",
+    "left-little-finger": "Meñique izquierdo",
+    "right-thumb": "Pulgar derecho",
+    "right-index-finger": "Índice derecho",
+    "right-middle-finger": "Corazón derecho",
+    "right-ring-finger": "Anular derecho",
+    "right-little-finger": "Meñique derecho"
+  }
+}

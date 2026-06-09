@@ -1,0 +1,280 @@
+{
+  "title": "Niri 設定",
+  "subtitle": {
+    "preview": "預覽模式 · 僅顯示變更，不寫入檔案",
+    "apply": "套用模式 · 儲存前驗證並備份",
+    "pending": "{n} 項未儲存的變更 — 請按套用",
+    "clean": "所有變更已套用 · 已驗證並備份"
+  },
+  "bar": {
+    "tooltip": "Niri 設定"
+  },
+  "contextMenu": {
+    "widget-settings": "元件設定"
+  },
+  "section": {
+    "shortcuts": "快捷鍵",
+    "monitors": "顯示器",
+    "input": "輸入",
+    "workspaces": "工作區",
+    "rules": "視窗規則",
+    "layout": "版面配置",
+    "animation": "動畫",
+    "autostart": "自動啟動",
+    "scripts": "腳本",
+    "misc": "其他"
+  },
+  "action": {
+    "reload": "重新載入設定",
+    "close": "關閉",
+    "apply-once": "套用一次",
+    "add-shortcut": "新增",
+    "enable": "啟用",
+    "disable": "停用",
+    "edit": "編輯",
+    "delete": "刪除",
+    "capture": "擷取",
+    "cancel": "取消",
+    "save": "儲存",
+    "use": "使用",
+    "apply": "套用",
+    "undo": "還原",
+    "docs": "開啟此區段的 niri 文件",
+    "open-editor": "在編輯器中開啟",
+    "edit-file": "編輯檔案",
+    "open-folder": "開啟資料夾"
+  },
+  "status": {
+    "saving": "正在儲存 {what}…",
+    "saved": "已儲存 {what} — niri 已重新載入。",
+    "saved-file": "已儲存 {what}。",
+    "save-failed": "niri validate 拒絕儲存 — 已從備份還原。",
+    "staged": "{what} 已暫存 — 請按套用以寫入。",
+    "applying": "正在套用 {n} 項變更…",
+    "applied": "已套用 — niri 已重新載入。",
+    "apply-failed": "niri validate 拒絕 — 已從備份還原。請修正後重新套用。",
+    "undone": "已還原至先前的設定。",
+    "write-failed": "寫入失敗：{what}。"
+  },
+  "preview": {
+    "title": "預覽 — 未寫入任何內容",
+    "subtitle": "這是 {path} 的完整新內容。請在設定中切換至套用模式以寫入。"
+  },
+  "shortcuts": {
+    "count": "{n} 個快捷鍵",
+    "file": "繫結於 {p}",
+    "none": "在設定中找不到 binds {} 區塊。",
+    "search": "篩選快捷鍵…"
+  },
+  "summary": {
+    "add": "新增快捷鍵 {c}",
+    "edit": "快捷鍵 {c}",
+    "delete": "刪除 {c}",
+    "enable": "啟用 {c}",
+    "disable": "停用 {c}"
+  },
+  "raw": {
+    "header": "唯讀檢視",
+    "note": "此區段的專用編輯器即將推出。目前以原始內容顯示，不會進行修改。",
+    "empty": "找不到此區段的設定。"
+  },
+  "bindeditor": {
+    "add": "新增快捷鍵",
+    "edit": "編輯快捷鍵",
+    "combo": "按鍵組合",
+    "combo-ph": "例如 Mod+Shift+T",
+    "recording": "請按下按鍵…",
+    "special": "特殊按鍵",
+    "conflict": "⚠ 已被佔用：{desc}",
+    "action": "動作",
+    "no-action": "（選擇動作）",
+    "choose-action": "選擇",
+    "command-ph": "要執行的指令",
+    "pick-app": "選擇應用程式",
+    "arg-ws": "工作區編號或名稱",
+    "arg": "引數",
+    "title-attr": "覆蓋層標題（選填）",
+    "title-ph": "顯示於快捷鍵覆蓋層",
+    "repeat-off": "停用按鍵重複",
+    "allow-locked": "鎖定畫面時允許"
+  },
+  "actionpicker": {
+    "title": "選擇動作",
+    "search": "搜尋動作…"
+  },
+  "apppicker": {
+    "title": "選擇應用程式",
+    "search": "搜尋應用程式…",
+    "loading": "正在載入應用程式…",
+    "raw": "…或輸入指令"
+  },
+  "monitors": {
+    "count": "偵測到 {n} 台顯示器",
+    "hint": "預覽即時套用，重新載入後還原。儲存會寫入定義輸出的檔案（或 cfg/display.kdl）。",
+    "error": "無法查詢 niri 輸出。",
+    "mode": "解析度與更新率",
+    "scale": "縮放比例",
+    "transform": "旋轉",
+    "posx": "位置 X",
+    "posy": "位置 Y",
+    "vrr": "可變更新率（VRR）",
+    "preview": "即時預覽",
+    "summary": "顯示器 {n}",
+    "count2": "{n} 台顯示器",
+    "hint2": "預覽即時套用（重新載入後還原）。儲存會寫入輸出區塊；新增可為其他設定配置未連接的顯示器。",
+    "add": "新增設定",
+    "remove": "移除設定",
+    "remove-summary": "移除顯示器設定",
+    "add-summary": "新增顯示器 {n}",
+    "disconnected": "未連接",
+    "add-title": "新增顯示器設定",
+    "add-hint": "請使用精確的連接埠或型號名稱（執行 `niri msg outputs`）。",
+    "connected": "已連接",
+    "profiles": "設定檔（Monique）",
+    "profiles-hint": "顯示器由 Monique 管理 — 選擇設定檔以套用，或使用「新增／編輯」建立或更新設定檔。",
+    "open-monique": "新增／編輯",
+    "no-profiles": "尚無設定檔 — 請使用「新增／編輯」在 Monique 中建立。",
+    "none": "無顯示器。"
+  },
+  "anim": {
+    "none": "找不到 animations {} 區塊。",
+    "global": "全域",
+    "off": "停用所有動畫",
+    "slowdown": "速度倍率（1.0 = 正常）",
+    "enabled": "已啟用",
+    "duration": "持續時間（毫秒）",
+    "curve": "曲線",
+    "spring-hint": "彈簧調整 — 請在檔案中編輯阻尼／剛性（標題 ✎ 按鈕）。",
+    "summary-global": "動畫設定",
+    "summary-event": "{n} 動畫"
+  },
+  "rules": {
+    "count": "{n} 條視窗規則",
+    "add": "新增規則",
+    "hint": "透過擷取現有視窗新增規則 — 其 app-id／標題會自動填入比對條件。",
+    "none": "尚無視窗規則。",
+    "summary-add": "新增視窗規則",
+    "summary-edit": "視窗規則",
+    "summary-del": "刪除規則",
+    "summary-en": "啟用規則",
+    "summary-dis": "停用規則"
+  },
+  "ruleeditor": {
+    "add": "新增視窗規則",
+    "edit": "編輯視窗規則",
+    "match": "比對視窗",
+    "capture": "擷取視窗",
+    "appid": "app-id（正規表示式）",
+    "title": "標題（正規表示式，選填）",
+    "props": "開啟時",
+    "floating": "以浮動方式開啟",
+    "maximized": "以最大化方式開啟",
+    "fullscreen": "以全螢幕方式開啟",
+    "workspace": "在工作區",
+    "output": "在輸出",
+    "colwidth": "欄寬（0–1）",
+    "winheight": "視窗高度（0–1）"
+  },
+  "windowpicker": {
+    "title": "選擇開啟中的視窗",
+    "hint": "其 app-id 和標題將自動填入比對條件。",
+    "search": "篩選視窗…",
+    "none": "niri 未回報任何開啟中的視窗。"
+  },
+  "ws": {
+    "count": "{n} 個命名工作區",
+    "add": "新增",
+    "hint": "命名工作區依序建立；niri 啟動時會進入第一個工作區。",
+    "none": "尚未宣告命名工作區。",
+    "new": "新增工作區",
+    "rename": "重新命名工作區",
+    "name-ph": "工作區名稱",
+    "summary-add": "工作區 {n}",
+    "summary-rename": "重新命名工作區",
+    "summary-del": "刪除 {n}"
+  },
+  "autostart": {
+    "count": "{n} 個啟動項目",
+    "add": "新增",
+    "hint": "niri 啟動時執行的程式。選擇應用程式或輸入指令。",
+    "none": "尚無啟動項目。",
+    "newt": "新增啟動項目",
+    "editt": "編輯啟動項目",
+    "cmd-ph": "要執行的指令",
+    "summary-add": "自動啟動項目",
+    "summary-edit": "自動啟動項目",
+    "summary-del": "刪除項目",
+    "summary-en": "啟用項目",
+    "summary-dis": "停用項目"
+  },
+  "scripts": {
+    "count": "{n} 個腳本",
+    "new": "新增腳本",
+    "create": "新增腳本",
+    "edit": "編輯腳本",
+    "hint": "儲存至 ~/.config/niri/scripts/ 並設為可執行。可在快捷鍵中以 spawn 指令參照。",
+    "none": "尚無腳本。",
+    "name": "名稱",
+    "template": "範本",
+    "appid": "app-id",
+    "command": "啟動指令",
+    "body": "腳本內容",
+    "summary": "腳本 {n}",
+    "summary-del": "刪除 {n}"
+  },
+  "input": {
+    "save": "儲存變更",
+    "none": "找不到 input {} 區塊。",
+    "summary": "輸入設定",
+    "keyboard": "鍵盤",
+    "layout": "配置",
+    "variant": "變體",
+    "options": "XKB 選項",
+    "repeat-delay": "重複延遲（毫秒）",
+    "repeat-rate": "重複速率",
+    "numlock": "啟動時啟用數字鎖定",
+    "touchpad": "觸控板",
+    "tap": "點擊即按",
+    "natural": "自然捲動",
+    "dwt": "打字時停用",
+    "accel": "加速度（-1.0 … 1.0）",
+    "mouse": "滑鼠",
+    "left-handed": "左手模式",
+    "middle-emu": "模擬中鍵點擊",
+    "general": "一般",
+    "ffm": "焦點跟隨滑鼠",
+    "ws-baf": "工作區來回切換"
+  },
+  "layout": {
+    "summary": "版面設定",
+    "none": "找不到 layout {} 區塊。",
+    "gaps": "間距（像素）",
+    "center": "置中焦點欄",
+    "bg": "背景顏色",
+    "focus-ring": "焦點環寬度",
+    "border": "邊框寬度"
+  },
+  "error": {
+    "no-niri": "在 PATH 中找不到 niri"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "圖示顏色",
+      "desc": "工具列元件中圖示的顏色。"
+    },
+    "controlCenter": {
+      "label": "顯示於控制中心",
+      "desc": "在控制中心顯示捷徑。"
+    },
+    "writeMode": {
+      "label": "寫入模式",
+      "desc": "外掛套用編輯的方式。預覽模式不會寫入磁碟。",
+      "preview": "僅預覽（不寫入 — 最安全）",
+      "apply": "直接套用（.bak + niri validate 驗證）"
+    },
+    "editor": {
+      "label": "外部編輯器指令",
+      "desc": "用於「在編輯器中開啟」按鈕（腳本、其他）。例如 'ghostty -e nvim'。留空則使用 $VISUAL/$EDITOR 或 xdg-open。"
+    }
+  }
+}

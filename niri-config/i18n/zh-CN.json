@@ -1,0 +1,280 @@
+{
+  "title": "Niri 配置",
+  "subtitle": {
+    "preview": "预览模式 · 显示编辑内容，不写入文件",
+    "apply": "应用模式 · 保存时验证并备份",
+    "pending": "{n} 项未保存的更改 — 请按应用",
+    "clean": "所有更改已应用 · 已验证并备份"
+  },
+  "bar": {
+    "tooltip": "Niri 配置"
+  },
+  "contextMenu": {
+    "widget-settings": "小部件设置"
+  },
+  "section": {
+    "shortcuts": "快捷键",
+    "monitors": "显示器",
+    "input": "输入",
+    "workspaces": "工作区",
+    "rules": "窗口规则",
+    "layout": "布局",
+    "animation": "动画",
+    "autostart": "自动启动",
+    "scripts": "脚本",
+    "misc": "其他"
+  },
+  "action": {
+    "reload": "重载配置",
+    "close": "关闭",
+    "apply-once": "仅应用一次",
+    "add-shortcut": "添加",
+    "enable": "启用",
+    "disable": "禁用",
+    "edit": "编辑",
+    "delete": "删除",
+    "capture": "捕获",
+    "cancel": "取消",
+    "save": "保存",
+    "use": "使用",
+    "apply": "应用",
+    "undo": "撤销",
+    "docs": "打开此节的 niri 文档",
+    "open-editor": "在编辑器中打开",
+    "edit-file": "编辑文件",
+    "open-folder": "打开文件夹"
+  },
+  "status": {
+    "saving": "正在保存 {what}…",
+    "saved": "已保存 {what} — niri 已重载。",
+    "saved-file": "已保存 {what}。",
+    "save-failed": "niri validate 拒绝保存 — 已从备份还原。",
+    "staged": "{what} 已暂存 — 按应用以写入。",
+    "applying": "正在应用 {n} 项更改…",
+    "applied": "已应用 — niri 已重载。",
+    "apply-failed": "niri validate 拒绝 — 已从备份还原。请修正后重新应用。",
+    "undone": "已还原到上一个配置。",
+    "write-failed": "写入失败：{what}。"
+  },
+  "preview": {
+    "title": "预览 — 未写入任何内容",
+    "subtitle": "这是 {path} 的完整新内容。请在设置中切换到应用模式以写入。"
+  },
+  "shortcuts": {
+    "count": "{n} 个快捷键",
+    "file": "绑定于 {p}",
+    "none": "配置中未找到 binds {} 块。",
+    "search": "筛选快捷键…"
+  },
+  "summary": {
+    "add": "新建快捷键 {c}",
+    "edit": "快捷键 {c}",
+    "delete": "删除 {c}",
+    "enable": "启用 {c}",
+    "disable": "禁用 {c}"
+  },
+  "raw": {
+    "header": "只读视图",
+    "note": "此节的专用编辑器即将推出。当前仅显示原始内容，不做修改。",
+    "empty": "此节未找到配置。"
+  },
+  "bindeditor": {
+    "add": "添加快捷键",
+    "edit": "编辑快捷键",
+    "combo": "按键组合",
+    "combo-ph": "例如 Mod+Shift+T",
+    "recording": "请按键…",
+    "special": "特殊键",
+    "conflict": "⚠ 已绑定：{desc}",
+    "action": "动作",
+    "no-action": "（选择动作）",
+    "choose-action": "选择",
+    "command-ph": "要运行的命令",
+    "pick-app": "选择应用",
+    "arg-ws": "工作区编号或名称",
+    "arg": "参数",
+    "title-attr": "覆盖层标题（可选）",
+    "title-ph": "显示在热键覆盖层中",
+    "repeat-off": "禁用按键重复",
+    "allow-locked": "锁屏时允许"
+  },
+  "actionpicker": {
+    "title": "选择动作",
+    "search": "搜索动作…"
+  },
+  "apppicker": {
+    "title": "选择应用程序",
+    "search": "搜索应用…",
+    "loading": "正在加载应用…",
+    "raw": "…或输入命令"
+  },
+  "monitors": {
+    "count": "检测到 {n} 个显示器",
+    "hint": "预览实时生效并在重载时还原。保存将写入定义该输出的文件（或 cfg/display.kdl）。",
+    "error": "无法查询 niri 输出。",
+    "mode": "分辨率与刷新率",
+    "scale": "缩放",
+    "transform": "变换",
+    "posx": "X 位置",
+    "posy": "Y 位置",
+    "vrr": "可变刷新率（VRR）",
+    "preview": "实时预览",
+    "summary": "显示器 {n}",
+    "count2": "{n} 个显示器",
+    "hint2": "预览实时生效（重载时还原）。保存写入输出块；添加可为未连接的显示器配置其他方案。",
+    "add": "添加配置",
+    "remove": "移除配置",
+    "remove-summary": "移除显示器配置",
+    "add-summary": "添加显示器 {n}",
+    "disconnected": "未连接",
+    "add-title": "添加显示器配置",
+    "add-hint": "使用精确的连接器或型号名称（运行 `niri msg outputs`）。",
+    "connected": "已连接",
+    "profiles": "配置文件（Monique）",
+    "profiles-hint": "显示器由 Monique 管理 — 选择配置文件以应用，或使用「新建/编辑」创建/更新配置文件。",
+    "open-monique": "新建/编辑",
+    "no-profiles": "尚无配置文件 — 使用「新建/编辑」在 Monique 中创建。",
+    "none": "无显示器。"
+  },
+  "anim": {
+    "none": "未找到 animations {} 块。",
+    "global": "全局",
+    "off": "禁用所有动画",
+    "slowdown": "减速倍率（1.0 = 正常）",
+    "enabled": "已启用",
+    "duration": "时长（毫秒）",
+    "curve": "曲线",
+    "spring-hint": "弹簧调节 — 在文件中编辑阻尼/刚度（标题 ✎ 按钮）。",
+    "summary-global": "动画设置",
+    "summary-event": "{n} 动画"
+  },
+  "rules": {
+    "count": "{n} 条窗口规则",
+    "add": "添加规则",
+    "hint": "通过捕获实时窗口添加规则 — 其 app-id/标题将预填匹配条件。",
+    "none": "尚无窗口规则。",
+    "summary-add": "新建窗口规则",
+    "summary-edit": "窗口规则",
+    "summary-del": "删除规则",
+    "summary-en": "启用规则",
+    "summary-dis": "禁用规则"
+  },
+  "ruleeditor": {
+    "add": "添加窗口规则",
+    "edit": "编辑窗口规则",
+    "match": "匹配窗口",
+    "capture": "捕获窗口",
+    "appid": "app-id（正则）",
+    "title": "标题（正则，可选）",
+    "props": "打开时",
+    "floating": "浮动打开",
+    "maximized": "最大化打开",
+    "fullscreen": "全屏打开",
+    "workspace": "所在工作区",
+    "output": "所在输出",
+    "colwidth": "列宽（0–1）",
+    "winheight": "窗口高度（0–1）"
+  },
+  "windowpicker": {
+    "title": "选择已打开的窗口",
+    "hint": "其 app-id 和标题将预填匹配条件。",
+    "search": "筛选窗口…",
+    "none": "niri 未报告任何已打开的窗口。"
+  },
+  "ws": {
+    "count": "{n} 个命名工作区",
+    "add": "添加",
+    "hint": "命名工作区按顺序创建；niri 启动时进入第一个。",
+    "none": "未声明命名工作区。",
+    "new": "新建工作区",
+    "rename": "重命名工作区",
+    "name-ph": "工作区名称",
+    "summary-add": "工作区 {n}",
+    "summary-rename": "重命名工作区",
+    "summary-del": "删除 {n}"
+  },
+  "autostart": {
+    "count": "{n} 个启动项",
+    "add": "添加",
+    "hint": "niri 启动时运行的程序。选择应用或输入命令。",
+    "none": "暂无启动项。",
+    "newt": "新建启动项",
+    "editt": "编辑启动项",
+    "cmd-ph": "要运行的命令",
+    "summary-add": "自动启动项",
+    "summary-edit": "自动启动项",
+    "summary-del": "删除条目",
+    "summary-en": "启用条目",
+    "summary-dis": "禁用条目"
+  },
+  "scripts": {
+    "count": "{n} 个脚本",
+    "new": "新建脚本",
+    "create": "新建脚本",
+    "edit": "编辑脚本",
+    "hint": "保存到 ~/.config/niri/scripts/ 并设为可执行。可在快捷键中以 spawn 命令引用。",
+    "none": "暂无脚本。",
+    "name": "名称",
+    "template": "模板",
+    "appid": "app-id",
+    "command": "启动命令",
+    "body": "脚本内容",
+    "summary": "脚本 {n}",
+    "summary-del": "删除 {n}"
+  },
+  "input": {
+    "save": "保存更改",
+    "none": "未找到 input {} 块。",
+    "summary": "输入设置",
+    "keyboard": "键盘",
+    "layout": "布局",
+    "variant": "变体",
+    "options": "XKB 选项",
+    "repeat-delay": "重复延迟（毫秒）",
+    "repeat-rate": "重复速率",
+    "numlock": "启动时启用数字锁",
+    "touchpad": "触控板",
+    "tap": "轻触点击",
+    "natural": "自然滚动",
+    "dwt": "打字时禁用",
+    "accel": "加速度（-1.0 … 1.0）",
+    "mouse": "鼠标",
+    "left-handed": "左手模式",
+    "middle-emu": "中键仿真",
+    "general": "通用",
+    "ffm": "鼠标跟随焦点",
+    "ws-baf": "工作区来回切换"
+  },
+  "layout": {
+    "summary": "布局设置",
+    "none": "未找到 layout {} 块。",
+    "gaps": "间距（像素）",
+    "center": "居中聚焦列",
+    "bg": "背景颜色",
+    "focus-ring": "焦点环宽度",
+    "border": "边框宽度"
+  },
+  "error": {
+    "no-niri": "在 PATH 中未找到 niri"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "图标颜色",
+      "desc": "栏部件中图标的颜色。"
+    },
+    "controlCenter": {
+      "label": "在控制中心显示",
+      "desc": "在控制中心显示快捷方式。"
+    },
+    "writeMode": {
+      "label": "写入模式",
+      "desc": "插件应用编辑的方式。预览模式不写入磁盘。",
+      "preview": "仅预览（不写入 — 最安全）",
+      "apply": "就地应用（.bak + niri validate 验证）"
+    },
+    "editor": {
+      "label": "外部编辑器命令",
+      "desc": "用于「在编辑器中打开」按钮（脚本、其他）。例如 ghostty -e nvim。留空则使用 $VISUAL/$EDITOR 或 xdg-open。"
+    }
+  }
+}

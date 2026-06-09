@@ -1,0 +1,280 @@
+{
+  "title": "Niri Config",
+  "subtitle": {
+    "preview": "プレビューモード · 変更は表示のみ、書き込まれません",
+    "apply": "適用モード · 保存時に検証とバックアップを行います",
+    "pending": "{n} 件の未保存の変更 — Apply を押してください",
+    "clean": "すべての変更を適用済み · 検証・バックアップ済み"
+  },
+  "bar": {
+    "tooltip": "Niri Config"
+  },
+  "contextMenu": {
+    "widget-settings": "ウィジェット設定"
+  },
+  "section": {
+    "shortcuts": "ショートカット",
+    "monitors": "モニター",
+    "input": "入力",
+    "workspaces": "ワークスペース",
+    "rules": "ウィンドウルール",
+    "layout": "レイアウト",
+    "animation": "アニメーション",
+    "autostart": "自動起動",
+    "scripts": "スクリプト",
+    "misc": "その他"
+  },
+  "action": {
+    "reload": "設定を再読み込み",
+    "close": "閉じる",
+    "apply-once": "一度だけ適用",
+    "add-shortcut": "追加",
+    "enable": "有効化",
+    "disable": "無効化",
+    "edit": "編集",
+    "delete": "削除",
+    "capture": "キャプチャ",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "use": "使用",
+    "apply": "適用",
+    "undo": "元に戻す",
+    "docs": "このセクションの niri ドキュメントを開く",
+    "open-editor": "エディターで開く",
+    "edit-file": "ファイルを編集",
+    "open-folder": "フォルダーを開く"
+  },
+  "status": {
+    "saving": "{what} を保存中…",
+    "saved": "{what} を保存しました — niri を再読み込みしました。",
+    "saved-file": "{what} を保存しました。",
+    "save-failed": "niri validate により拒否されました — バックアップから復元しました。",
+    "staged": "{what} をステージしました — Apply を押して書き込んでください。",
+    "applying": "{n} 件の変更を適用中…",
+    "applied": "適用しました — niri を再読み込みしました。",
+    "apply-failed": "niri validate により拒否されました — バックアップから復元しました。修正して再適用してください。",
+    "undone": "以前の設定に戻しました。",
+    "write-failed": "書き込みに失敗しました: {what}。"
+  },
+  "preview": {
+    "title": "プレビュー — 書き込まれません",
+    "subtitle": "{path} の新しい全内容です。設定で Apply モードに切り替えると書き込まれます。"
+  },
+  "shortcuts": {
+    "count": "{n} 個のショートカット",
+    "file": "{p} 内のバインド",
+    "none": "設定に binds {} ブロックが見つかりません。",
+    "search": "ショートカットを絞り込む…"
+  },
+  "summary": {
+    "add": "新しいショートカット {c}",
+    "edit": "ショートカット {c}",
+    "delete": "{c} を削除",
+    "enable": "{c} を有効化",
+    "disable": "{c} を無効化"
+  },
+  "raw": {
+    "header": "読み取り専用ビュー",
+    "note": "このセクション専用のエディターは近日公開予定です。現在はそのまま表示のみで変更はできません。",
+    "empty": "このセクションの設定が見つかりません。"
+  },
+  "bindeditor": {
+    "add": "ショートカットを追加",
+    "edit": "ショートカットを編集",
+    "combo": "キーの組み合わせ",
+    "combo-ph": "例: Mod+Shift+T",
+    "recording": "キーを押してください…",
+    "special": "特殊キー",
+    "conflict": "⚠ すでにバインド済み: {desc}",
+    "action": "アクション",
+    "no-action": "（アクションを選択）",
+    "choose-action": "選択",
+    "command-ph": "実行するコマンド",
+    "pick-app": "アプリを選択",
+    "arg-ws": "ワークスペースの番号または名前",
+    "arg": "引数",
+    "title-attr": "オーバーレイタイトル（任意）",
+    "title-ph": "ホットキーオーバーレイに表示",
+    "repeat-off": "キーリピートを無効化",
+    "allow-locked": "画面ロック中も許可"
+  },
+  "actionpicker": {
+    "title": "アクションを選択",
+    "search": "アクションを検索…"
+  },
+  "apppicker": {
+    "title": "アプリケーションを選択",
+    "search": "アプリを検索…",
+    "loading": "アプリを読み込み中…",
+    "raw": "…またはコマンドを入力"
+  },
+  "monitors": {
+    "count": "{n} 台のモニターを検出",
+    "hint": "プレビューはライブ適用され、再読み込みで元に戻ります。保存すると出力を定義するファイル（または cfg/display.kdl）に書き込まれます。",
+    "error": "niri の出力情報を取得できませんでした。",
+    "mode": "解像度とリフレッシュレート",
+    "scale": "スケール",
+    "transform": "変換",
+    "posx": "位置 X",
+    "posy": "位置 Y",
+    "vrr": "可変リフレッシュレート（VRR）",
+    "preview": "ライブプレビュー",
+    "summary": "モニター {n}",
+    "count2": "{n} 台のモニター",
+    "hint2": "プレビューはライブ適用（再読み込みで元に戻り）。保存は出力ブロックに書き込まれます。追加で未接続モニターを別のセットアップ用に設定できます。",
+    "add": "設定を追加",
+    "remove": "設定を削除",
+    "remove-summary": "モニター設定を削除",
+    "add-summary": "モニター {n} を追加",
+    "disconnected": "未接続",
+    "add-title": "モニター設定を追加",
+    "add-hint": "正確なコネクター名またはモデル名を使用してください（`niri msg outputs` を実行）。",
+    "connected": "接続済み",
+    "profiles": "プロファイル（Monique）",
+    "profiles-hint": "モニターは Monique で管理されています — プロファイルを選択して適用するか、「新規 / 編集」でプロファイルを作成・更新してください。",
+    "open-monique": "新規 / 編集",
+    "no-profiles": "プロファイルがありません — 「新規 / 編集」で Monique にプロファイルを作成してください。",
+    "none": "モニターがありません。"
+  },
+  "anim": {
+    "none": "animations {} ブロックが見つかりません。",
+    "global": "グローバル",
+    "off": "すべてのアニメーションを無効化",
+    "slowdown": "スローダウン（1.0 = 標準）",
+    "enabled": "有効",
+    "duration": "時間（ms）",
+    "curve": "カーブ",
+    "spring-hint": "スプリング調整 — ファイルでダンピング/スティフネスを編集してください（ヘッダーの ✎ ボタン）。",
+    "summary-global": "アニメーション設定",
+    "summary-event": "{n} アニメーション"
+  },
+  "rules": {
+    "count": "{n} 件のウィンドウルール",
+    "add": "ルールを追加",
+    "hint": "ライブウィンドウをキャプチャしてルールを追加 — app-id/タイトルが自動入力されます。",
+    "none": "ウィンドウルールがまだありません。",
+    "summary-add": "新しいウィンドウルール",
+    "summary-edit": "ウィンドウルール",
+    "summary-del": "ルールを削除",
+    "summary-en": "ルールを有効化",
+    "summary-dis": "ルールを無効化"
+  },
+  "ruleeditor": {
+    "add": "ウィンドウルールを追加",
+    "edit": "ウィンドウルールを編集",
+    "match": "ウィンドウを一致させる",
+    "capture": "ウィンドウをキャプチャ",
+    "appid": "app-id（正規表現）",
+    "title": "タイトル（正規表現、任意）",
+    "props": "ウィンドウを開いたとき",
+    "floating": "フローティングで開く",
+    "maximized": "最大化して開く",
+    "fullscreen": "フルスクリーンで開く",
+    "workspace": "ワークスペース",
+    "output": "出力",
+    "colwidth": "カラム幅（0〜1）",
+    "winheight": "ウィンドウ高さ（0〜1）"
+  },
+  "windowpicker": {
+    "title": "開いているウィンドウを選択",
+    "hint": "app-id とタイトルがマッチフィールドに自動入力されます。",
+    "search": "ウィンドウを絞り込む…",
+    "none": "niri から開いているウィンドウが報告されていません。"
+  },
+  "ws": {
+    "count": "{n} 個の名前付きワークスペース",
+    "add": "追加",
+    "hint": "名前付きワークスペースは順番に作成されます。niri は最初のワークスペースで起動します。",
+    "none": "名前付きワークスペースが宣言されていません。",
+    "new": "新しいワークスペース",
+    "rename": "ワークスペースの名前を変更",
+    "name-ph": "ワークスペース名",
+    "summary-add": "ワークスペース {n}",
+    "summary-rename": "ワークスペースの名前を変更",
+    "summary-del": "{n} を削除"
+  },
+  "autostart": {
+    "count": "{n} 件の起動エントリー",
+    "add": "追加",
+    "hint": "niri が起動時に実行するプログラムです。アプリを選択するかコマンドを入力してください。",
+    "none": "起動エントリーがありません。",
+    "newt": "新しい起動エントリー",
+    "editt": "起動エントリーを編集",
+    "cmd-ph": "実行するコマンド",
+    "summary-add": "自動起動エントリー",
+    "summary-edit": "自動起動エントリー",
+    "summary-del": "エントリーを削除",
+    "summary-en": "エントリーを有効化",
+    "summary-dis": "エントリーを無効化"
+  },
+  "scripts": {
+    "count": "{n} 個のスクリプト",
+    "new": "新しいスクリプト",
+    "create": "新しいスクリプト",
+    "edit": "スクリプトを編集",
+    "hint": "~/.config/niri/scripts/ に保存され、実行可能になります。ショートカットから spawn コマンドとして参照できます。",
+    "none": "スクリプトがまだありません。",
+    "name": "名前",
+    "template": "テンプレート",
+    "appid": "app-id",
+    "command": "起動コマンド",
+    "body": "スクリプト",
+    "summary": "スクリプト {n}",
+    "summary-del": "{n} を削除"
+  },
+  "input": {
+    "save": "変更を保存",
+    "none": "input {} ブロックが見つかりません。",
+    "summary": "入力設定",
+    "keyboard": "キーボード",
+    "layout": "レイアウト",
+    "variant": "バリアント",
+    "options": "XKB オプション",
+    "repeat-delay": "リピート遅延（ms）",
+    "repeat-rate": "リピートレート",
+    "numlock": "起動時に NumLock を有効化",
+    "touchpad": "タッチパッド",
+    "tap": "タップでクリック",
+    "natural": "ナチュラルスクロール",
+    "dwt": "入力中は無効化",
+    "accel": "加速度（-1.0 … 1.0）",
+    "mouse": "マウス",
+    "left-handed": "左利き",
+    "middle-emu": "中クリックエミュレーション",
+    "general": "一般",
+    "ffm": "フォーカス フォローズ マウス",
+    "ws-baf": "ワークスペースの往復移動"
+  },
+  "layout": {
+    "summary": "レイアウト設定",
+    "none": "layout {} ブロックが見つかりません。",
+    "gaps": "ギャップ（px）",
+    "center": "フォーカスカラムを中央に",
+    "bg": "背景色",
+    "focus-ring": "フォーカスリングの幅",
+    "border": "ボーダーの幅"
+  },
+  "error": {
+    "no-niri": "niri が PATH 上に見つかりません"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "アイコンの色",
+      "desc": "バーウィジェットのアイコンの色。"
+    },
+    "controlCenter": {
+      "label": "コントロールセンターに表示",
+      "desc": "コントロールセンターにショートカットを表示します。"
+    },
+    "writeMode": {
+      "label": "書き込みモード",
+      "desc": "プラグインが編集を適用する方法。プレビューはディスクに書き込みません。",
+      "preview": "プレビューのみ（書き込まない — 最も安全）",
+      "apply": "その場に適用（.bak + niri validate ゲート）"
+    },
+    "editor": {
+      "label": "外部エディターコマンド",
+      "desc": "「エディターで開く」ボタン（スクリプト、その他）で使用されます。例: 'ghostty -e nvim'。空の場合は $VISUAL/$EDITOR または xdg-open を使用。"
+    }
+  }
+}

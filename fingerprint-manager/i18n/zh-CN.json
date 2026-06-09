@@ -1,0 +1,75 @@
+{
+  "title": "指纹管理器",
+  "subtitle": {
+    "summary": "{user} · 已录入 {count}/{max}"
+  },
+  "bar": {
+    "tooltip": "指纹管理器"
+  },
+  "contextMenu": {
+    "widget-settings": "小部件设置"
+  },
+  "empty": "尚未录入任何指纹。",
+  "action": {
+    "refresh": "刷新",
+    "enroll": "录入指纹",
+    "test": "测试匹配",
+    "delete": "删除",
+    "delete-all": "全部删除",
+    "cancel": "取消"
+  },
+  "picker": {
+    "title": "选择要录入的手指"
+  },
+  "confirm": {
+    "delete-all": "删除所有已录入的指纹？",
+    "delete-finger": "删除 {finger} 的指纹？"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "图标颜色",
+      "desc": "栏部件中指纹图标的颜色。"
+    },
+    "controlCenter": {
+      "label": "在控制中心显示",
+      "desc": "在控制中心显示指纹快捷方式。"
+    }
+  },
+  "enroll": {
+    "title": "正在录入 {finger}",
+    "hint": {
+      "touch": "将手指放在传感器上。",
+      "again": "很好 — 抬起手指后再次放上。",
+      "retry": "调整位置后重试。"
+    }
+  },
+  "status": {
+    "enrolled": "录入成功。",
+    "enroll-failed": "录入已取消或失败。",
+    "deleting": "正在删除 {finger}…",
+    "deleting-all": "正在删除所有指纹…",
+    "deleted": "指纹已删除。",
+    "deleted-all": "所有指纹已删除。",
+    "delete-failed": "删除失败。",
+    "verify-start": "将手指放在传感器上…",
+    "verify-retry": "请重试 — 保持手指不动。",
+    "match": "匹配成功 — 指纹已识别。",
+    "no-match": "不匹配。"
+  },
+  "error": {
+    "no-device": "未找到指纹设备。fprintd 是否正在运行？",
+    "no-fprintd": "未安装 fprintd。请参阅插件 README 进行配置。"
+  },
+  "finger": {
+    "left-thumb": "左拇指",
+    "left-index-finger": "左食指",
+    "left-middle-finger": "左中指",
+    "left-ring-finger": "左无名指",
+    "left-little-finger": "左小指",
+    "right-thumb": "右拇指",
+    "right-index-finger": "右食指",
+    "right-middle-finger": "右中指",
+    "right-ring-finger": "右无名指",
+    "right-little-finger": "右小指"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "title": "Vingerafdrukbeheer",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} geregistreerd"
+  },
+  "bar": {
+    "tooltip": "Vingerafdrukbeheer"
+  },
+  "contextMenu": {
+    "widget-settings": "Widgetinstellingen"
+  },
+  "empty": "Nog geen vingerafdrukken geregistreerd.",
+  "action": {
+    "refresh": "Vernieuwen",
+    "enroll": "Vinger registreren",
+    "test": "Testen",
+    "delete": "Verwijderen",
+    "delete-all": "Alles verwijderen",
+    "cancel": "Annuleren"
+  },
+  "picker": {
+    "title": "Kies een vinger om te registreren"
+  },
+  "confirm": {
+    "delete-all": "ALLE geregistreerde vingerafdrukken verwijderen?",
+    "delete-finger": "Vingerafdruk van {finger} verwijderen?"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Icoontkleur",
+      "desc": "Kleur van het vingerafdrukicoon in de balk."
+    },
+    "controlCenter": {
+      "label": "Tonen in controlecentrum",
+      "desc": "Snelkoppeling voor vingerafdrukken in het controlecentrum weergeven."
+    }
+  },
+  "enroll": {
+    "title": "{finger} registreren",
+    "hint": {
+      "touch": "Leg uw vinger op de sensor.",
+      "again": "Goed — til op en leg opnieuw.",
+      "retry": "Pas de positie aan en probeer opnieuw."
+    }
+  },
+  "status": {
+    "enrolled": "Registratie geslaagd.",
+    "enroll-failed": "Registratie geannuleerd of mislukt.",
+    "deleting": "{finger} verwijderen…",
+    "deleting-all": "Alle vingerafdrukken verwijderen…",
+    "deleted": "Vingerafdruk verwijderd.",
+    "deleted-all": "Alle vingerafdrukken verwijderd.",
+    "delete-failed": "Verwijderen mislukt.",
+    "verify-start": "Leg vinger op de sensor…",
+    "verify-retry": "Probeer opnieuw — houd vinger stil.",
+    "match": "Overeenkomst — vingerafdruk herkend.",
+    "no-match": "Geen overeenkomst."
+  },
+  "error": {
+    "no-device": "Geen vingerafdruklezer gevonden. Wordt fprintd uitgevoerd?",
+    "no-fprintd": "fprintd is niet geïnstalleerd. Zie de plugin-README voor installatie."
+  },
+  "finger": {
+    "left-thumb": "Linker duim",
+    "left-index-finger": "Linker wijsvinger",
+    "left-middle-finger": "Linker middelvinger",
+    "left-ring-finger": "Linker ringvinger",
+    "left-little-finger": "Linker pink",
+    "right-thumb": "Rechter duim",
+    "right-index-finger": "Rechter wijsvinger",
+    "right-middle-finger": "Rechter middelvinger",
+    "right-ring-finger": "Rechter ringvinger",
+    "right-little-finger": "Rechter pink"
+  }
+}

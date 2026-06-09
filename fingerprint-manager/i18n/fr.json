@@ -1,0 +1,75 @@
+{
+  "title": "Gestionnaire d'empreintes",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} enregistrées"
+  },
+  "bar": {
+    "tooltip": "Gestionnaire d'empreintes"
+  },
+  "contextMenu": {
+    "widget-settings": "Paramètres du widget"
+  },
+  "empty": "Aucune empreinte enregistrée.",
+  "action": {
+    "refresh": "Actualiser",
+    "enroll": "Enregistrer un doigt",
+    "test": "Tester",
+    "delete": "Supprimer",
+    "delete-all": "Tout supprimer",
+    "cancel": "Annuler"
+  },
+  "picker": {
+    "title": "Choisir un doigt à enregistrer"
+  },
+  "confirm": {
+    "delete-all": "Supprimer TOUTES les empreintes enregistrées ?",
+    "delete-finger": "Supprimer l'empreinte pour {finger} ?"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Couleur de l'icône",
+      "desc": "Couleur de l'icône d'empreinte dans la barre."
+    },
+    "controlCenter": {
+      "label": "Afficher dans le centre de contrôle",
+      "desc": "Afficher un raccourci d'empreinte dans le centre de contrôle."
+    }
+  },
+  "enroll": {
+    "title": "Enregistrement de {finger}",
+    "hint": {
+      "touch": "Posez le doigt sur le capteur.",
+      "again": "Bien — soulevez et reposez le doigt.",
+      "retry": "Ajustez la position et réessayez."
+    }
+  },
+  "status": {
+    "enrolled": "Enregistrement réussi.",
+    "enroll-failed": "Enregistrement annulé ou échoué.",
+    "deleting": "Suppression de {finger}…",
+    "deleting-all": "Suppression de toutes les empreintes…",
+    "deleted": "Empreinte supprimée.",
+    "deleted-all": "Toutes les empreintes supprimées.",
+    "delete-failed": "Échec de la suppression.",
+    "verify-start": "Posez le doigt sur le capteur…",
+    "verify-retry": "Réessayez — gardez le doigt stable.",
+    "match": "Correspondance — empreinte reconnue.",
+    "no-match": "Aucune correspondance."
+  },
+  "error": {
+    "no-device": "Aucun lecteur d'empreintes trouvé. fprintd est-il en cours d'exécution ?",
+    "no-fprintd": "fprintd n'est pas installé. Consultez le README du plugin pour la configuration."
+  },
+  "finger": {
+    "left-thumb": "Pouce gauche",
+    "left-index-finger": "Index gauche",
+    "left-middle-finger": "Majeur gauche",
+    "left-ring-finger": "Annulaire gauche",
+    "left-little-finger": "Auriculaire gauche",
+    "right-thumb": "Pouce droit",
+    "right-index-finger": "Index droit",
+    "right-middle-finger": "Majeur droit",
+    "right-ring-finger": "Annulaire droit",
+    "right-little-finger": "Auriculaire droit"
+  }
+}

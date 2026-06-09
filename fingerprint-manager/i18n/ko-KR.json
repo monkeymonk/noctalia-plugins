@@ -1,0 +1,75 @@
+{
+  "title": "지문 관리자",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} 등록됨"
+  },
+  "bar": {
+    "tooltip": "지문 관리자"
+  },
+  "contextMenu": {
+    "widget-settings": "위젯 설정"
+  },
+  "empty": "등록된 지문이 없습니다.",
+  "action": {
+    "refresh": "새로 고침",
+    "enroll": "지문 등록",
+    "test": "일치 테스트",
+    "delete": "삭제",
+    "delete-all": "모두 삭제",
+    "cancel": "취소"
+  },
+  "picker": {
+    "title": "등록할 손가락을 선택하세요"
+  },
+  "confirm": {
+    "delete-all": "등록된 지문을 모두 삭제하시겠습니까?",
+    "delete-finger": "{finger}의 지문을 삭제하시겠습니까?"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "아이콘 색상",
+      "desc": "바 위젯의 지문 아이콘 색상입니다."
+    },
+    "controlCenter": {
+      "label": "컨트롤 센터에 표시",
+      "desc": "컨트롤 센터에 지문 바로가기를 표시합니다."
+    }
+  },
+  "enroll": {
+    "title": "{finger} 등록 중",
+    "hint": {
+      "touch": "센서에 손가락을 올려놓으세요.",
+      "again": "좋습니다 — 손가락을 떼고 다시 올려놓으세요.",
+      "retry": "위치를 조정하고 다시 시도하세요."
+    }
+  },
+  "status": {
+    "enrolled": "등록이 완료되었습니다.",
+    "enroll-failed": "등록이 취소되거나 실패했습니다.",
+    "deleting": "{finger} 삭제 중…",
+    "deleting-all": "모든 지문 삭제 중…",
+    "deleted": "지문이 삭제되었습니다.",
+    "deleted-all": "모든 지문이 삭제되었습니다.",
+    "delete-failed": "삭제에 실패했습니다.",
+    "verify-start": "센서에 손가락을 올려놓으세요…",
+    "verify-retry": "다시 시도하세요 — 손가락을 고정하세요.",
+    "match": "일치 — 지문이 인식되었습니다.",
+    "no-match": "일치하지 않습니다."
+  },
+  "error": {
+    "no-device": "지문 장치를 찾을 수 없습니다. fprintd가 실행 중인가요?",
+    "no-fprintd": "fprintd가 설치되어 있지 않습니다. 설정 방법은 플러그인 README를 참조하세요."
+  },
+  "finger": {
+    "left-thumb": "왼쪽 엄지",
+    "left-index-finger": "왼쪽 검지",
+    "left-middle-finger": "왼쪽 중지",
+    "left-ring-finger": "왼쪽 약지",
+    "left-little-finger": "왼쪽 새끼",
+    "right-thumb": "오른쪽 엄지",
+    "right-index-finger": "오른쪽 검지",
+    "right-middle-finger": "오른쪽 중지",
+    "right-ring-finger": "오른쪽 약지",
+    "right-little-finger": "오른쪽 새끼"
+  }
+}

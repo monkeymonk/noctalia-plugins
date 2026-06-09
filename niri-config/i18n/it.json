@@ -1,0 +1,280 @@
+{
+  "title": "Niri Config",
+  "subtitle": {
+    "preview": "Modalità anteprima · le modifiche sono visualizzate, mai scritte",
+    "apply": "Modalità applica · i salvataggi sono validati e copiati come backup",
+    "pending": "{n} modifica/e non salvata/e — premi Applica",
+    "clean": "Tutte le modifiche applicate · validate e copiate come backup"
+  },
+  "bar": {
+    "tooltip": "Niri Config"
+  },
+  "contextMenu": {
+    "widget-settings": "Impostazioni widget"
+  },
+  "section": {
+    "shortcuts": "Scorciatoie",
+    "monitors": "Monitor",
+    "input": "Input",
+    "workspaces": "Spazi di lavoro",
+    "rules": "Regole finestre",
+    "layout": "Layout",
+    "animation": "Animazione",
+    "autostart": "Avvio automatico",
+    "scripts": "Script",
+    "misc": "Altro"
+  },
+  "action": {
+    "reload": "Ricarica configurazione",
+    "close": "Chiudi",
+    "apply-once": "Applica una volta",
+    "add-shortcut": "Aggiungi",
+    "enable": "Abilita",
+    "disable": "Disabilita",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "capture": "Acquisisci",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "use": "Usa",
+    "apply": "Applica",
+    "undo": "Annulla modifica",
+    "docs": "Apri la documentazione niri per questa sezione",
+    "open-editor": "Apri nell'editor",
+    "edit-file": "Modifica file",
+    "open-folder": "Apri cartella"
+  },
+  "status": {
+    "saving": "Salvataggio di {what}…",
+    "saved": "Salvato {what} — niri ricaricato.",
+    "saved-file": "Salvato {what}.",
+    "save-failed": "Salvataggio rifiutato da niri validate — ripristinato dal backup.",
+    "staged": "{what} in coda — premi Applica per scrivere.",
+    "applying": "Applicazione di {n} modifica/e…",
+    "applied": "Applicato — niri ricaricato.",
+    "apply-failed": "Rifiutato da niri validate — ripristinato dal backup. Correggi e riapplica.",
+    "undone": "Ripristinata la configurazione precedente.",
+    "write-failed": "Scrittura fallita: {what}."
+  },
+  "preview": {
+    "title": "Anteprima — niente viene scritto",
+    "subtitle": "Questo è il nuovo contenuto completo di {path}. Passa alla modalità Applica nelle impostazioni per scriverlo."
+  },
+  "shortcuts": {
+    "count": "{n} scorciatoie",
+    "file": "bind in {p}",
+    "none": "Nessun blocco binds {} trovato nella configurazione.",
+    "search": "Filtra scorciatoie…"
+  },
+  "summary": {
+    "add": "nuova scorciatoia {c}",
+    "edit": "scorciatoia {c}",
+    "delete": "elimina {c}",
+    "enable": "abilita {c}",
+    "disable": "disabilita {c}"
+  },
+  "raw": {
+    "header": "Vista sola lettura",
+    "note": "Un editor dedicato per questa sezione è in arrivo. Per ora è mostrata verbatim e mai modificata.",
+    "empty": "Nessuna configurazione trovata per questa sezione."
+  },
+  "bindeditor": {
+    "add": "Aggiungi scorciatoia",
+    "edit": "Modifica scorciatoia",
+    "combo": "Combinazione di tasti",
+    "combo-ph": "es. Mod+Shift+T",
+    "recording": "Premi i tasti…",
+    "special": "Tasto speciale",
+    "conflict": "⚠ Già assegnato: {desc}",
+    "action": "Azione",
+    "no-action": "(scegli un'azione)",
+    "choose-action": "Scegli",
+    "command-ph": "comando da eseguire",
+    "pick-app": "Scegli app",
+    "arg-ws": "numero o nome dello spazio di lavoro",
+    "arg": "argomento",
+    "title-attr": "Titolo overlay (opzionale)",
+    "title-ph": "mostrato nell'overlay dei tasti",
+    "repeat-off": "Disabilita ripetizione tasto",
+    "allow-locked": "Consenti a schermo bloccato"
+  },
+  "actionpicker": {
+    "title": "Scegli un'azione",
+    "search": "Cerca azioni…"
+  },
+  "apppicker": {
+    "title": "Scegli un'applicazione",
+    "search": "Cerca app…",
+    "loading": "Caricamento app…",
+    "raw": "…o digita un comando"
+  },
+  "monitors": {
+    "count": "{n} monitor rilevati",
+    "hint": "L'anteprima si applica in tempo reale e si ripristina al ricaricamento. Salva scrive nel file che definisce l'output (o cfg/display.kdl).",
+    "error": "Impossibile interrogare gli output di niri.",
+    "mode": "Risoluzione e frequenza",
+    "scale": "Scala",
+    "transform": "Trasformazione",
+    "posx": "Posizione X",
+    "posy": "Posizione Y",
+    "vrr": "Frequenza di aggiornamento variabile (VRR)",
+    "preview": "Anteprima live",
+    "summary": "monitor {n}",
+    "count2": "{n} monitor",
+    "hint2": "L'anteprima si applica in tempo reale (ripristinata al ricaricamento). Salva scrive il blocco output; Aggiungi permette di configurare un monitor non connesso per un altro setup.",
+    "add": "Aggiungi configurazione",
+    "remove": "Rimuovi configurazione",
+    "remove-summary": "rimuovi configurazione monitor",
+    "add-summary": "aggiungi monitor {n}",
+    "disconnected": "non connesso",
+    "add-title": "Aggiungi configurazione monitor",
+    "add-hint": "Usa il nome esatto del connettore o del modello (esegui `niri msg outputs`).",
+    "connected": "connesso",
+    "profiles": "Profili (Monique)",
+    "profiles-hint": "I monitor sono gestiti da Monique — scegli un profilo per applicarlo, o usa “Nuovo / modifica” per creare/aggiornare i profili.",
+    "open-monique": "Nuovo / modifica",
+    "no-profiles": "Nessun profilo ancora — usa “Nuovo / modifica” per crearne uno in Monique.",
+    "none": "Nessun monitor."
+  },
+  "anim": {
+    "none": "Nessun blocco animations {} trovato.",
+    "global": "Globale",
+    "off": "Disabilita tutte le animazioni",
+    "slowdown": "Rallentamento (1.0 = normale)",
+    "enabled": "Abilitato",
+    "duration": "Durata (ms)",
+    "curve": "Curva",
+    "spring-hint": "Regolazione molla — modifica smorzamento/rigidità nel file (pulsante ✎ nell'intestazione).",
+    "summary-global": "impostazioni animazioni",
+    "summary-event": "animazione {n}"
+  },
+  "rules": {
+    "count": "{n} regole finestre",
+    "add": "Aggiungi regola",
+    "hint": "Aggiungi una regola acquisendo una finestra aperta — app-id/titolo pre-compilano la corrispondenza.",
+    "none": "Nessuna regola finestra ancora.",
+    "summary-add": "nuova regola finestra",
+    "summary-edit": "regola finestra",
+    "summary-del": "elimina regola",
+    "summary-en": "abilita regola",
+    "summary-dis": "disabilita regola"
+  },
+  "ruleeditor": {
+    "add": "Aggiungi regola finestra",
+    "edit": "Modifica regola finestra",
+    "match": "Abbina una finestra",
+    "capture": "Acquisisci finestra",
+    "appid": "app-id (regex)",
+    "title": "titolo (regex, opzionale)",
+    "props": "All'apertura",
+    "floating": "Apri come mobile",
+    "maximized": "Apri massimizzata",
+    "fullscreen": "Apri a schermo intero",
+    "workspace": "In spazio di lavoro",
+    "output": "Su output",
+    "colwidth": "Larghezza colonna (0–1)",
+    "winheight": "Altezza finestra (0–1)"
+  },
+  "windowpicker": {
+    "title": "Scegli una finestra aperta",
+    "hint": "Il suo app-id e titolo pre-compileranno la corrispondenza.",
+    "search": "Filtra finestre…",
+    "none": "Nessuna finestra aperta riportata da niri."
+  },
+  "ws": {
+    "count": "{n} spazi di lavoro con nome",
+    "add": "Aggiungi",
+    "hint": "Gli spazi di lavoro con nome sono creati in ordine; niri si avvia sul primo.",
+    "none": "Nessuno spazio di lavoro con nome dichiarato.",
+    "new": "Nuovo spazio di lavoro",
+    "rename": "Rinomina spazio di lavoro",
+    "name-ph": "nome spazio di lavoro",
+    "summary-add": "spazio di lavoro {n}",
+    "summary-rename": "rinomina spazio di lavoro",
+    "summary-del": "elimina {n}"
+  },
+  "autostart": {
+    "count": "{n} voci di avvio",
+    "add": "Aggiungi",
+    "hint": "Programmi avviati da niri all'avvio. Scegli un'app o digita un comando.",
+    "none": "Nessuna voce di avvio.",
+    "newt": "Nuova voce di avvio",
+    "editt": "Modifica voce di avvio",
+    "cmd-ph": "comando da eseguire",
+    "summary-add": "voce di avvio automatico",
+    "summary-edit": "voce di avvio automatico",
+    "summary-del": "elimina voce",
+    "summary-en": "abilita voce",
+    "summary-dis": "disabilita voce"
+  },
+  "scripts": {
+    "count": "{n} script",
+    "new": "Nuovo script",
+    "create": "Nuovo script",
+    "edit": "Modifica script",
+    "hint": "Salvati in ~/.config/niri/scripts/ e resi eseguibili. Riferiscili da una scorciatoia come comando spawn.",
+    "none": "Nessuno script ancora.",
+    "name": "Nome",
+    "template": "Modello",
+    "appid": "app-id",
+    "command": "comando di avvio",
+    "body": "Script",
+    "summary": "script {n}",
+    "summary-del": "elimina {n}"
+  },
+  "input": {
+    "save": "Salva modifiche",
+    "none": "Nessun blocco input {} trovato.",
+    "summary": "impostazioni input",
+    "keyboard": "Tastiera",
+    "layout": "Layout",
+    "variant": "Variante",
+    "options": "Opzioni XKB",
+    "repeat-delay": "Ritardo ripetizione (ms)",
+    "repeat-rate": "Velocità ripetizione",
+    "numlock": "Abilita numlock all'avvio",
+    "touchpad": "Touchpad",
+    "tap": "Tocca per cliccare",
+    "natural": "Scorrimento naturale",
+    "dwt": "Disabilita durante la digitazione",
+    "accel": "Accelerazione (-1.0 … 1.0)",
+    "mouse": "Mouse",
+    "left-handed": "Mancino",
+    "middle-emu": "Emulazione tasto centrale",
+    "general": "Generale",
+    "ffm": "Il focus segue il mouse",
+    "ws-baf": "Spazio di lavoro avanti e indietro"
+  },
+  "layout": {
+    "summary": "impostazioni layout",
+    "none": "Nessun blocco layout {} trovato.",
+    "gaps": "Margini (px)",
+    "center": "Centra colonna focalizzata",
+    "bg": "Colore sfondo",
+    "focus-ring": "Larghezza anello di focus",
+    "border": "Larghezza bordo"
+  },
+  "error": {
+    "no-niri": "niri non trovato nel PATH"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Colore icona",
+      "desc": "Colore dell'icona nel widget della barra."
+    },
+    "controlCenter": {
+      "label": "Mostra nel centro di controllo",
+      "desc": "Visualizza un collegamento nel centro di controllo."
+    },
+    "writeMode": {
+      "label": "Modalità di scrittura",
+      "desc": "Come il plugin applica le modifiche. Anteprima non scrive mai su disco.",
+      "preview": "Solo anteprima (non scrive mai — più sicuro)",
+      "apply": "Applica in loco (.bak + niri validate gate)"
+    },
+    "editor": {
+      "label": "Comando editor esterno",
+      "desc": "Usato dai pulsanti 'Apri nell'editor' (Script, Altro). Es. 'ghostty -e nvim'. Vuoto = $VISUAL/$EDITOR o xdg-open."
+    }
+  }
+}

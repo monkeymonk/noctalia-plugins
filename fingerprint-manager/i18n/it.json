@@ -1,0 +1,75 @@
+{
+  "title": "Gestore impronte",
+  "subtitle": {
+    "summary": "{user} · {count}/{max} registrate"
+  },
+  "bar": {
+    "tooltip": "Gestore impronte"
+  },
+  "contextMenu": {
+    "widget-settings": "Impostazioni widget"
+  },
+  "empty": "Nessuna impronta ancora registrata.",
+  "action": {
+    "refresh": "Aggiorna",
+    "enroll": "Registra dito",
+    "test": "Verifica corrispondenza",
+    "delete": "Elimina",
+    "delete-all": "Elimina tutte",
+    "cancel": "Annulla"
+  },
+  "picker": {
+    "title": "Scegli un dito da registrare"
+  },
+  "confirm": {
+    "delete-all": "Eliminare TUTTE le impronte registrate?",
+    "delete-finger": "Eliminare l'impronta per {finger}?"
+  },
+  "settings": {
+    "iconColor": {
+      "label": "Colore icona",
+      "desc": "Colore dell'icona impronta nel widget della barra."
+    },
+    "controlCenter": {
+      "label": "Mostra nel centro di controllo",
+      "desc": "Visualizza un collegamento impronta nel centro di controllo."
+    }
+  },
+  "enroll": {
+    "title": "Registrazione di {finger}",
+    "hint": {
+      "touch": "Posiziona il dito sul sensore.",
+      "again": "Ottimo — solleva e appoggia di nuovo.",
+      "retry": "Aggiusta la posizione e riprova."
+    }
+  },
+  "status": {
+    "enrolled": "Registrazione completata.",
+    "enroll-failed": "Registrazione annullata o fallita.",
+    "deleting": "Eliminazione di {finger}…",
+    "deleting-all": "Eliminazione di tutte le impronte…",
+    "deleted": "Impronta eliminata.",
+    "deleted-all": "Tutte le impronte eliminate.",
+    "delete-failed": "Eliminazione fallita.",
+    "verify-start": "Appoggia il dito sul sensore…",
+    "verify-retry": "Riprova — tieni il dito fermo.",
+    "match": "Corrispondenza — impronta riconosciuta.",
+    "no-match": "Nessuna corrispondenza."
+  },
+  "error": {
+    "no-device": "Nessun dispositivo impronta trovato. fprintd è in esecuzione?",
+    "no-fprintd": "fprintd non è installato. Consulta il README del plugin per la configurazione."
+  },
+  "finger": {
+    "left-thumb": "Pollice sinistro",
+    "left-index-finger": "Indice sinistro",
+    "left-middle-finger": "Medio sinistro",
+    "left-ring-finger": "Anulare sinistro",
+    "left-little-finger": "Mignolo sinistro",
+    "right-thumb": "Pollice destro",
+    "right-index-finger": "Indice destro",
+    "right-middle-finger": "Medio destro",
+    "right-ring-finger": "Anulare destro",
+    "right-little-finger": "Mignolo destro"
+  }
+}
