@@ -1,8 +1,6 @@
 {
   "title": "Niri 設定",
   "subtitle": {
-    "preview": "預覽模式 · 僅顯示變更，不寫入檔案",
-    "apply": "套用模式 · 儲存前驗證並備份",
     "pending": "{n} 項未儲存的變更 — 請按套用",
     "clean": "所有變更已套用 · 已驗證並備份"
   },
@@ -25,9 +23,7 @@
     "misc": "其他"
   },
   "action": {
-    "reload": "重新載入設定",
-    "close": "關閉",
-    "apply-once": "套用一次",
+    "reload": "重新載入 / 捨棄暫存變更",
     "add-shortcut": "新增",
     "enable": "啟用",
     "disable": "停用",
@@ -45,24 +41,25 @@
     "open-folder": "開啟資料夾"
   },
   "status": {
-    "saving": "正在儲存 {what}…",
-    "saved": "已儲存 {what} — niri 已重新載入。",
     "saved-file": "已儲存 {what}。",
-    "save-failed": "niri validate 拒絕儲存 — 已從備份還原。",
     "staged": "{what} 已暫存 — 請按套用以寫入。",
     "applying": "正在套用 {n} 項變更…",
     "applied": "已套用 — niri 已重新載入。",
     "apply-failed": "niri validate 拒絕 — 已從備份還原。請修正後重新套用。",
     "undone": "已還原至先前的設定。",
+    "undo-empty": "沒有可還原的內容 — 找不到備份。",
+    "undo-failed": "還原失敗：{what}",
+    "undo-no-output": "還原腳本沒有輸出",
+    "reloaded": "已從磁碟重新載入 — {why}。",
+    "reload-blocked": "已略過重新載入 — {n} 項暫存變更將會遺失。請先套用。",
     "write-failed": "寫入失敗：{what}。"
   },
-  "preview": {
-    "title": "預覽 — 未寫入任何內容",
-    "subtitle": "這是 {path} 的完整新內容。請在設定中切換至套用模式以寫入。"
+  "reason": {
+    "refresh": "手動重新整理",
+    "profile-switch": "切換顯示器設定檔"
   },
   "shortcuts": {
     "count": "{n} 個快捷鍵",
-    "file": "繫結於 {p}",
     "none": "在設定中找不到 binds {} 區塊。",
     "search": "篩選快捷鍵…"
   },
@@ -72,11 +69,6 @@
     "delete": "刪除 {c}",
     "enable": "啟用 {c}",
     "disable": "停用 {c}"
-  },
-  "raw": {
-    "header": "唯讀檢視",
-    "note": "此區段的專用編輯器即將推出。目前以原始內容顯示，不會進行修改。",
-    "empty": "找不到此區段的設定。"
   },
   "bindeditor": {
     "add": "新增快捷鍵",
@@ -109,8 +101,6 @@
     "raw": "…或輸入指令"
   },
   "monitors": {
-    "count": "偵測到 {n} 台顯示器",
-    "hint": "預覽即時套用，重新載入後還原。儲存會寫入定義輸出的檔案（或 cfg/display.kdl）。",
     "error": "無法查詢 niri 輸出。",
     "mode": "解析度與更新率",
     "scale": "縮放比例",
@@ -119,6 +109,7 @@
     "posy": "位置 Y",
     "vrr": "可變更新率（VRR）",
     "preview": "即時預覽",
+    "preview-error": "預覽失敗 — niri 拒絕了顯示器變更。",
     "summary": "顯示器 {n}",
     "count2": "{n} 台顯示器",
     "hint2": "預覽即時套用（重新載入後還原）。儲存會寫入輸出區塊；新增可為其他設定配置未連接的顯示器。",
@@ -144,7 +135,6 @@
     "enabled": "已啟用",
     "duration": "持續時間（毫秒）",
     "curve": "曲線",
-    "spring-hint": "彈簧調整 — 請在檔案中編輯阻尼／剛性（標題 ✎ 按鈕）。",
     "summary-global": "動畫設定",
     "summary-event": "{n} 動畫"
   },
@@ -166,7 +156,6 @@
     "capture": "擷取視窗",
     "appid": "app-id（正規表示式）",
     "title": "標題（正規表示式，選填）",
-    "props": "開啟時",
     "floating": "以浮動方式開啟",
     "maximized": "以最大化方式開啟",
     "fullscreen": "以全螢幕方式開啟",
@@ -230,6 +219,9 @@
     "layout": "配置",
     "variant": "變體",
     "options": "XKB 選項",
+    "layout-add": "新增配置",
+    "variant-add": "新增變體",
+    "options-add": "新增 XKB 選項",
     "repeat-delay": "重複延遲（毫秒）",
     "repeat-rate": "重複速率",
     "numlock": "啟動時啟用數字鎖定",
@@ -250,9 +242,7 @@
     "none": "找不到 layout {} 區塊。",
     "gaps": "間距（像素）",
     "center": "置中焦點欄",
-    "bg": "背景顏色",
-    "focus-ring": "焦點環寬度",
-    "border": "邊框寬度"
+    "bg": "背景顏色"
   },
   "error": {
     "no-niri": "在 PATH 中找不到 niri"
@@ -266,15 +256,9 @@
       "label": "顯示於控制中心",
       "desc": "在控制中心顯示捷徑。"
     },
-    "writeMode": {
-      "label": "寫入模式",
-      "desc": "外掛套用編輯的方式。預覽模式不會寫入磁碟。",
-      "preview": "僅預覽（不寫入 — 最安全）",
-      "apply": "直接套用（.bak + niri validate 驗證）"
-    },
     "editor": {
       "label": "外部編輯器指令",
-      "desc": "用於「在編輯器中開啟」按鈕（腳本、其他）。例如 'ghostty -e nvim'。留空則使用 $VISUAL/$EDITOR 或 xdg-open。"
+      "desc": "編輯設定檔的指令，例如 'ghostty -e nvim'（終端機 + 編輯器）。留空則改為在檔案管理器中開啟該檔案所在的資料夾。"
     }
   }
 }

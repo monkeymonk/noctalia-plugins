@@ -15,8 +15,8 @@ import qs.Widgets
 ColumnLayout {
     id: root
 
-    property var panel: null
-    property var configModel: null
+    required property var panel
+    required property var configModel
 
     property var named: []          // [{ name, node, path }]
     property var live: []           // from `niri msg workspaces`
@@ -29,7 +29,7 @@ ColumnLayout {
     function recompute() {
         var out = [];
         if (configModel && configModel.loaded) {
-            var ows = configModel.owners(["workspace"]);
+            var ows = configModel.allOwners(["workspace"]);
             ows.forEach(function (o) {
                 o.nodes.forEach(function (n) {
                     if (n.name !== "workspace" || !n.args[0]) return;
@@ -47,7 +47,7 @@ ColumnLayout {
     Component.onCompleted: { recompute(); liveProcess.running = true; }
     Connections {
         target: root.configModel
-        function onLoadFinished() { root.recompute(); }
+        function onConfigChanged() { root.recompute(); }
     }
 
     Process {
@@ -89,7 +89,7 @@ ColumnLayout {
             icon: "plus"
             text: panel.tr("ws.add", "Add")
             enabled: root.configModel && root.configModel.loaded
-            onClicked: addDialog.openCreate()
+            onClicked: wsEditor.openCreate()
         }
     }
     NText {
@@ -137,7 +137,7 @@ ColumnLayout {
                             color: Color.mOnSurfaceVariant
                             font.pointSize: Style.fontSizeXS
                         }
-                        NIconButton { icon: "edit"; tooltipText: panel.tr("action.edit", "Rename"); onClicked: addDialog.openRename(modelData) }
+                        NIconButton { icon: "edit"; tooltipText: panel.tr("action.edit", "Rename"); onClicked: wsEditor.openRename(modelData) }
                         NIconButton { icon: "trash"; tooltipText: panel.tr("action.delete", "Delete"); onClicked: root.deleteWorkspace(modelData) }
                     }
                 }
@@ -151,45 +151,12 @@ ColumnLayout {
         return "";
     }
 
-    // ----- add/rename dialog -----
-    Item {
-        id: addDialog
-        property var entry: null
-        function openCreate() { entry = null; nameField.text = ""; outputField.text = ""; pop.open(); }
-        function openRename(e) { entry = e; nameField.text = e.name; outputField.text = e.output || ""; pop.open(); }
-        Popup {
-            id: pop
-            modal: true; focus: true
-            parent: Overlay.overlay
-            anchors.centerIn: parent
-            width: 360; padding: Style.marginL
-            background: Rectangle { color: Color.mSurface; radius: Style.radiusM; border.color: Color.mPrimary; border.width: 1 }
-            ColumnLayout {
-                anchors.fill: parent
-                spacing: Style.marginM
-                NText {
-                    text: addDialog.entry ? panel.tr("ws.rename", "Rename workspace") : panel.tr("ws.new", "New workspace")
-                    font.weight: Style.fontWeightBold; font.pointSize: Style.fontSizeL
-                }
-                NTextInput { id: nameField; Layout.fillWidth: true; label: panel.tr("ws.name", "Name"); placeholderText: panel.tr("ws.name-ph", "workspace name") }
-                NTextInput { id: outputField; Layout.fillWidth: true; label: panel.tr("ws.output", "Open on output (optional)"); placeholderText: "DP-1" }
-                RowLayout {
-                    Layout.fillWidth: true
-                    Item { Layout.fillWidth: true }
-                    NButton { text: panel.tr("action.cancel", "Cancel"); onClicked: pop.close() }
-                    NButton {
-                        text: panel.tr("action.save", "Save")
-                        backgroundColor: Color.mPrimary; textColor: Color.mOnPrimary
-                        enabled: nameField.text.trim() !== ""
-                        onClicked: {
-                            var n = nameField.text.trim(), o = outputField.text.trim();
-                            pop.close();
-                            if (addDialog.entry) root.renameWorkspace(addDialog.entry, n, o);
-                            else root.addWorkspace(n, o);
-                        }
-                    }
-                }
-            }
+    WorkspaceEditor {
+        id: wsEditor
+        translate: root.panel.tr
+        onAccepted: (entry, name, output) => {
+            if (entry) root.renameWorkspace(entry, name, output);
+            else root.addWorkspace(name, output);
         }
     }
 }

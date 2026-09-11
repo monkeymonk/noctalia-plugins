@@ -6,7 +6,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 var TRANSFORMS = ["Normal", "90", "180", "270", "Flipped", "Flipped-90", "Flipped-180", "Flipped-270"];
-var COMMON_SCALES = [1, 1.25, 1.5, 1.75, 2, 2.5, 3];
 
 // Parse an `output` kdl node → editable model.
 function parseOutput(node) {
@@ -56,7 +55,7 @@ function parseMode(s) {
 
 if (typeof module !== "undefined" && module.exports) {
     module.exports = {
-        TRANSFORMS: TRANSFORMS, COMMON_SCALES: COMMON_SCALES,
+        TRANSFORMS: TRANSFORMS,
         parseOutput: parseOutput, serializeOutput: serializeOutput, parseMode: parseMode
     };
 }

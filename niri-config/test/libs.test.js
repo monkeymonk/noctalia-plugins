@@ -76,9 +76,14 @@ if (wsJson) { const ws = NIRI.parseWorkspaces(wsJson); ok("parseWorkspaces nonem
 const winJson = sh("niri msg --json windows");
 if (winJson) { const wins = NIRI.parseWindows(winJson); ok("parseWindows ok", Array.isArray(wins)); console.log("  · windows open: " + wins.length); }
 
-// saveCmd shape
-const sc = NIRI.saveCmd("/tmp/x.kdl", "/tmp/config.kdl", "YmFzZTY0");
-ok("saveCmd is sh -c", sc[0] === "sh" && sc[1] === "-c" && sc.length === 7 && sc[4] === "/tmp/x.kdl");
+// outputCmd must never return a half-built argv
+ok("outputCmd position builds set X Y",
+   JSON.stringify(NIRI.outputCmd("eDP-1", "position", ["0", "100"]))
+   === JSON.stringify(["niri", "msg", "output", "eDP-1", "position", "set", "0", "100"]));
+ok("outputCmd position without coords → null", NIRI.outputCmd("eDP-1", "position", ["", ""]) === null);
+ok("outputCmd scale without value → null", NIRI.outputCmd("eDP-1", "scale", "") === null);
+ok("outputCmd off needs no value",
+   JSON.stringify(NIRI.outputCmd("eDP-1", "off")) === JSON.stringify(["niri", "msg", "output", "eDP-1", "off"]));
 
 // ── desktop ──────────────────────────────────────────────────────────────────
 ok("cleanExec strips field codes", D.cleanExec("firefox %u") === "firefox");

@@ -6,11 +6,12 @@ import qs.Commons
 import qs.Widgets
 
 // Modal editor for one monitor. Emits previewRequested(name, settings),
-// accepted(model, configured) and removeRequested(configured).
+// accepted(target, model) — target is { path, node } when a config for this
+// output already exists, null when creating one — and removeRequested(configured).
 Item {
     id: root
 
-    property var panel: null
+    property var translate: null
 
     property string name: ""
     property var det: null            // detected (live) info or null
@@ -29,10 +30,10 @@ Item {
     property string edBackdrop: ""
 
     signal previewRequested(string name, var settings)
-    signal accepted(var model, var configured)
+    signal accepted(var target, var model)
     signal removeRequested(var configured)
 
-    function tr(k, f) { return panel ? panel.tr(k, f) : f; }
+    function tr(k, f, p) { return translate ? translate(k, f, p) : f; }
 
     function openFor(m) {
         name = m.name; det = m.detected || null; cfg = m.configured || null;
@@ -138,7 +139,7 @@ Item {
                 NButton {
                     text: root.tr("action.save", "Save")
                     backgroundColor: Color.mPrimary; textColor: Color.mOnPrimary
-                    onClicked: { var m = root.buildModel(), c = root.cfg; popup.close(); root.accepted(m, c); }
+                    onClicked: { var m = root.buildModel(), t = root.cfg ? { path: root.cfg.path, node: root.cfg.node } : null; popup.close(); root.accepted(t, m); }
                 }
             }
         }

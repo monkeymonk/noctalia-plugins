@@ -1,8 +1,6 @@
 {
   "title": "Niri 配置",
   "subtitle": {
-    "preview": "预览模式 · 显示编辑内容，不写入文件",
-    "apply": "应用模式 · 保存时验证并备份",
     "pending": "{n} 项未保存的更改 — 请按应用",
     "clean": "所有更改已应用 · 已验证并备份"
   },
@@ -25,9 +23,7 @@
     "misc": "其他"
   },
   "action": {
-    "reload": "重载配置",
-    "close": "关闭",
-    "apply-once": "仅应用一次",
+    "reload": "重载 / 放弃暂存更改",
     "add-shortcut": "添加",
     "enable": "启用",
     "disable": "禁用",
@@ -45,24 +41,25 @@
     "open-folder": "打开文件夹"
   },
   "status": {
-    "saving": "正在保存 {what}…",
-    "saved": "已保存 {what} — niri 已重载。",
     "saved-file": "已保存 {what}。",
-    "save-failed": "niri validate 拒绝保存 — 已从备份还原。",
     "staged": "{what} 已暂存 — 按应用以写入。",
     "applying": "正在应用 {n} 项更改…",
     "applied": "已应用 — niri 已重载。",
     "apply-failed": "niri validate 拒绝 — 已从备份还原。请修正后重新应用。",
     "undone": "已还原到上一个配置。",
+    "undo-empty": "没有可还原的内容 — 未找到备份。",
+    "undo-failed": "还原失败：{what}",
+    "undo-no-output": "恢复脚本没有输出",
+    "reloaded": "已从磁盘重载 — {why}。",
+    "reload-blocked": "已跳过重载 — {n} 项暂存更改将会丢失。请先应用。",
     "write-failed": "写入失败：{what}。"
   },
-  "preview": {
-    "title": "预览 — 未写入任何内容",
-    "subtitle": "这是 {path} 的完整新内容。请在设置中切换到应用模式以写入。"
+  "reason": {
+    "refresh": "手动刷新",
+    "profile-switch": "切换显示器配置方案"
   },
   "shortcuts": {
     "count": "{n} 个快捷键",
-    "file": "绑定于 {p}",
     "none": "配置中未找到 binds {} 块。",
     "search": "筛选快捷键…"
   },
@@ -72,11 +69,6 @@
     "delete": "删除 {c}",
     "enable": "启用 {c}",
     "disable": "禁用 {c}"
-  },
-  "raw": {
-    "header": "只读视图",
-    "note": "此节的专用编辑器即将推出。当前仅显示原始内容，不做修改。",
-    "empty": "此节未找到配置。"
   },
   "bindeditor": {
     "add": "添加快捷键",
@@ -109,8 +101,6 @@
     "raw": "…或输入命令"
   },
   "monitors": {
-    "count": "检测到 {n} 个显示器",
-    "hint": "预览实时生效并在重载时还原。保存将写入定义该输出的文件（或 cfg/display.kdl）。",
     "error": "无法查询 niri 输出。",
     "mode": "分辨率与刷新率",
     "scale": "缩放",
@@ -119,6 +109,7 @@
     "posy": "Y 位置",
     "vrr": "可变刷新率（VRR）",
     "preview": "实时预览",
+    "preview-error": "预览失败 — niri 拒绝了显示器更改。",
     "summary": "显示器 {n}",
     "count2": "{n} 个显示器",
     "hint2": "预览实时生效（重载时还原）。保存写入输出块；添加可为未连接的显示器配置其他方案。",
@@ -144,7 +135,6 @@
     "enabled": "已启用",
     "duration": "时长（毫秒）",
     "curve": "曲线",
-    "spring-hint": "弹簧调节 — 在文件中编辑阻尼/刚度（标题 ✎ 按钮）。",
     "summary-global": "动画设置",
     "summary-event": "{n} 动画"
   },
@@ -166,7 +156,6 @@
     "capture": "捕获窗口",
     "appid": "app-id（正则）",
     "title": "标题（正则，可选）",
-    "props": "打开时",
     "floating": "浮动打开",
     "maximized": "最大化打开",
     "fullscreen": "全屏打开",
@@ -230,6 +219,9 @@
     "layout": "布局",
     "variant": "变体",
     "options": "XKB 选项",
+    "layout-add": "添加布局",
+    "variant-add": "添加变体",
+    "options-add": "添加 XKB 选项",
     "repeat-delay": "重复延迟（毫秒）",
     "repeat-rate": "重复速率",
     "numlock": "启动时启用数字锁",
@@ -250,9 +242,7 @@
     "none": "未找到 layout {} 块。",
     "gaps": "间距（像素）",
     "center": "居中聚焦列",
-    "bg": "背景颜色",
-    "focus-ring": "焦点环宽度",
-    "border": "边框宽度"
+    "bg": "背景颜色"
   },
   "error": {
     "no-niri": "在 PATH 中未找到 niri"
@@ -266,15 +256,9 @@
       "label": "在控制中心显示",
       "desc": "在控制中心显示快捷方式。"
     },
-    "writeMode": {
-      "label": "写入模式",
-      "desc": "插件应用编辑的方式。预览模式不写入磁盘。",
-      "preview": "仅预览（不写入 — 最安全）",
-      "apply": "就地应用（.bak + niri validate 验证）"
-    },
     "editor": {
       "label": "外部编辑器命令",
-      "desc": "用于「在编辑器中打开」按钮（脚本、其他）。例如 ghostty -e nvim。留空则使用 $VISUAL/$EDITOR 或 xdg-open。"
+      "desc": "编辑配置文件的命令，例如 'ghostty -e nvim'（终端 + 编辑器）。留空则改为在文件管理器中打开该文件所在的文件夹。"
     }
   }
 }

@@ -1,8 +1,6 @@
 {
   "title": "Niri Config",
   "subtitle": {
-    "preview": "Modo de pré-visualização · as edições são mostradas, nunca escritas",
-    "apply": "Modo de aplicação · as gravações são validadas e guardadas em cópia de segurança",
     "pending": "{n} alteração(ões) por guardar — prima Aplicar",
     "clean": "Todas as alterações aplicadas · validadas e com cópia de segurança"
   },
@@ -25,9 +23,7 @@
     "misc": "Outros"
   },
   "action": {
-    "reload": "Recarregar configuração",
-    "close": "Fechar",
-    "apply-once": "Aplicar uma vez",
+    "reload": "Recarregar / descartar alterações pendentes",
     "add-shortcut": "Adicionar",
     "enable": "Ativar",
     "disable": "Desativar",
@@ -45,24 +41,25 @@
     "open-folder": "Abrir pasta"
   },
   "status": {
-    "saving": "A guardar {what}…",
-    "saved": "Guardado {what} — niri recarregado.",
     "saved-file": "Guardado {what}.",
-    "save-failed": "Gravação rejeitada pelo niri validate — restaurado a partir da cópia de segurança.",
     "staged": "{what} preparado — prima Aplicar para escrever.",
     "applying": "A aplicar {n} alteração(ões)…",
     "applied": "Aplicado — niri recarregado.",
     "apply-failed": "Rejeitado pelo niri validate — restaurado a partir da cópia de segurança. Corrija e aplique de novo.",
     "undone": "Revertido para a configuração anterior.",
+    "undo-empty": "Nada a reverter — nenhuma cópia de segurança encontrada.",
+    "undo-failed": "Falha ao reverter: {what}",
+    "undo-no-output": "sem saída do script de restauro",
+    "reloaded": "Recarregado do disco — {why}.",
+    "reload-blocked": "Recarregamento ignorado — {n} alteração(ões) pendente(s) seriam perdidas. Aplique-as primeiro.",
     "write-failed": "Falha ao escrever: {what}."
   },
-  "preview": {
-    "title": "Pré-visualização — nada escrito",
-    "subtitle": "Este é o novo conteúdo completo de {path}. Mude para o modo Aplicar nas definições para o escrever."
+  "reason": {
+    "refresh": "atualização manual",
+    "profile-switch": "mudança de perfil de monitores"
   },
   "shortcuts": {
     "count": "{n} atalhos",
-    "file": "binds em {p}",
     "none": "Nenhum bloco binds {} encontrado na configuração.",
     "search": "Filtrar atalhos…"
   },
@@ -72,11 +69,6 @@
     "delete": "eliminar {c}",
     "enable": "ativar {c}",
     "disable": "desativar {c}"
-  },
-  "raw": {
-    "header": "Vista só de leitura",
-    "note": "Um editor dedicado para esta secção está a caminho. Por agora é mostrado sem modificações.",
-    "empty": "Nenhuma configuração encontrada para esta secção."
   },
   "bindeditor": {
     "add": "Adicionar atalho",
@@ -109,8 +101,6 @@
     "raw": "…ou escreva um comando"
   },
   "monitors": {
-    "count": "{n} monitores detetados",
-    "hint": "A pré-visualização aplica-se em tempo real e reverte ao recarregar. Guardar escreve no ficheiro que define a saída (ou cfg/display.kdl).",
     "error": "Não foi possível consultar as saídas do niri.",
     "mode": "Resolução e frequência",
     "scale": "Escala",
@@ -119,6 +109,7 @@
     "posy": "Posição Y",
     "vrr": "Taxa de atualização variável (VRR)",
     "preview": "Pré-visualizar em tempo real",
+    "preview-error": "Pré-visualização falhou — o niri rejeitou uma alteração de monitor.",
     "summary": "monitor {n}",
     "count2": "{n} monitores",
     "hint2": "A pré-visualização aplica-se em tempo real (reverte ao recarregar). Guardar escreve o bloco de saída; Adicionar permite configurar um monitor desligado para outra configuração.",
@@ -144,7 +135,6 @@
     "enabled": "Ativado",
     "duration": "Duração (ms)",
     "curve": "Curva",
-    "spring-hint": "Ajuste de mola — edite amortecimento/rigidez no ficheiro (botão ✎ no cabeçalho).",
     "summary-global": "definições de animação",
     "summary-event": "animação {n}"
   },
@@ -166,7 +156,6 @@
     "capture": "Capturar janela",
     "appid": "app-id (regex)",
     "title": "título (regex, opcional)",
-    "props": "Quando abre",
     "floating": "Abrir flutuante",
     "maximized": "Abrir maximizado",
     "fullscreen": "Abrir em ecrã inteiro",
@@ -230,6 +219,9 @@
     "layout": "Disposição",
     "variant": "Variante",
     "options": "Opções XKB",
+    "layout-add": "Adicionar disposição",
+    "variant-add": "Adicionar variante",
+    "options-add": "Adicionar opção XKB",
     "repeat-delay": "Atraso de repetição (ms)",
     "repeat-rate": "Taxa de repetição",
     "numlock": "Ativar numlock no arranque",
@@ -250,9 +242,7 @@
     "none": "Nenhum bloco layout {} encontrado.",
     "gaps": "Espaçamentos (px)",
     "center": "Centrar coluna focada",
-    "bg": "Cor de fundo",
-    "focus-ring": "Largura do anel de foco",
-    "border": "Largura da moldura"
+    "bg": "Cor de fundo"
   },
   "error": {
     "no-niri": "niri não encontrado no PATH"
@@ -266,15 +256,9 @@
       "label": "Mostrar no centro de controlo",
       "desc": "Mostrar um atalho no centro de controlo."
     },
-    "writeMode": {
-      "label": "Modo de escrita",
-      "desc": "Como o plugin aplica as suas edições. Pré-visualização nunca escreve no disco.",
-      "preview": "Apenas pré-visualização (nunca escreve — mais seguro)",
-      "apply": "Aplicar no local (.bak + validação pelo niri validate)"
-    },
     "editor": {
       "label": "Comando do editor externo",
-      "desc": "Usado pelos botões 'Abrir no editor' (Scripts, Outros). ex. 'ghostty -e nvim'. Vazio = $VISUAL/$EDITOR ou xdg-open."
+      "desc": "Comando para editar os ficheiros de configuração, ex. 'ghostty -e nvim' (um terminal + editor). Deixe vazio para abrir a pasta do ficheiro no seu gestor de ficheiros."
     }
   }
 }

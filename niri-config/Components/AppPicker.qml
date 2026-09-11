@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import "../lib/desktop.js" as Desktop
-import "../lib/config.js" as Cfg
+import "../lib/fileblob.js" as Fileblob
 import "../lib/scripts.js" as Scripts
 import qs.Commons
 import qs.Widgets
@@ -14,19 +14,24 @@ import qs.Widgets
 Item {
     id: root
 
-    property var panel: null
+    property var translate: null
+    property string scriptsDir: ""
     property var apps: []          // [{name, exec, icon, comment}]
     property var scripts: []       // [{name, path, executable}]
     property bool loaded: false
     property string filter: ""
     readonly property string home: Quickshell.env("HOME") || ""
+    // .desktop search dirs: the lib owns the policy, QML expands the leading ~.
+    readonly property var appDirs: Desktop.APP_DIRS.map(function (d) {
+        return d[0] === "~" ? root.home + d.slice(1) : d;
+    })
 
     signal picked(string command)
 
-    function tr(k, f) { return panel ? panel.tr(k, f) : f; }
+    function tr(k, f, p) { return translate ? translate(k, f, p) : f; }
 
     function open() {
-        if (!loaded) loadProcess.running = true;
+        if (!loaded) listProcess.running = true;
         scriptsProcess.running = true;
         popup.open();
     }
@@ -35,21 +40,34 @@ Item {
 
     Process {
         id: scriptsProcess
-        command: Scripts.listCmd(Scripts.scriptsDir(root.home))
+        command: Scripts.listCmd(root.scriptsDir)
         property string text: ""
         stdout: StdioCollector { onStreamFinished: scriptsProcess.text = this.text }
-        onExited: { root.scripts = Scripts.parseList(scriptsProcess.text, Scripts.scriptsDir(root.home)); }
+        onExited: { root.scripts = Scripts.parseList(scriptsProcess.text, root.scriptsDir); }
+    }
+
+    // Enumerate the .desktop files, then read them all in one marker blob.
+    Process {
+        id: listProcess
+        command: ["sh", "-c",
+            'for d in "$@"; do [ -d "$d" ] && for f in "$d"/*.desktop; do [ -f "$f" ] && printf "%s\\n" "$f"; done; done',
+            "_"].concat(root.appDirs)
+        property string text: ""
+        stdout: StdioCollector { onStreamFinished: listProcess.text = this.text }
+        onExited: {
+            var paths = listProcess.text.split("\n").filter(function (p) { return p !== ""; });
+            if (!paths.length) { root.loaded = true; return; }
+            loadProcess.command = Fileblob.readBlobCmd(paths);
+            loadProcess.running = true;
+        }
     }
 
     Process {
         id: loadProcess
-        command: ["sh", "-c",
-            'for d in /usr/share/applications /usr/local/share/applications "$HOME/.local/share/applications"; do ' +
-            '[ -d "$d" ] && for f in "$d"/*.desktop; do [ -f "$f" ] && { printf "%s%s>>>>\\n" "' + Cfg.FILE_MARKER + '" "$f"; cat "$f"; printf "\\n"; }; done; done']
         property string text: ""
         stdout: StdioCollector { onStreamFinished: loadProcess.text = this.text }
         onExited: {
-            var map = Cfg.splitFileBlob(loadProcess.text);
+            var map = Fileblob.splitFileBlob(loadProcess.text);
             var seen = {}, list = [];
             for (var p in map) {
                 var e = Desktop.parseDesktopEntry(map[p]);

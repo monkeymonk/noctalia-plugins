@@ -2,8 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
-import "lib/niri.js" as Niri
+import "lib/config.js" as Cfg
 import "Sections"
 import "Components"
 import qs.Commons
@@ -50,7 +49,7 @@ Item {
             Quickshell.execDetached(["sh", "-c", root.externalEditor + ' "$1"', "_", path]);
         } else {
             var p = String(path).replace(/\/+$/, "");
-            var dir = p.lastIndexOf("/") > 0 ? p.substring(0, p.lastIndexOf("/")) : cfgModel.configDir;
+            var dir = Cfg.dirname(p) || cfgModel.configDir;
             Quickshell.execDetached(["xdg-open", dir]);
         }
     }
@@ -58,7 +57,8 @@ Item {
     property string currentSection: "shortcuts"
     property string statusMessage: ""
     property color statusColor: Color.mOnSurfaceVariant
-    property bool busy: false
+    readonly property bool busy: saveCtl.busy
+    readonly property bool canUndo: saveCtl.canUndo
 
     // file the current section edits (each section exposes `sectionFile`)
     readonly property string currentFile: (sectionLoader.item && sectionLoader.item.sectionFile)
@@ -77,61 +77,46 @@ Item {
         return s;
     }
 
-    // Notifies sections (e.g. Scripts) when a non-config file write completes.
-    signal fileSaved(string path)
+    // Notifies sections (e.g. Scripts) when a raw (unvalidated) file write or
+    // delete completed. Only ScriptsSection produces and consumes these.
+    signal rawFileChanged(string path)
 
-    property var appliedPaths: []      // last-applied files (for Undo)
-    property bool canUndo: false
+    function setStatus(message, level) {
+        root.statusMessage = message;
+        root.statusColor = level === "ok" ? Color.mPrimary
+                         : level === "error" ? Color.mError
+                         : Color.mOnSurfaceVariant;
+    }
 
-    // Sections request a save here. Config edits are STAGED (shown live in the UI,
-    // written to disk only when you press Apply). Raw files (scripts) write now.
-    function requestSave(path, newText, summary, opts) {
-        if (opts && opts.raw) {
-            doRawSave(path, newText, summary, opts);
-        } else {
-            cfgModel.stage(path, newText);
-            root.statusMessage = root.tr("status.staged", "{what} staged — press Apply to write it.", { what: summary || "Change" });
-            root.statusColor = Color.mOnSurfaceVariant;
+    // ---------- write pipeline (owned by SaveController) ----------
+
+    // Stage a config edit — shown live in the UI, written on Apply.
+    function requestSave(path, newText, summary) { saveCtl.requestSave(path, newText, summary); }
+
+    // Write a non-config file (script) to disk now: unvalidated, not undoable.
+    function writeFileNow(path, newText, summary, opts) { saveCtl.writeFileNow(path, newText, summary, opts); }
+
+    function applyChanges() { saveCtl.applyChanges(); }
+    function undoLast() { saveCtl.undoLast(); }
+    function deleteFile(path, summary) { saveCtl.deleteFile(path, summary); }
+
+    // Explicit user gesture: drop any staged edits and re-read from disk.
+    // `reason` is an already-translated string.
+    function discardAndReload(reason) {
+        cfgModel.discardStaged();
+        root.setStatus(root.tr("status.reloaded", "Reloaded from disk — {why}.", { why: reason }), "info");
+    }
+
+    // Programmatic reload (a section reloading as a side effect). Refuses while
+    // edits are staged so it can never silently discard another section's work.
+    function reloadConfig(reason) {
+        if (cfgModel.pendingCount > 0) {
+            root.setStatus(root.tr("status.reload-blocked",
+                "Reload skipped — {n} staged change(s) would be lost. Apply them first.",
+                { n: cfgModel.pendingCount }), "error");
+            return;
         }
-    }
-
-    function doRawSave(path, newText, summary, opts) {
-        root.busy = true;
-        saveProcess._path = path;
-        saveProcess._summary = summary || "";
-        saveProcess.command = Niri.writeFileCmd(path, Qt.btoa(newText), !!(opts && opts.executable));
-        saveProcess.running = true;
-    }
-
-    // Write all staged files atomically: .bak + write + niri validate + reload,
-    // restoring every .bak if validation fails.
-    function applyChanges() {
-        var list = cfgModel.stagedList();
-        if (!list.length) return;
-        root.busy = true;
-        root.statusMessage = root.tr("status.applying", "Applying {n} change(s)…", { n: list.length });
-        root.statusColor = Color.mOnSurfaceVariant;
-        root.appliedPaths = list.map(function (x) { return x.path; });
-        var pairs = list.map(function (x) { return { path: x.path, b64: Qt.btoa(x.text) }; });
-        applyProcess.command = Niri.applyCmd(cfgModel.mainPath, pairs);
-        applyProcess.running = true;
-    }
-
-    function undoLast() {
-        if (!root.appliedPaths.length) return;
-        root.busy = true;
-        undoProcess.command = Niri.undoCmd(root.appliedPaths);
-        undoProcess.running = true;
-    }
-
-    // Delete a plugin-managed file (e.g. a script). Bypasses the validate gate.
-    function deleteFile(path, summary) {
-        root.busy = true;
-        saveProcess._path = path;
-        saveProcess._summary = summary || "";
-        saveProcess._raw = true;
-        saveProcess.command = Niri.deleteFileCmd(path);
-        saveProcess.running = true;
+        root.discardAndReload(reason);
     }
 
     Component.onCompleted: cfgModel.load()
@@ -139,65 +124,17 @@ Item {
     ConfigModel {
         id: cfgModel
         pluginApi: root.pluginApi
-        onLoadFinished: {
-            if (error) { root.statusMessage = error; root.statusColor = Color.mError; }
+        onReloaded: {
+            if (error) root.setStatus(error, "error");
         }
     }
 
-    // Raw file writes (scripts / delete) — immediate, no niri validate.
-    Process {
-        id: saveProcess
-        property string _path: ""
-        property string _summary: ""
-        property string outText: ""
-        stdout: StdioCollector { onStreamFinished: saveProcess.outText = this.text }
-        onExited: (code) => {
-            root.busy = false;
-            if (saveProcess.outText.indexOf("OK") !== -1) {
-                root.statusMessage = root.tr("status.saved-file", "Saved {what}.", { what: saveProcess._summary });
-                root.statusColor = Color.mPrimary;
-                root.fileSaved(saveProcess._path);
-            } else {
-                root.statusMessage = root.tr("status.write-failed", "Write failed: {what}.", { what: saveProcess._summary });
-                root.statusColor = Color.mError;
-            }
-        }
-    }
-
-    // Apply staged config changes (validated + backed up).
-    Process {
-        id: applyProcess
-        property string outText: ""
-        property string errText: ""
-        stdout: StdioCollector { onStreamFinished: applyProcess.outText = this.text }
-        stderr: StdioCollector { onStreamFinished: applyProcess.errText = this.text }
-        onExited: (code) => {
-            root.busy = false;
-            if (applyProcess.outText.indexOf("OK") !== -1) {
-                root.statusMessage = root.tr("status.applied", "Applied — niri reloaded.");
-                root.statusColor = Color.mPrimary;
-                root.canUndo = true;
-                cfgModel.load();   // re-read from disk, clears staged
-            } else {
-                var detail = (applyProcess.errText || "").trim();
-                root.statusMessage = root.tr("status.apply-failed", "Rejected by niri validate — restored from backup. Fix and re-apply.")
-                                     + (detail ? ("\n" + detail) : "");
-                root.statusColor = Color.mError;   // staged changes kept so you can fix
-            }
-        }
-    }
-
-    Process {
-        id: undoProcess
-        property string outText: ""
-        stdout: StdioCollector { onStreamFinished: undoProcess.outText = this.text }
-        onExited: (code) => {
-            root.busy = false;
-            root.canUndo = false;
-            root.statusMessage = root.tr("status.undone", "Reverted to the previous config.");
-            root.statusColor = Color.mPrimary;
-            cfgModel.load();
-        }
+    SaveController {
+        id: saveCtl
+        pluginApi: root.pluginApi
+        configModel: cfgModel
+        onStatusReport: (message, level) => root.setStatus(message, level)
+        onRawFileChanged: (path) => root.rawFileChanged(path)
     }
 
     readonly property var sections: [
@@ -269,7 +206,7 @@ Item {
                 NIconButton {
                     icon: "refresh"
                     tooltipText: root.tr("action.reload", "Reload / discard staged changes")
-                    onClicked: cfgModel.discardStaged()
+                    onClicked: root.discardAndReload(root.tr("reason.refresh", "manual refresh"))
                 }
             }
 
@@ -363,7 +300,6 @@ Item {
                         case "layout": return layoutComp;
                         case "animation": return animationComp;
                         case "misc": return miscComp;
-                        default: return rawComp;
                         }
                     }
                 }
@@ -377,7 +313,6 @@ Item {
                 Component { id: layoutComp; LayoutSection { panel: root; configModel: cfgModel } }
                 Component { id: animationComp; AnimationSection { panel: root; configModel: cfgModel } }
                 Component { id: miscComp; MiscSection { panel: root; configModel: cfgModel } }
-                Component { id: rawComp; RawSection { panel: root; configModel: cfgModel; sectionKey: root.currentSection } }
             }
 
             // Status line

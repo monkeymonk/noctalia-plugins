@@ -13,7 +13,10 @@ Item {
     property var pluginApi: null
     property string finger: ""
     property int stagesPassed: 0
-    property int totalStages: 10   // typical for Goodix 609c; refined as we observe
+    // Overwritten by the busctl query below once the device reports its real
+    // stage count; 10 is the fallback when fprintd cannot be asked.
+    property int totalStages: 10
+    property bool stagesResolved: false
     property string hint: ""
     property bool active: false
 
@@ -36,8 +39,15 @@ Item {
         return tr("finger." + name, F.labelOf(name));
     }
 
+    function queryStages() {
+        if (stagesResolved || devicePathProcess.running || stageCountProcess.running) return;
+        devicePathProcess.stdoutText = "";
+        devicePathProcess.running = true;
+    }
+
     function openFor(name) {
         finger = name;
+        queryStages();
         stagesPassed = 0;
         hint = tr("enroll.hint.touch", "Place your finger on the sensor.");
         active = true;
@@ -54,6 +64,49 @@ Item {
     }
 
     visible: active
+
+    // fprintd exposes the device's stage count on D-Bus; the object path is
+    // dynamic, so ask the manager for the default device first.
+    Process {
+        id: devicePathProcess
+        command: ["busctl", "--system", "call", "net.reactivated.Fprint",
+                  "/net/reactivated/Fprint/Manager",
+                  "net.reactivated.Fprint.Manager", "GetDefaultDevice"]
+
+        property string stdoutText: ""
+        stdout: StdioCollector { onStreamFinished: devicePathProcess.stdoutText = this.text }
+
+        onExited: (code) => {
+            if (code !== 0) return;
+            // `o "/net/reactivated/Fprint/Device/0"`
+            var m = /"([^"]+)"/.exec(devicePathProcess.stdoutText);
+            if (!m) return;
+            stageCountProcess.stdoutText = "";
+            stageCountProcess.command = ["busctl", "--system", "get-property",
+                                         "net.reactivated.Fprint", m[1],
+                                         "net.reactivated.Fprint.Device", "num-enroll-stages"];
+            stageCountProcess.running = true;
+        }
+    }
+
+    Process {
+        id: stageCountProcess
+
+        property string stdoutText: ""
+        stdout: StdioCollector { onStreamFinished: stageCountProcess.stdoutText = this.text }
+
+        onExited: (code) => {
+            if (code !== 0) return;
+            // `i 13`
+            var m = /(-?\d+)/.exec(stageCountProcess.stdoutText);
+            if (!m) return;
+            var n = parseInt(m[1], 10);
+            if (n > 0) {
+                root.totalStages = n;
+                root.stagesResolved = true;
+            }
+        }
+    }
 
     Process {
         id: enrollProcess

@@ -83,10 +83,13 @@ when its plugin API lands only the thin UI shell needs re-implementing.
 | --- | --- |
 | `lib/kdl.js` | tolerant KDL v2 parser with source ranges + surgical edit primitives |
 | `lib/config.js` | resolve the `include` graph, map sections → owning file |
+| `lib/fileblob.js` | read N files in one process, split the marker-delimited blob |
 | `lib/binds.js` | bind model/serialization, conflict detection, action vocabulary |
 | `lib/keys.js` | Qt key event → niri keysym; special-key list |
 | `lib/niri.js` | `niri msg` builders, JSON parsers, validated multi-file apply/undo |
-| `lib/rules.js`, `outputs.js`, `xkb.js`, `desktop.js`, `scripts.js`, `monique.js` | per-section models/serialization + external-tool integration |
+| `lib/input.js`, `lib/layout.js` | descriptor-driven parse/diff/apply for the Input and Layout tabs |
+| `lib/rules.js`, `outputs.js`, `desktop.js`, `scripts.js`, `monique.js` | per-section models/serialization + external-tool integration |
+| `lib/xkb.js` | parses the system's xkb layout/variant/model/option list from `evdev.lst`; drives the Input tab's pickers (the layout/variant/option fields stay free text so comma-separated multi-layout setups survive) |
 
 ## IPC
 
@@ -107,8 +110,10 @@ and the write path is exercised entirely in a `/tmp` **sandbox copy** — it nev
 touches `~/.config/niri`:
 
 ```bash
-node test/kdl.test.js          # parser safety vs your real *.kdl
+node test/kdl.test.js          # parser safety + batched child edits vs your real *.kdl
 node test/libs.test.js         # binds/keys/niri/desktop/outputs/xkb vs live data
+node test/input.test.js        # input model: parse / diff / edit serialization / apply
+node test/layout.test.js       # layout model incl. preset blocks
 node test/save.sandbox.test.js # apply + niri validate gate + auto-restore + undo (sandboxed)
 ```
 

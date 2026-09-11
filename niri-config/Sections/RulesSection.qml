@@ -12,8 +12,8 @@ import qs.Widgets
 ColumnLayout {
     id: root
 
-    property var panel: null
-    property var configModel: null
+    required property var panel
+    required property var configModel
 
     property var ruleModels: []       // each: parseRule(node) + { path }
     property string rulesFile: ""
@@ -25,7 +25,7 @@ ColumnLayout {
     function recompute() {
         var out = [];
         if (configModel && configModel.loaded) {
-            var ows = configModel.owners(["window-rule", "layer-rule"]);
+            var ows = configModel.allOwners(["window-rule", "layer-rule"]);
             ows.forEach(function (o) {
                 o.nodes.forEach(function (n) {
                     if (n.name !== "window-rule" && n.name !== "layer-rule") return;
@@ -43,7 +43,7 @@ ColumnLayout {
     Component.onCompleted: recompute()
     Connections {
         target: root.configModel
-        function onLoadFinished() { root.recompute(); }
+        function onConfigChanged() { root.recompute(); }
     }
 
     function shortPath(p) { return p ? p.replace(configModel.home, "~") : ""; }
@@ -56,12 +56,12 @@ ColumnLayout {
         var text = Kdl.appendNode(src, block);
         panel.requestSave(rulesFile, text, panel.tr("rules.summary-add", "new window rule"));
     }
-    function updateRule(rule) {
-        var src = configModel.textOf(rule.path);
-        var indent = Kdl.leadingIndent(src, rule.node.range);
+    function updateRule(target, rule) {
+        var src = configModel.textOf(target.path);
+        var indent = Kdl.leadingIndent(src, target.node.range);
         var block = Rules.serializeRule(rule, "    ");
-        var text = Kdl.replaceNodeLine(src, rule.node, indent + block);
-        panel.requestSave(rule.path, text, panel.tr("rules.summary-edit", "window rule"));
+        var text = Kdl.replaceNodeLine(src, target.node, indent + block);
+        panel.requestSave(target.path, text, panel.tr("rules.summary-edit", "window rule"));
     }
     function deleteRule(r) {
         var text = Kdl.removeNodeLine(configModel.textOf(r.path), r.node);
@@ -154,16 +154,10 @@ ColumnLayout {
 
     RuleEditor {
         id: ruleEditor
-        panel: root.panel
-        onAccepted: (node, rule) => {
-            if (node) { rule.node = node; rule.path = root.findPath(node); root.updateRule(rule); }
+        translate: root.panel.tr
+        onAccepted: (target, rule) => {
+            if (target) root.updateRule(target, rule);
             else root.addRule(rule);
         }
-    }
-
-    // map an edited node back to its file path
-    function findPath(node) {
-        for (var i = 0; i < ruleModels.length; i++) if (ruleModels[i].node === node) return ruleModels[i].path;
-        return rulesFile;
     }
 }

@@ -1,8 +1,6 @@
 {
   "title": "niri-Konfiguration",
   "subtitle": {
-    "preview": "Vorschaumodus · Änderungen werden angezeigt, nie geschrieben",
-    "apply": "Anwendungsmodus · Speicherungen werden validiert und gesichert",
     "pending": "{n} ungespeicherte Änderung(en) — Anwenden drücken",
     "clean": "Alle Änderungen angewendet · validiert & gesichert"
   },
@@ -25,9 +23,7 @@
     "misc": "Sonstiges"
   },
   "action": {
-    "reload": "Konfiguration neu laden",
-    "close": "Schließen",
-    "apply-once": "Einmalig anwenden",
+    "reload": "Neu laden / vorgemerkte Änderungen verwerfen",
     "add-shortcut": "Hinzufügen",
     "enable": "Aktivieren",
     "disable": "Deaktivieren",
@@ -45,24 +41,25 @@
     "open-folder": "Ordner öffnen"
   },
   "status": {
-    "saving": "{what} wird gespeichert…",
-    "saved": "{what} gespeichert — niri neu geladen.",
     "saved-file": "{what} gespeichert.",
-    "save-failed": "Speicherung von niri validate abgelehnt — aus Sicherung wiederhergestellt.",
     "staged": "{what} vorgemerkt — Anwenden drücken zum Schreiben.",
     "applying": "{n} Änderung(en) werden angewendet…",
     "applied": "Angewendet — niri neu geladen.",
     "apply-failed": "Von niri validate abgelehnt — aus Sicherung wiederhergestellt. Korrigieren und erneut anwenden.",
     "undone": "Zur vorherigen Konfiguration zurückgekehrt.",
+    "undo-empty": "Nichts zurückzusetzen — keine Sicherung gefunden.",
+    "undo-failed": "Zurücksetzen fehlgeschlagen: {what}",
+    "undo-no-output": "keine Ausgabe vom Wiederherstellungsskript",
+    "reloaded": "Von der Festplatte neu geladen — {why}.",
+    "reload-blocked": "Neuladen übersprungen — {n} vorgemerkte Änderung(en) würden verloren gehen. Wenden Sie sie zuerst an.",
     "write-failed": "Schreiben fehlgeschlagen: {what}."
   },
-  "preview": {
-    "title": "Vorschau — nichts geschrieben",
-    "subtitle": "Dies ist der vollständige neue Inhalt von {path}. In den Einstellungen zum Anwendungsmodus wechseln, um zu schreiben."
+  "reason": {
+    "refresh": "manuelle Aktualisierung",
+    "profile-switch": "Wechsel des Monitorprofils"
   },
   "shortcuts": {
     "count": "{n} Tastenkürzel",
-    "file": "Bindungen in {p}",
     "none": "Kein binds {} Block in der Konfiguration gefunden.",
     "search": "Tastenkürzel filtern…"
   },
@@ -72,11 +69,6 @@
     "delete": "{c} löschen",
     "enable": "{c} aktivieren",
     "disable": "{c} deaktivieren"
-  },
-  "raw": {
-    "header": "Nur-Lese-Ansicht",
-    "note": "Ein dedizierter Editor für diesen Abschnitt ist in Planung. Vorerst wird er unverändert angezeigt und nie geändert.",
-    "empty": "Keine Konfiguration für diesen Abschnitt gefunden."
   },
   "bindeditor": {
     "add": "Tastenkürzel hinzufügen",
@@ -109,8 +101,6 @@
     "raw": "…oder Befehl eingeben"
   },
   "monitors": {
-    "count": "{n} Monitore erkannt",
-    "hint": "Vorschau wird live angewendet und beim Neu laden zurückgesetzt. Speichern schreibt in die Datei, die die Ausgabe definiert (oder cfg/display.kdl).",
     "error": "niri-Ausgaben konnten nicht abgefragt werden.",
     "mode": "Auflösung & Bildwiederholrate",
     "scale": "Skalierung",
@@ -119,6 +109,7 @@
     "posy": "Position Y",
     "vrr": "Variable Bildwiederholrate (VRR)",
     "preview": "Live-Vorschau",
+    "preview-error": "Vorschau fehlgeschlagen — niri hat eine Monitoränderung abgelehnt.",
     "summary": "Monitor {n}",
     "count2": "{n} Monitore",
     "hint2": "Vorschau wird live angewendet (beim Neu laden zurückgesetzt). Speichern schreibt den Ausgabe-Block; Hinzufügen ermöglicht die Konfiguration eines nicht angeschlossenen Monitors für ein anderes Setup.",
@@ -144,7 +135,6 @@
     "enabled": "Aktiviert",
     "duration": "Dauer (ms)",
     "curve": "Kurve",
-    "spring-hint": "Federabstimmung — Dämpfung/Steifigkeit in der Datei bearbeiten (Kopfzeilen-Schaltfläche ✎).",
     "summary-global": "Animationseinstellungen",
     "summary-event": "Animation {n}"
   },
@@ -166,7 +156,6 @@
     "capture": "Fenster erfassen",
     "appid": "app-id (Regex)",
     "title": "Titel (Regex, optional)",
-    "props": "Beim Öffnen",
     "floating": "Schwebend öffnen",
     "maximized": "Maximiert öffnen",
     "fullscreen": "Vollbild öffnen",
@@ -230,6 +219,9 @@
     "layout": "Layout",
     "variant": "Variante",
     "options": "XKB-Optionen",
+    "layout-add": "Layout hinzufügen",
+    "variant-add": "Variante hinzufügen",
+    "options-add": "XKB-Option hinzufügen",
     "repeat-delay": "Wiederholungsverzögerung (ms)",
     "repeat-rate": "Wiederholungsrate",
     "numlock": "Numlock beim Start aktivieren",
@@ -250,9 +242,7 @@
     "none": "Kein layout {} Block gefunden.",
     "gaps": "Abstände (px)",
     "center": "Fokussierte Spalte zentrieren",
-    "bg": "Hintergrundfarbe",
-    "focus-ring": "Fokusring-Breite",
-    "border": "Rahmenbreite"
+    "bg": "Hintergrundfarbe"
   },
   "error": {
     "no-niri": "niri nicht im PATH gefunden"
@@ -266,15 +256,9 @@
       "label": "Im Kontrollzentrum anzeigen",
       "desc": "Schnellzugriff im Kontrollzentrum einblenden."
     },
-    "writeMode": {
-      "label": "Schreibmodus",
-      "desc": "Wie das Plugin Änderungen anwendet. Vorschau schreibt nie auf die Festplatte.",
-      "preview": "Nur Vorschau (schreibt nie — sicherste Option)",
-      "apply": "Direkt anwenden (.bak + niri validate Prüfung)"
-    },
     "editor": {
       "label": "Externer Editor-Befehl",
-      "desc": "Wird von den Schaltflächen „Im Editor öffnen” verwendet (Skripte, Sonstiges). Z. B. „ghostty -e nvim”. Leer = $VISUAL/$EDITOR oder xdg-open."
+      "desc": "Befehl zum Bearbeiten der Konfigurationsdateien, z. B. „ghostty -e nvim“ (Terminal + Editor). Leer lassen, um stattdessen den Ordner der Datei im Dateimanager zu öffnen."
     }
   }
 }

@@ -12,8 +12,8 @@ import qs.Widgets
 ColumnLayout {
     id: root
 
-    property var panel: null
-    property var configModel: null
+    required property var panel
+    required property var configModel
 
     property string miscFile: ""
     property string sectionFile: miscFile
@@ -33,49 +33,54 @@ ColumnLayout {
 
     spacing: Style.marginM
 
-    function childNamed(node, name) {
-        var k = node && node.children ? node.children : [];
-        for (var i = 0; i < k.length; i++) if (k[i].name === name) return k[i];
+    // ---- settings table: one row per option, drives read / snapshot / dirty / save ----
+    // root: null = top-level node, otherwise the owning top-level block.
+    // kind: flag (bare node) | str | int | float | path (screenshot-path, accepts bare `null`)
+    readonly property var settingDefs: [
+        { prop: "preferNoCsd", root: null, name: "prefer-no-csd", kind: "flag" },
+        { prop: "screenshotPath", root: null, name: "screenshot-path", kind: "path" },
+        { prop: "cursorTheme", root: "cursor", name: "xcursor-theme", kind: "str" },
+        { prop: "cursorSize", root: "cursor", name: "xcursor-size", kind: "int" },
+        { prop: "cursorHideTyping", root: "cursor", name: "hide-when-typing", kind: "flag" },
+        { prop: "cursorHideMs", root: "cursor", name: "hide-after-inactive-ms", kind: "int" },
+        { prop: "hkSkipStartup", root: "hotkey-overlay", name: "skip-at-startup", kind: "flag" },
+        { prop: "hkHideNotBound", root: "hotkey-overlay", name: "hide-not-bound", kind: "flag" },
+        { prop: "clipDisablePrimary", root: "clipboard", name: "disable-primary", kind: "flag" },
+        { prop: "overviewZoom", root: "overview", name: "zoom", kind: "float" },
+        { prop: "overviewBackdrop", root: "overview", name: "backdrop-color", kind: "str" }
+    ]
+
+    // ---- read (one parse per recompute) ----
+    function topOf(doc, name) {
+        for (var i = 0; i < doc.nodes.length; i++) if (doc.nodes[i].name === name) return doc.nodes[i];
         return null;
     }
-    function topNode(text, name) {
-        var d = Kdl.parse(text);
-        for (var i = 0; i < d.nodes.length; i++) if (d.nodes[i].name === name) return d.nodes[i];
-        return null;
+    function readSetting(doc, d) {
+        var n = d.root === null ? topOf(doc, d.name) : Kdl.childNamed(topOf(doc, d.root), d.name);
+        if (d.kind === "flag") return !!n;
+        if (d.kind === "path") return (n && n.args[0]) ? (n.args[0].value === null ? "null" : String(n.args[0].value)) : "";
+        return (n && n.args[0]) ? String(n.args[0].value) : "";
     }
-    function ensureTop(text, name) { return topNode(text, name) ? text : Kdl.appendNode(text, name + " {\n}"); }
-    function topFlag(text, name) { return !!topNode(text, name); }
-    function topStr(text, name) { var n = topNode(text, name); return (n && n.args[0]) ? String(n.args[0].value) : ""; }
-    function blkFlag(text, blk, name) { var b = topNode(text, blk); return b ? !!childNamed(b, name) : false; }
-    function blkStr(text, blk, name) { var b = topNode(text, blk); var c = b ? childNamed(b, name) : null; return (c && c.args[0]) ? String(c.args[0].value) : ""; }
 
     function recompute() {
         if (!(configModel && configModel.loaded)) return;
-        var ow = configModel.owners(["prefer-no-csd", "screenshot-path", "cursor", "hotkey-overlay", "clipboard", "overview", "environment"]);
-        miscFile = ow.length ? ow[0].path : (configModel.configDir + "/cfg/misc.kdl");
-        var t = configModel.textOf(miscFile);
-        preferNoCsd = topFlag(t, "prefer-no-csd");
-        var sp = topNode(t, "screenshot-path");
-        screenshotPath = sp ? (sp.args[0] ? (sp.args[0].value === null ? "null" : String(sp.args[0].value)) : "") : "";
-        cursorTheme = blkStr(t, "cursor", "xcursor-theme");
-        cursorSize = blkStr(t, "cursor", "xcursor-size");
-        cursorHideTyping = blkFlag(t, "cursor", "hide-when-typing");
-        cursorHideMs = blkStr(t, "cursor", "hide-after-inactive-ms");
-        hkSkipStartup = blkFlag(t, "hotkey-overlay", "skip-at-startup");
-        hkHideNotBound = blkFlag(t, "hotkey-overlay", "hide-not-bound");
-        clipDisablePrimary = blkFlag(t, "clipboard", "disable-primary");
-        overviewZoom = blkStr(t, "overview", "zoom");
-        overviewBackdrop = blkStr(t, "overview", "backdrop-color");
+        var ow = configModel.allOwners(["prefer-no-csd", "screenshot-path", "cursor", "hotkey-overlay", "clipboard", "overview", "environment"]);
+        // no loaded file owns these: write to the main config, the only file guaranteed
+        // to be part of the include graph (a fresh side file would never be read by niri).
+        miscFile = ow.length ? ow[0].path : configModel.mainPath;
+        var doc = Kdl.parse(configModel.textOf(miscFile));
+        var defs = settingDefs;
+        for (var i = 0; i < defs.length; i++) root[defs[i].prop] = readSetting(doc, defs[i]);
         orig = snapshot();
     }
     function snapshot() {
-        return { preferNoCsd: preferNoCsd, screenshotPath: screenshotPath, cursorTheme: cursorTheme, cursorSize: cursorSize,
-                 cursorHideTyping: cursorHideTyping, cursorHideMs: cursorHideMs, hkSkipStartup: hkSkipStartup, hkHideNotBound: hkHideNotBound,
-                 clipDisablePrimary: clipDisablePrimary, overviewZoom: overviewZoom, overviewBackdrop: overviewBackdrop };
+        var s = {}, defs = settingDefs;
+        for (var i = 0; i < defs.length; i++) s[defs[i].prop] = root[defs[i].prop];
+        return s;
     }
 
     Component.onCompleted: recompute()
-    Connections { target: root.configModel; function onLoadFinished() { root.recompute(); } }
+    Connections { target: root.configModel; function onConfigChanged() { root.recompute(); } }
 
     readonly property bool dirty: {
         if (!orig) return false;
@@ -84,48 +89,41 @@ ColumnLayout {
         return false;
     }
 
-    // ---- setters ----
-    function setTopFlag(text, name, on) {
-        var ex = topNode(text, name);
-        if (on) return ex ? text : Kdl.appendNode(text, name);
-        return ex ? Kdl.removeNodeLine(text, ex) : text;
-    }
-    function setTopLine(text, name, line) {
-        var ex = topNode(text, name);
+    // ---- write (one parse per top-level node, one batched pass per block) ----
+    function writeTop(text, name, line) {
+        var ex = topOf(Kdl.parse(text), name);
         if (line === null) return ex ? Kdl.removeNodeLine(text, ex) : text;
         if (ex) return Kdl.replaceNodeLine(text, ex, Kdl.leadingIndent(text, ex.range) + line);
         return Kdl.appendNode(text, line);
     }
-    function setBlkFlag(text, blk, name, on) {
-        var b = topNode(text, blk); var ex = b ? childNamed(b, name) : null;
-        if (!on) return ex ? Kdl.removeNodeLine(text, ex) : text;
-        text = ensureTop(text, blk);
-        return childNamed(topNode(text, blk), name) ? text : Kdl.insertChildLine(text, topNode(text, blk), name);
-    }
-    function setBlkLine(text, blk, name, line) {
-        var b = topNode(text, blk); var ex = b ? childNamed(b, name) : null;
-        if (line === null) return ex ? Kdl.removeNodeLine(text, ex) : text;
-        if (ex) return Kdl.replaceNodeLine(text, ex, Kdl.leadingIndent(text, ex.range) + line);
-        text = ensureTop(text, blk);
-        return Kdl.insertChildLine(text, topNode(text, blk), line);
+    // The finished source line for a setting, or null when it must be removed.
+    function settingLine(d, v) {
+        if (d.kind === "flag") return v ? d.name : null;
+        if (d.kind === "path") return v === "" ? null : (v === "null" ? (d.name + " null") : (d.name + ' "' + v + '"'));
+        if (d.kind === "int") return (v === "" || isNaN(parseInt(v))) ? null : (d.name + " " + parseInt(v));
+        if (d.kind === "float") return (v === "" || isNaN(parseFloat(v))) ? null : (d.name + " " + parseFloat(v));
+        return v ? (d.name + ' "' + v + '"') : null;
     }
 
+    // Changed settings only, in settingDefs order: consecutive children of the
+    // same block collapse into one applyChildEdits call (edits in disjoint
+    // regions commute, so the resulting text is the per-setting fold's).
     function save() {
-        var t = configModel.textOf(miscFile), o = orig;
-        if (preferNoCsd !== o.preferNoCsd) t = setTopFlag(t, "prefer-no-csd", preferNoCsd);
-        if (screenshotPath !== o.screenshotPath) {
-            var spLine = screenshotPath === "" ? null : (screenshotPath === "null" ? "screenshot-path null" : ('screenshot-path "' + screenshotPath + '"'));
-            t = setTopLine(t, "screenshot-path", spLine);
+        var t = configModel.textOf(miscFile), o = orig, defs = settingDefs;
+        var ops = [];   // { root: null, name, line } | { root: "cursor", edits: [...] }
+        for (var i = 0; i < defs.length; i++) {
+            var d = defs[i], v = root[d.prop];
+            if (v === o[d.prop]) continue;
+            var line = settingLine(d, v);
+            if (d.root === null) { ops.push({ root: null, name: d.name, line: line }); continue; }
+            var last = ops.length ? ops[ops.length - 1] : null;
+            if (last && last.root === d.root) last.edits.push({ path: [], name: d.name, line: line });
+            else ops.push({ root: d.root, edits: [{ path: [], name: d.name, line: line }] });
         }
-        if (cursorTheme !== o.cursorTheme) t = setBlkLine(t, "cursor", "xcursor-theme", cursorTheme ? ('xcursor-theme "' + cursorTheme + '"') : null);
-        if (cursorSize !== o.cursorSize) t = setBlkLine(t, "cursor", "xcursor-size", (cursorSize === "" || isNaN(parseInt(cursorSize))) ? null : ("xcursor-size " + parseInt(cursorSize)));
-        if (cursorHideTyping !== o.cursorHideTyping) t = setBlkFlag(t, "cursor", "hide-when-typing", cursorHideTyping);
-        if (cursorHideMs !== o.cursorHideMs) t = setBlkLine(t, "cursor", "hide-after-inactive-ms", (cursorHideMs === "" || isNaN(parseInt(cursorHideMs))) ? null : ("hide-after-inactive-ms " + parseInt(cursorHideMs)));
-        if (hkSkipStartup !== o.hkSkipStartup) t = setBlkFlag(t, "hotkey-overlay", "skip-at-startup", hkSkipStartup);
-        if (hkHideNotBound !== o.hkHideNotBound) t = setBlkFlag(t, "hotkey-overlay", "hide-not-bound", hkHideNotBound);
-        if (clipDisablePrimary !== o.clipDisablePrimary) t = setBlkFlag(t, "clipboard", "disable-primary", clipDisablePrimary);
-        if (overviewZoom !== o.overviewZoom) t = setBlkLine(t, "overview", "zoom", (overviewZoom === "" || isNaN(parseFloat(overviewZoom))) ? null : ("zoom " + parseFloat(overviewZoom)));
-        if (overviewBackdrop !== o.overviewBackdrop) t = setBlkLine(t, "overview", "backdrop-color", overviewBackdrop ? ('backdrop-color "' + overviewBackdrop + '"') : null);
+        for (var j = 0; j < ops.length; j++) {
+            var op = ops[j];
+            t = op.root === null ? writeTop(t, op.name, op.line) : Kdl.applyChildEdits(t, op.root, op.edits);
+        }
         panel.requestSave(miscFile, t, panel.tr("misc.summary", "misc settings"));
     }
 

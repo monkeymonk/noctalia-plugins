@@ -1,7 +1,7 @@
 {
   "id": "niri-config",
   "name": "Niri Config",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "minNoctaliaVersion": "4.4.3",
   "author": "Stephan Zych",
   "license": "MIT",

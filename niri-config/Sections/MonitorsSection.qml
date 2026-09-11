@@ -18,8 +18,8 @@ import qs.Widgets
 ColumnLayout {
     id: root
 
-    property var panel: null
-    property var configModel: null
+    required property var panel
+    required property var configModel
 
     property var outputs: []         // live, from niri
     property var merged: []          // [{ name, detected, configured:{model,node,path} }]
@@ -35,8 +35,14 @@ ColumnLayout {
     spacing: Style.marginM
 
     Component.onCompleted: { recompute(); outputsProcess.running = true; checkMonique.running = true; }
-    // the Panel's global "reload config" button drives this — re-detect + profiles too
-    Connections { target: root.configModel; function onLoadFinished() { root.recompute(); outputsProcess.running = true; root.refreshProfiles(); } }
+    // Recompute on any in-memory change (staged edits included), but only
+    // re-detect live outputs / monique profiles after a real disk reload —
+    // the Panel's global "reload config" button drives that.
+    Connections {
+        target: root.configModel
+        function onConfigChanged() { root.recompute(); }
+        function onReloaded() { outputsProcess.running = true; root.refreshProfiles(); }
+    }
 
     function switchProfile(name) { switchProcess.profileName = name; switchProcess.running = true; }
     function refreshProfiles() { if (moniqueAvailable) { listProfiles.running = true; currentProfile.running = true; } }
@@ -67,19 +73,21 @@ ColumnLayout {
         onExited: (code) => {
             if (code === 0) {
                 root.activeProfile = switchProcess.profileName;
-                root.configModel.load();      // monitors.kdl changed
+                // monique rewrote the monitor file — reload through the panel so
+                // staged edits in other sections aren't dropped without warning.
+                root.panel.reloadConfig(root.panel.tr("reason.profile-switch", "monitor profile switch"));
                 outputsProcess.running = true;
             }
         }
     }
 
-    function refresh() { outputsProcess.running = true; recompute(); }
+    function refresh() { outputsProcess.running = true; }
 
     function recompute() {
         var byName = {};
         outputs.forEach(function (o) { byName[o.name] = { name: o.name, detected: o, configured: null }; });
         if (configModel && configModel.loaded) {
-            configModel.owners(["output"]).forEach(function (ow) {
+            configModel.allOwners(["output"]).forEach(function (ow) {
                 ow.nodes.forEach(function (n) {
                     if (n.name !== "output" || !n.args[0]) return;
                     var nm = String(n.args[0].value);
@@ -95,23 +103,62 @@ ColumnLayout {
     function openMonique() { Quickshell.execDetached(["monique"]); }
 
     // Where the plugin writes monitor config when it manages monitors directly
-    // (i.e. Monique isn't installed) — the noctalia default cfg/display.kdl.
+    // (i.e. Monique isn't installed): the noctalia default cfg/display.kdl when
+    // the include graph actually loads it, else whichever loaded file already
+    // owns `output` blocks, else the main config — which is always included.
+    // Never a path outside the include graph: niri would ignore such a file
+    // while `niri validate` still passes, so the setting would do nothing.
     function displayFile() {
         if (!configModel) return "";
         for (var i = 0; i < configModel.files.length; i++)
             if (configModel.files[i].path.indexOf("cfg/display.kdl") !== -1) return configModel.files[i].path;
-        return configModel.configDir + "/cfg/display.kdl";
+        var ow = configModel.ownerOf("output");
+        if (ow && ow.path) return ow.path;
+        return configModel.mainPath;
     }
 
-    function previewProp(name, prop, value) { previewProcess.command = Niri.outputCmd(name, prop, value); previewProcess.running = true; }
+    // Live preview issues one `niri msg output` per property, and a single
+    // Process runs one command at a time — so they drain through a queue.
+    property var previewCmds: []
+    property bool previewBusy: false
 
-    function persist(model, configured) {
+    // Starts a fresh preview run: a run still draining is dropped (newest
+    // settings win), only its in-flight command is left to finish.
+    function previewSettings(name, s) {
+        previewCmds = [];
+        // a command that never actually spawned would otherwise wedge the queue
+        if (!previewProcess.running) previewBusy = false;
+        previewProp(name, "mode", s.mode);
+        previewProp(name, "scale", s.scale != null ? String(s.scale) : "");
+        previewProp(name, "transform", s.transform);
+        previewProp(name, "position", [s.x != null ? String(s.x) : "", s.y != null ? String(s.y) : ""]);
+        previewProp(name, "vrr", s.vrr ? "on" : "off");
+    }
+
+    // outputCmd returns null when there is nothing to set (e.g. no position
+    // configured at all) — a legitimate no-op, not an error.
+    function previewProp(name, prop, value) {
+        var cmd = Niri.outputCmd(name, prop, value);
+        if (!cmd) return;
+        previewCmds = previewCmds.concat([cmd]);
+        previewNext();
+    }
+
+    function previewNext() {
+        if (previewBusy || previewCmds.length === 0) return;
+        previewBusy = true;
+        previewProcess.command = previewCmds[0];
+        previewCmds = previewCmds.slice(1);
+        previewProcess.running = true;
+    }
+
+    function persist(target, model) {
         var path, newText;
-        if (configured) {
-            var src = configModel.textOf(configured.path);
-            var indent = Kdl.leadingIndent(src, configured.node.range);
-            newText = Kdl.replaceNodeLine(src, configured.node, indent + Outputs.serializeOutput(model, "    "));
-            path = configured.path;
+        if (target) {
+            var src = configModel.textOf(target.path);
+            var indent = Kdl.leadingIndent(src, target.node.range);
+            newText = Kdl.replaceNodeLine(src, target.node, indent + Outputs.serializeOutput(model, "    "));
+            path = target.path;
         } else {
             path = displayFile();
             newText = Kdl.appendNode(configModel.textOf(path), Outputs.serializeOutput(model, "    "));
@@ -135,11 +182,20 @@ ColumnLayout {
         stdout: StdioCollector { onStreamFinished: outputsProcess.text = this.text }
         stderr: StdioCollector {}
         onExited: (code) => {
-            if (code === 0) { root.outputs = Niri.parseOutputs(outputsProcess.text); root.loadError = ""; root.recompute(); }
+            if (code === 0) { root.outputs = Niri.parseOutputs(outputsProcess.text); root.loadError = ""; }
             else root.loadError = root.panel.tr("monitors.error", "Could not query niri outputs.");
+            root.recompute();
         }
     }
-    Process { id: previewProcess }
+    Process {
+        id: previewProcess
+        stderr: StdioCollector {}
+        onExited: (code) => {
+            root.previewBusy = false;
+            if (code !== 0) root.loadError = root.panel.tr("monitors.preview-error", "Preview failed — niri rejected a monitor change.");
+            root.previewNext();
+        }
+    }
 
     // ---- header ----
     RowLayout {
@@ -147,7 +203,7 @@ ColumnLayout {
         spacing: Style.marginS
         NText { text: panel.tr("monitors.count2", "{n} monitors", { n: root.merged.length }); font.weight: Style.fontWeightBold }
         Item { Layout.fillWidth: true }
-        NButton { icon: "plus"; text: panel.tr("monitors.add", "Add config"); visible: !root.moniqueAvailable; enabled: root.configModel && root.configModel.loaded; onClicked: addDialog.open() }
+        NButton { icon: "plus"; text: panel.tr("monitors.add", "Add config"); visible: !root.moniqueAvailable; enabled: root.configModel && root.configModel.loaded; onClicked: addDialog.openCreate() }
     }
     NText {
         Layout.fillWidth: true
@@ -259,48 +315,15 @@ ColumnLayout {
 
     MonitorEditor {
         id: monitorEditor
-        panel: root.panel
-        onPreviewRequested: (name, s) => {
-            root.previewProp(name, "mode", s.mode);
-            root.previewProp(name, "scale", s.scale != null ? String(s.scale) : "");
-            root.previewProp(name, "transform", s.transform);
-            root.previewProp(name, "position", [s.x != null ? String(s.x) : "", s.y != null ? String(s.y) : ""]);
-            root.previewProp(name, "vrr", s.vrr ? "on" : "off");
-        }
-        onAccepted: (model, configured) => root.persist(model, configured)
+        translate: root.panel.tr
+        onPreviewRequested: (name, s) => root.previewSettings(name, s)
+        onAccepted: (target, model) => root.persist(target, model)
         onRemoveRequested: (configured) => root.removeConfig(configured)
     }
 
-    // ---- add-config dialog ----
-    Popup {
+    MonitorAddDialog {
         id: addDialog
-        modal: true; focus: true
-        parent: Overlay.overlay
-        anchors.centerIn: parent
-        width: 380; padding: Style.marginL
-        background: Rectangle { color: Color.mSurface; radius: Style.radiusM; border.color: Color.mPrimary; border.width: 1 }
-        onOpened: addName.text = ""
-        ColumnLayout {
-            anchors.fill: parent
-            spacing: Style.marginM
-            NText { text: panel.tr("monitors.add-title", "Add monitor config"); font.weight: Style.fontWeightBold; font.pointSize: Style.fontSizeL }
-            NText {
-                Layout.fillWidth: true
-                text: panel.tr("monitors.add-hint", "Use the exact connector or model name (run `niri msg outputs`).")
-                color: Color.mOnSurfaceVariant; font.pointSize: Style.fontSizeS; wrapMode: Text.WordWrap
-            }
-            NTextInput { id: addName; Layout.fillWidth: true; placeholderText: 'DP-2 or "Maker Model …"' }
-            RowLayout {
-                Layout.fillWidth: true
-                Item { Layout.fillWidth: true }
-                NButton { text: panel.tr("action.cancel", "Cancel"); onClicked: addDialog.close() }
-                NButton {
-                    text: panel.tr("action.add-shortcut", "Add")
-                    backgroundColor: Color.mPrimary; textColor: Color.mOnPrimary
-                    enabled: addName.text.trim() !== ""
-                    onClicked: { var n = addName.text.trim(); addDialog.close(); root.addConfig(n); }
-                }
-            }
-        }
+        translate: root.panel.tr
+        onAccepted: (name) => root.addConfig(name)
     }
 }

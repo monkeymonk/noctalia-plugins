@@ -7,15 +7,15 @@ import "../lib/desktop.js" as Desktop
 import qs.Commons
 import qs.Widgets
 
-// Add/edit a single niri bind. Emits accepted(editNode, bind):
-//   editNode === null  → create; else → replace that node.
+// Add/edit a single niri bind. Emits accepted(target, model):
+//   target === null → create; else → replace target.node in target.path.
 Item {
     id: root
 
-    property var panel: null
-    property var configModel: null
+    property var translate: null
+    property string scriptsDir: ""     // resolved by the owning section
     property var existingBinds: []
-    property var editNode: null
+    property var target: null          // { path, node } of the edited bind, or null
 
     // working state
     property string combo: ""
@@ -29,12 +29,12 @@ Item {
     property bool recording: false
     property var tailActions: []        // 2nd+ actions of a multi-action bind, preserved verbatim
 
-    signal accepted(var editNode, var bind)
+    signal accepted(var target, var model)
 
-    function tr(k, f, p) { return panel ? panel.tr(k, f, p) : f; }
+    function tr(k, f, p) { return translate ? translate(k, f, p) : f; }
 
     readonly property bool isSpawn: actionName === "spawn" || actionName === "spawn-sh"
-    readonly property var conflict: combo ? Binds.findConflict(existingBinds, combo, editNode) : null
+    readonly property var conflict: combo ? Binds.findConflict(existingBinds, combo, target ? target.node : null) : null
 
     function reset() {
         combo = ""; actionName = ""; actionArgType = "none"; actionArg = "";
@@ -43,12 +43,12 @@ Item {
     }
 
     function openCreate(binds) {
-        reset(); editNode = null; existingBinds = binds || [];
+        reset(); target = null; existingBinds = binds || [];
         popup.open();
     }
 
     function openEdit(b, binds) {
-        reset(); editNode = b.node; existingBinds = binds || [];
+        reset(); target = { path: b.path, node: b.node }; existingBinds = binds || [];
         combo = b.combo;
         var a = (b.actions && b.actions[0]) || { name: "", args: [] };
         tailActions = (b.actions && b.actions.length > 1) ? b.actions.slice(1) : [];
@@ -86,7 +86,7 @@ Item {
 
     ActionPicker {
         id: actionPicker
-        panel: root.panel
+        translate: root.tr
         onPicked: (name, argType) => {
             root.actionName = name;
             root.actionArgType = argType;
@@ -96,7 +96,8 @@ Item {
     }
     AppPicker {
         id: appPicker
-        panel: root.panel
+        translate: root.tr
+        scriptsDir: root.scriptsDir
         onPicked: (cmd) => { root.command = cmd; }
     }
 
@@ -117,7 +118,7 @@ Item {
             spacing: Style.marginM
 
             NText {
-                text: root.editNode ? root.tr("bindeditor.edit", "Edit shortcut") : root.tr("bindeditor.add", "Add shortcut")
+                text: root.target ? root.tr("bindeditor.edit", "Edit shortcut") : root.tr("bindeditor.add", "Add shortcut")
                 font.pointSize: Style.fontSizeL
                 font.weight: Style.fontWeightBold
             }
@@ -275,7 +276,7 @@ Item {
                     backgroundColor: Color.mPrimary
                     textColor: Color.mOnPrimary
                     enabled: root.canSave
-                    onClicked: { var b = root.buildBind(); popup.close(); root.accepted(root.editNode, b); }
+                    onClicked: { var b = root.buildBind(); popup.close(); root.accepted(root.target, b); }
                 }
             }
         }

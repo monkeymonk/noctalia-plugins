@@ -136,8 +136,7 @@ function describeAction(act) {
     if (act.name === "spawn" || act.name === "spawn-sh") {
         return (act.args && act.args.length) ? act.args.join(" ") : act.name;
     }
-    var label = ACTION_LABELS[act.name];
-    var base = label || act.name.replace(/-/g, " ");
+    var base = act.name.replace(/-/g, " ");
     if (act.args && act.args.length) base += " " + act.args.join(" ");
     return base;
 }
@@ -219,9 +218,6 @@ var ACTIONS = [
     { name: "consume-or-expel-window-left", cat: "layout", arg: "none" },
     { name: "consume-or-expel-window-right", cat: "layout", arg: "none" }
 ];
-
-var ACTION_LABELS = {};
-ACTIONS.forEach(function (a) { ACTION_LABELS[a.name] = a.name.replace(/-/g, " "); });
 
 function actionSpec(name) {
     for (var i = 0; i < ACTIONS.length; i++) if (ACTIONS[i].name === name) return ACTIONS[i];

@@ -1,8 +1,6 @@
 {
   "title": "Niri Config",
   "subtitle": {
-    "preview": "Preview mode · edits are shown, never written",
-    "apply": "Apply mode · saves are validated and backed up",
     "pending": "{n} unsaved change(s) — press Apply",
     "clean": "All changes applied · validated & backed up"
   },
@@ -25,9 +23,7 @@
     "misc": "Misc"
   },
   "action": {
-    "reload": "Reload config",
-    "close": "Close",
-    "apply-once": "Apply this once",
+    "reload": "Reload / discard staged changes",
     "add-shortcut": "Add",
     "enable": "Enable",
     "disable": "Disable",
@@ -45,24 +41,25 @@
     "open-folder": "Open folder"
   },
   "status": {
-    "saving": "Saving {what}…",
-    "saved": "Saved {what} — niri reloaded.",
     "saved-file": "Saved {what}.",
-    "save-failed": "Save rejected by niri validate — restored from backup.",
     "staged": "{what} staged — press Apply to write it.",
     "applying": "Applying {n} change(s)…",
     "applied": "Applied — niri reloaded.",
     "apply-failed": "Rejected by niri validate — restored from backup. Fix and re-apply.",
     "undone": "Reverted to the previous config.",
+    "undo-empty": "Nothing to revert — no backup found.",
+    "undo-failed": "Undo failed: {what}",
+    "undo-no-output": "no output from the restore script",
+    "reloaded": "Reloaded from disk — {why}.",
+    "reload-blocked": "Reload skipped — {n} staged change(s) would be lost. Apply them first.",
     "write-failed": "Write failed: {what}."
   },
-  "preview": {
-    "title": "Preview — nothing written",
-    "subtitle": "This is the full new content of {path}. Switch to Apply mode in settings to write it."
+  "reason": {
+    "refresh": "manual refresh",
+    "profile-switch": "monitor profile switch"
   },
   "shortcuts": {
     "count": "{n} shortcuts",
-    "file": "binds in {p}",
     "none": "No binds {} block found in your config.",
     "search": "Filter shortcuts…"
   },
@@ -72,11 +69,6 @@
     "delete": "delete {c}",
     "enable": "enable {c}",
     "disable": "disable {c}"
-  },
-  "raw": {
-    "header": "Read-only view",
-    "note": "A dedicated editor for this section is coming. For now it's shown verbatim and never modified.",
-    "empty": "No configuration found for this section."
   },
   "bindeditor": {
     "add": "Add shortcut",
@@ -109,8 +101,6 @@
     "raw": "…or type a command"
   },
   "monitors": {
-    "count": "{n} monitors detected",
-    "hint": "Preview applies live and reverts on reload. Save writes to the file that defines the output (or cfg/display.kdl).",
     "error": "Could not query niri outputs.",
     "mode": "Resolution & refresh",
     "scale": "Scale",
@@ -119,6 +109,7 @@
     "posy": "Position Y",
     "vrr": "Variable refresh rate (VRR)",
     "preview": "Preview live",
+    "preview-error": "Preview failed — niri rejected a monitor change.",
     "summary": "monitor {n}",
     "count2": "{n} monitors",
     "hint2": "Preview applies live (reverts on reload). Save writes the output block; Add lets you configure a disconnected monitor for another setup.",
@@ -144,7 +135,6 @@
     "enabled": "Enabled",
     "duration": "Duration (ms)",
     "curve": "Curve",
-    "spring-hint": "Spring tuning — edit damping/stiffness in the file (header ✎ button).",
     "summary-global": "animation settings",
     "summary-event": "{n} animation"
   },
@@ -166,7 +156,6 @@
     "capture": "Capture window",
     "appid": "app-id (regex)",
     "title": "title (regex, optional)",
-    "props": "When it opens",
     "floating": "Open floating",
     "maximized": "Open maximized",
     "fullscreen": "Open fullscreen",
@@ -230,6 +219,9 @@
     "layout": "Layout",
     "variant": "Variant",
     "options": "XKB options",
+    "layout-add": "Add layout",
+    "variant-add": "Add variant",
+    "options-add": "Add option",
     "repeat-delay": "Repeat delay (ms)",
     "repeat-rate": "Repeat rate",
     "numlock": "Enable numlock at startup",
@@ -250,9 +242,7 @@
     "none": "No layout {} block found.",
     "gaps": "Gaps (px)",
     "center": "Center focused column",
-    "bg": "Background color",
-    "focus-ring": "Focus ring width",
-    "border": "Border width"
+    "bg": "Background color"
   },
   "error": {
     "no-niri": "niri not found on PATH"
@@ -266,15 +256,9 @@
       "label": "Show in control center",
       "desc": "Display a shortcut in the control center."
     },
-    "writeMode": {
-      "label": "Write mode",
-      "desc": "How the plugin applies your edits. Preview never writes to disk.",
-      "preview": "Preview only (never writes — safest)",
-      "apply": "Apply in place (.bak + niri validate gate)"
-    },
     "editor": {
       "label": "External editor command",
-      "desc": "Used by the 'Open in editor' buttons (Scripts, Misc). e.g. 'ghostty -e nvim'. Empty = $VISUAL/$EDITOR or xdg-open."
+      "desc": "Command to edit config files, e.g. 'ghostty -e nvim' (a terminal + editor). Leave empty to open the file's folder in your file manager instead."
     }
   }
 }

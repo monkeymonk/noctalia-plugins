@@ -11,8 +11,8 @@ import qs.Widgets
 ColumnLayout {
     id: root
 
-    property var panel: null
-    property var configModel: null
+    required property var panel
+    required property var configModel
 
     property string animPath: ""
     property string sectionFile: animPath
@@ -29,35 +29,28 @@ ColumnLayout {
 
     spacing: Style.marginM
 
-    function childNamed(node, name) {
-        var k = node && node.children ? node.children : [];
-        for (var i = 0; i < k.length; i++) if (k[i].name === name) return k[i];
-        return null;
-    }
-    function animNode(text) { return Kdl.findNode(Kdl.parse(text), "animations"); }
-
     function recompute() {
         if (!(configModel && configModel.loaded)) return;
-        var own = configModel.owner("animations");
+        var own = configModel.ownerOf("animations");
         if (!own) { animPath = ""; events = []; return; }
         animPath = own.path;
-        var A = own.node;
-        globalOff = !!childNamed(A, "off");
-        var sd = childNamed(A, "slowdown");
+        var A = own.nodes[0];
+        globalOff = !!Kdl.childNamed(A, "off");
+        var sd = Kdl.childNamed(A, "slowdown");
         slowdown = (sd && sd.args[0]) ? String(sd.args[0].value) : "";
         origGlobalOff = globalOff; origSlowdown = slowdown;
 
         var evs = [];
         knownEvents.forEach(function (name) {
-            var e = childNamed(A, name);
+            var e = Kdl.childNamed(A, name);
             if (!e) { evs.push({ name: name, present: false, disabled: false, isSpring: false, durationMs: "", curve: "ease-out-quad" }); return; }
-            var dm = childNamed(e, "duration-ms");
-            var cv = childNamed(e, "curve");
-            var sp = childNamed(e, "spring");
+            var dm = Kdl.childNamed(e, "duration-ms");
+            var cv = Kdl.childNamed(e, "curve");
+            var sp = Kdl.childNamed(e, "spring");
             function sprop(k) { return (sp && sp.props && sp.props[k] != null) ? String(sp.props[k]) : ""; }
             evs.push({
                 name: name, present: true,
-                disabled: !!childNamed(e, "off"),
+                disabled: !!Kdl.childNamed(e, "off"),
                 isSpring: !!sp,
                 durationMs: (dm && dm.args[0]) ? String(dm.args[0].value) : "",
                 curve: (cv && cv.args[0]) ? String(cv.args[0].value) : "ease-out-quad",
@@ -68,54 +61,33 @@ ColumnLayout {
     }
 
     Component.onCompleted: recompute()
-    Connections { target: root.configModel; function onLoadFinished() { root.recompute(); } }
+    Connections { target: root.configModel; function onConfigChanged() { root.recompute(); } }
 
-    // ---- surgical helpers rooted at "animations" ----
-    function ensureBlock(text, pathArr) {
-        if (!Kdl.findNode(Kdl.parse(text), "animations")) text = Kdl.appendNode(text, "animations {\n}");
-        for (var i = 0; i < pathArr.length; i++) {
-            var cur = Kdl.findNode(Kdl.parse(text), "animations");
-            for (var j = 0; cur && j < i; j++) cur = childNamed(cur, pathArr[j]);
-            if (cur && !childNamed(cur, pathArr[i])) text = Kdl.insertChildLine(text, cur, pathArr[i] + " {\n}");
-        }
-        return text;
-    }
-    function findBlock(text, pathArr) {
-        var cur = Kdl.findNode(Kdl.parse(text), "animations");
-        for (var i = 0; cur && i < pathArr.length; i++) cur = childNamed(cur, pathArr[i]);
-        return cur;
-    }
-    function setFlag(text, pathArr, name, on) {
-        var b = findBlock(text, pathArr); var ex = b ? childNamed(b, name) : null;
-        if (!on) return ex ? Kdl.removeNodeLine(text, ex) : text;
-        text = ensureBlock(text, pathArr);
-        var b2 = findBlock(text, pathArr);
-        return childNamed(b2, name) ? text : Kdl.insertChildLine(text, b2, name);
-    }
-    function setLine(text, pathArr, name, line) {
-        var b = findBlock(text, pathArr); var ex = b ? childNamed(b, name) : null;
-        if (line === null) return ex ? Kdl.removeNodeLine(text, ex) : text;
-        if (ex) return Kdl.replaceNodeLine(text, ex, Kdl.leadingIndent(text, ex.range) + line);
-        text = ensureBlock(text, pathArr);
-        return Kdl.insertChildLine(text, findBlock(text, pathArr), line);
-    }
-
+    // ---- surgical writes (one batched parse pass per save, inside Kdl) ----
     function saveGlobal() {
-        var t = configModel.textOf(animPath);
-        if (globalOff !== origGlobalOff) t = setFlag(t, [], "off", globalOff);
-        if (slowdown !== origSlowdown) t = setLine(t, [], "slowdown", (slowdown === "" || isNaN(parseFloat(slowdown))) ? null : ("slowdown " + parseFloat(slowdown)));
+        var edits = [];
+        if (globalOff !== origGlobalOff)
+            edits.push({ path: [], name: "off", line: globalOff ? "off" : null });
+        if (slowdown !== origSlowdown)
+            edits.push({ path: [], name: "slowdown",
+                         line: (slowdown === "" || isNaN(parseFloat(slowdown))) ? null : ("slowdown " + parseFloat(slowdown)) });
+        var t = Kdl.applyChildEdits(configModel.textOf(animPath), "animations", edits);
         panel.requestSave(animPath, t, panel.tr("anim.summary-global", "animation settings"));
     }
     function saveEvent(ev, enabled, durationMs, curve, damping, stiffness, epsilon) {
-        var t = configModel.textOf(animPath);
-        t = setFlag(t, [ev.name], "off", !enabled);
+        var edits = [];
+        if (!enabled !== !!ev.disabled)
+            edits.push({ path: [ev.name], name: "off", line: enabled ? null : "off" });
         if (enabled && ev.isSpring) {
             if (damping !== "" && stiffness !== "" && epsilon !== "")
-                t = setLine(t, [ev.name], "spring", "spring damping-ratio=" + parseFloat(damping) + " stiffness=" + parseFloat(stiffness) + " epsilon=" + parseFloat(epsilon));
+                edits.push({ path: [ev.name], name: "spring",
+                             line: "spring damping-ratio=" + parseFloat(damping) + " stiffness=" + parseFloat(stiffness) + " epsilon=" + parseFloat(epsilon) });
         } else if (enabled) {
-            t = setLine(t, [ev.name], "duration-ms", (durationMs === "" || isNaN(parseInt(durationMs))) ? null : ("duration-ms " + parseInt(durationMs)));
-            t = setLine(t, [ev.name], "curve", curve ? ('curve "' + curve + '"') : null);
+            edits.push({ path: [ev.name], name: "duration-ms",
+                         line: (durationMs === "" || isNaN(parseInt(durationMs))) ? null : ("duration-ms " + parseInt(durationMs)) });
+            edits.push({ path: [ev.name], name: "curve", line: curve ? ('curve "' + curve + '"') : null });
         }
+        var t = Kdl.applyChildEdits(configModel.textOf(animPath), "animations", edits);
         panel.requestSave(animPath, t, panel.tr("anim.summary-event", "{n} animation", { n: ev.name }));
     }
 

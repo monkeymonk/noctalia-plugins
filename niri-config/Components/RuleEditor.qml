@@ -5,14 +5,15 @@ import "../lib/rules.js" as Rules
 import qs.Commons
 import qs.Widgets
 
-// Add/edit a window-rule. Emits accepted(editNode, ruleModel). Covers the
-// documented properties; styling blocks (focus-ring/border/shadow/effects) and
-// extra match criteria are preserved verbatim across edits (rawExtras) — use the
+// Add/edit a window-rule. Emits accepted(target, model) — target is
+// { path, node } when editing, null when creating. Covers the documented
+// properties; styling blocks (focus-ring/border/shadow/effects) and extra
+// match criteria are preserved verbatim across edits (rawExtras) — use the
 // section's Edit-file button to tweak those.
 Item {
     id: root
 
-    property var panel: null
+    property var translate: null
 
     // match
     property string appId: ""
@@ -53,11 +54,11 @@ Item {
     property var origExcludes: []
     property var origExtras: []
     property string origKind: "window-rule"
-    property var editNode: null
+    property var target: null         // { path, node } of the edited rule, or null
 
-    signal accepted(var editNode, var rule)
+    signal accepted(var target, var model)
 
-    function tr(k, f) { return panel ? panel.tr(k, f) : f; }
+    function tr(k, f, p) { return translate ? translate(k, f, p) : f; }
 
     readonly property var triOpts: [{ key: "", name: "(unset)" }, { key: "true", name: "yes" }, { key: "false", name: "no" }]
     readonly property var colDispOpts: [{ key: "", name: "(unset)" }, { key: "normal", name: "normal" }, { key: "tabbed", name: "tabbed" }]
@@ -77,10 +78,10 @@ Item {
         origMatches = []; origExcludes = []; origExtras = []; origKind = "window-rule";
     }
 
-    function openCreate() { reset(); editNode = null; popup.open(); }
+    function openCreate() { reset(); target = null; popup.open(); }
 
     function openEdit(r) {
-        reset(); editNode = r.node;
+        reset(); target = { path: r.path, node: r.node };
         origMatches = r.matches || []; origExcludes = r.excludes || []; origExtras = r.rawExtras || [];
         origKind = r.kind || "window-rule";
         var m = (r.matches && r.matches[0]) || {};
@@ -102,8 +103,9 @@ Item {
         var match0 = {};
         var src = (origMatches && origMatches[0]) || {};
         for (var k in src) match0[k] = src[k];
-        if (appId) match0["app-id"] = appId; else delete match0["app-id"];
-        if (title) match0.title = title; else delete match0.title;
+        var picked = Rules.matchFromWindow({ appId: appId, title: title });
+        if ("app-id" in picked) match0["app-id"] = picked["app-id"]; else delete match0["app-id"];
+        if ("title" in picked) match0.title = picked.title; else delete match0.title;
         var hasMatch0 = Object.keys(match0).length > 0;
         var matches = (origMatches && origMatches.length > 1) ? [match0].concat(origMatches.slice(1)) : (hasMatch0 ? [match0] : []);
 
@@ -133,7 +135,7 @@ Item {
 
     visible: false
 
-    WindowPicker { id: windowPicker; panel: root.panel; onPicked: (a, t) => { root.appId = a; root.title = t; } }
+    WindowPicker { id: windowPicker; translate: root.tr; onPicked: (a, t) => { root.appId = a; root.title = t; } }
 
     Popup {
         id: popup
@@ -151,7 +153,7 @@ Item {
             spacing: Style.marginM
 
             NText {
-                text: root.editNode ? root.tr("ruleeditor.edit", "Edit window rule") : root.tr("ruleeditor.add", "Add window rule")
+                text: root.target ? root.tr("ruleeditor.edit", "Edit window rule") : root.tr("ruleeditor.add", "Add window rule")
                 font.pointSize: Style.fontSizeL; font.weight: Style.fontWeightBold
             }
 
@@ -253,7 +255,7 @@ Item {
                     text: root.tr("action.save", "Save")
                     backgroundColor: Color.mPrimary; textColor: Color.mOnPrimary
                     enabled: root.canSave
-                    onClicked: { var r = root.buildRule(); popup.close(); root.accepted(root.editNode, r); }
+                    onClicked: { var r = root.buildRule(); popup.close(); root.accepted(root.target, r); }
                 }
             }
         }

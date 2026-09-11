@@ -75,13 +75,9 @@ function commandToAction(cmd) {
     return { name: "spawn", args: tokenize(c) };
 }
 
-// Build an action from a parsed desktop entry.
-function entryToAction(entry) { return commandToAction(entry.exec); }
-
 if (typeof module !== "undefined" && module.exports) {
     module.exports = {
         APP_DIRS: APP_DIRS, parseDesktopEntry: parseDesktopEntry, cleanExec: cleanExec,
-        needsShell: needsShell, tokenize: tokenize, commandToAction: commandToAction,
-        entryToAction: entryToAction
+        needsShell: needsShell, tokenize: tokenize, commandToAction: commandToAction
     };
 }

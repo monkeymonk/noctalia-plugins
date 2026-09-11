@@ -11,7 +11,7 @@ Item {
     property string iconName: "fingerprint"
     property string deleteTooltip: "Delete"
 
-    signal deleteRequested()
+    signal deleteRequested(string fingerName)
 
     implicitHeight: bg.implicitHeight
 
@@ -41,7 +41,7 @@ Item {
             NIconButton {
                 icon: "trash"
                 tooltipText: root.deleteTooltip
-                onClicked: root.deleteRequested()
+                onClicked: root.deleteRequested(root.fingerName)
             }
         }
     }

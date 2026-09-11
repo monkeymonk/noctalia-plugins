@@ -1,8 +1,6 @@
 {
   "title": "Niri Config",
   "subtitle": {
-    "preview": "Voorbeeldmodus · wijzigingen worden getoond, nooit geschreven",
-    "apply": "Toepassingsmodus · opslaan wordt gevalideerd en geback-upt",
     "pending": "{n} niet-opgeslagen wijziging(en) — druk op Toepassen",
     "clean": "Alle wijzigingen toegepast · gevalideerd & geback-upt"
   },
@@ -25,9 +23,7 @@
     "misc": "Overig"
   },
   "action": {
-    "reload": "Configuratie herladen",
-    "close": "Sluiten",
-    "apply-once": "Eenmalig toepassen",
+    "reload": "Herladen / wachtende wijzigingen verwerpen",
     "add-shortcut": "Toevoegen",
     "enable": "Inschakelen",
     "disable": "Uitschakelen",
@@ -45,24 +41,25 @@
     "open-folder": "Map openen"
   },
   "status": {
-    "saving": "{what} opslaan…",
-    "saved": "{what} opgeslagen — niri herladen.",
     "saved-file": "{what} opgeslagen.",
-    "save-failed": "Opslaan afgewezen door niri validate — hersteld vanuit back-up.",
     "staged": "{what} klaargezet — druk op Toepassen om te schrijven.",
     "applying": "{n} wijziging(en) toepassen…",
     "applied": "Toegepast — niri herladen.",
     "apply-failed": "Afgewezen door niri validate — hersteld vanuit back-up. Corrigeer en probeer opnieuw.",
     "undone": "Teruggezet naar de vorige configuratie.",
+    "undo-empty": "Niets om terug te zetten — geen back-up gevonden.",
+    "undo-failed": "Terugzetten mislukt: {what}",
+    "undo-no-output": "geen uitvoer van het herstelscript",
+    "reloaded": "Herladen vanaf schijf — {why}.",
+    "reload-blocked": "Herladen overgeslagen — {n} wachtende wijziging(en) zouden verloren gaan. Pas ze eerst toe.",
     "write-failed": "Schrijven mislukt: {what}."
   },
-  "preview": {
-    "title": "Voorbeeld — niets geschreven",
-    "subtitle": "Dit is de volledige nieuwe inhoud van {path}. Schakel over naar Toepassingsmodus in de instellingen om te schrijven."
+  "reason": {
+    "refresh": "handmatig verversen",
+    "profile-switch": "wisselen van monitorprofiel"
   },
   "shortcuts": {
     "count": "{n} sneltoetsen",
-    "file": "binds in {p}",
     "none": "Geen binds {} blok gevonden in uw configuratie.",
     "search": "Sneltoetsen filteren…"
   },
@@ -72,11 +69,6 @@
     "delete": "{c} verwijderen",
     "enable": "{c} inschakelen",
     "disable": "{c} uitschakelen"
-  },
-  "raw": {
-    "header": "Alleen-lezenweergave",
-    "note": "Een toegewijde editor voor dit onderdeel is in aantocht. Momenteel wordt het ongewijzigd weergegeven en nooit aangepast.",
-    "empty": "Geen configuratie gevonden voor dit onderdeel."
   },
   "bindeditor": {
     "add": "Sneltoets toevoegen",
@@ -109,8 +101,6 @@
     "raw": "…of typ een opdracht"
   },
   "monitors": {
-    "count": "{n} monitoren gedetecteerd",
-    "hint": "Voorbeeld wordt live toegepast en ongedaan gemaakt bij herladen. Opslaan schrijft naar het bestand dat de uitvoer definieert (of cfg/display.kdl).",
     "error": "Kon niri-uitvoer niet opvragen.",
     "mode": "Resolutie & verversingsfrequentie",
     "scale": "Schaal",
@@ -119,6 +109,7 @@
     "posy": "Positie Y",
     "vrr": "Variabele verversingsfrequentie (VRR)",
     "preview": "Live voorbeeld",
+    "preview-error": "Voorbeeld mislukt — niri weigerde een monitorwijziging.",
     "summary": "monitor {n}",
     "count2": "{n} monitoren",
     "hint2": "Voorbeeld wordt live toegepast (ongedaan gemaakt bij herladen). Opslaan schrijft het uitvoerblok; Toevoegen laat u een losgekoppelde monitor configureren voor een andere opstelling.",
@@ -144,7 +135,6 @@
     "enabled": "Ingeschakeld",
     "duration": "Duur (ms)",
     "curve": "Curve",
-    "spring-hint": "Veerafstemming — bewerk demping/stijfheid in het bestand (koptekst ✎-knop).",
     "summary-global": "animatie-instellingen",
     "summary-event": "{n} animatie"
   },
@@ -166,7 +156,6 @@
     "capture": "Venster vastleggen",
     "appid": "app-id (regex)",
     "title": "titel (regex, optioneel)",
-    "props": "Wanneer het opent",
     "floating": "Zwevend openen",
     "maximized": "Gemaximaliseerd openen",
     "fullscreen": "Volledig scherm openen",
@@ -230,6 +219,9 @@
     "layout": "Indeling",
     "variant": "Variant",
     "options": "XKB-opties",
+    "layout-add": "Indeling toevoegen",
+    "variant-add": "Variant toevoegen",
+    "options-add": "XKB-optie toevoegen",
     "repeat-delay": "Herhalingsvertraging (ms)",
     "repeat-rate": "Herhalingssnelheid",
     "numlock": "Numlock inschakelen bij opstarten",
@@ -250,9 +242,7 @@
     "none": "Geen indeling {} blok gevonden.",
     "gaps": "Tussenruimte (px)",
     "center": "Gefocuste kolom centreren",
-    "bg": "Achtergrondkleur",
-    "focus-ring": "Focusringbreedte",
-    "border": "Randbreedte"
+    "bg": "Achtergrondkleur"
   },
   "error": {
     "no-niri": "niri niet gevonden in PATH"
@@ -266,15 +256,9 @@
       "label": "Tonen in controlecentrum",
       "desc": "Snelkoppeling weergeven in het controlecentrum."
     },
-    "writeMode": {
-      "label": "Schrijfmodus",
-      "desc": "Hoe de plugin uw wijzigingen toepast. Voorbeeld schrijft nooit naar schijf.",
-      "preview": "Alleen voorbeeld (schrijft nooit — veiligst)",
-      "apply": "Ter plaatse toepassen (.bak + niri validate controle)"
-    },
     "editor": {
       "label": "Externe editoropdracht",
-      "desc": "Gebruikt door de 'Openen in editor'-knoppen (Scripts, Overig). bijv. 'ghostty -e nvim'. Leeg = $VISUAL/$EDITOR of xdg-open."
+      "desc": "Opdracht om configuratiebestanden te bewerken, bijv. 'ghostty -e nvim' (een terminal + editor). Laat leeg om in plaats daarvan de map van het bestand in je bestandsbeheerder te openen."
     }
   }
 }

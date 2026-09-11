@@ -279,49 +279,67 @@ function parse(text) {
 
 // ── tree helpers ────────────────────────────────────────────────────────────
 
-// Depth-first walk. cb(node, parent) -> if returns false, skip children.
+// Depth-first walk in document order. cb(node, parent) is called for every node.
 function walk(nodes, cb, parent) {
     for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i];
-        var r = cb(n, parent || null);
-        if (r !== false && n.children && n.children.length) walk(n.children, cb, n);
+        cb(n, parent || null);
+        if (n.children && n.children.length) walk(n.children, cb, n);
     }
 }
 
-// Find the first top-level (or nested) node matching name (case-insensitive).
+// Find the first node matching name (case-insensitive), depth-first, stopping at
+// the first hit — the sections call this dozens of times per recompute.
 function findNode(doc, name, nodes) {
     var target = name.toLowerCase();
-    var hit = null;
-    walk(nodes || doc.nodes, function (n) {
-        if (!hit && n.name.toLowerCase() === target) { hit = n; return false; }
-    });
-    return hit;
-}
-
-function findNodes(nodes, predicate) {
-    var out = [];
-    walk(nodes, function (n) { if (predicate(n)) out.push(n); });
-    return out;
+    var roots = nodes || doc.nodes;
+    var stack = [];
+    for (var i = roots.length - 1; i >= 0; i--) stack.push(roots[i]);
+    while (stack.length) {
+        var n = stack.pop();
+        if (n.name.toLowerCase() === target) return n;
+        var kids = n.children;
+        if (kids) for (var j = kids.length - 1; j >= 0; j--) stack.push(kids[j]);
+    }
+    return null;
 }
 
 // ── surgical text edits (operate on raw text + ranges) ───────────────────────
 
+// True when only whitespace separates pos from the start of its physical line.
+function startsLine(text, pos) {
+    while (pos > 0 && text[pos - 1] !== "\n") { if (!isWs(text[pos - 1])) return false; pos--; }
+    return true;
+}
+
 // Expand a [start,end] range to cover full physical lines (incl. leading indent
-// and the trailing newline). Used to cleanly remove/replace line-oriented nodes.
+// and the trailing newline) — but ONLY when those lines hold nothing but the node
+// itself. A node that shares its line with anything else (`xkb { layout "us" }
+// numlock`, `a 1; b 2`, an enclosing block opened on the same line) keeps its own
+// range (minus the inter-token whitespace the parser swept up after it), so a
+// line-oriented edit can never swallow a neighbour or the space before a brace.
 function lineSpan(text, range) {
     var s = range[0], e = range[1];
     while (s > 0 && text[s - 1] !== "\n") s--;
     while (e < text.length && text[e] !== "\n") e++;
-    if (e < text.length && text[e] === "\n") e++;
+    var shared = !startsLine(text, range[0]);
+    for (var i = range[1]; !shared && i < e; i++) if (!isWs(text[i])) shared = true;
+    if (shared) {
+        var ne = range[1];
+        while (ne > range[0] && isWs(text[ne - 1])) ne--;
+        return [range[0], ne];
+    }
+    if (e < text.length) e++;
     return [s, e];
 }
 
+// Indentation of the node's own line — "" when the node does not start the line
+// (an inline child owns no indent; the enclosing line's indent is not its own).
 function leadingIndent(text, range) {
+    if (!startsLine(text, range[0])) return "";
     var s = range[0];
     while (s > 0 && text[s - 1] !== "\n") s--;
-    var ind = "";
-    for (var i = s; i < text.length && (text[i] === " " || text[i] === "\t"); i++) ind += text[i];
-    return ind;
+    return text.slice(s, range[0]);
 }
 
 // Replace the text covered by [start,end] with replacement.
@@ -330,40 +348,52 @@ function spliceText(text, range, replacement) {
 }
 
 // Replace a node's whole line(s) with newLine (no trailing newline expected).
+// For a node sharing its line, only the node itself is replaced and its ";"
+// terminator is kept so the following sibling stays a separate node.
 function replaceNodeLine(text, node, newLine) {
     var span = lineSpan(text, node.range);
-    var trailing = text[span[1] - 1] === "\n" ? "\n" : "";
+    var last = text[span[1] - 1];
+    var trailing = "";
+    if (last === "\n") trailing = "\n";
+    else if (last === ";" && newLine.charAt(newLine.length - 1) !== ";") trailing = ";";
     return spliceText(text, span, newLine + trailing);
 }
 
-// Remove a node entirely (its full line span).
+// Remove a node entirely (its full line span, or just itself — plus the inline
+// whitespace that followed it — when it shares a line with a sibling).
 function removeNodeLine(text, node) {
-    return spliceText(text, lineSpan(text, node.range), "");
-}
-
-// Comment out a node by line: prefix each physical line with "// ".
-function commentOutNodeLine(text, node) {
     var span = lineSpan(text, node.range);
-    var block = text.slice(span[0], span[1]);
-    var commented = block.replace(/^(\s*)(?=\S)/gm, "$1// ");
-    return spliceText(text, span, commented);
+    var e = span[1];
+    if (text[e - 1] !== "\n") while (text[e] === " " || text[e] === "\t") e++;
+    return spliceText(text, [span[0], e], "");
 }
 
-// Insert newLine just before the closing "}" of parent (as a child), using the
-// indentation of existing children when available. parent.childrenRange must be set.
+// Insert newLine as a child of parent, just before its closing "}".
+// A single-line block stays on its line, the new node separated by ";" so it does
+// not merge into the previous node's arguments. A multi-line block gets a fresh
+// line indented like its siblings, continuation lines included, so a block
+// inserted as `name {\n}` closes at its own indent.
 function insertChildLine(text, parent, newLine) {
     if (!parent.childrenRange) return text;
-    var insertAt = parent.childrenRange[1];
-    // derive child indent from an existing child, else parent indent + 4 spaces
-    var indent;
-    if (parent.children && parent.children.length) {
-        indent = leadingIndent(text, parent.children[parent.children.length - 1].range);
-    } else {
-        indent = leadingIndent(text, parent.range) + "    ";
+    var innerStart = parent.childrenRange[0], innerEnd = parent.childrenRange[1];
+    var at = innerEnd;
+    while (at > innerStart && (text[at - 1] === " " || text[at - 1] === "\t")) at--;
+
+    if (text.slice(innerStart, innerEnd).indexOf("\n") === -1) {
+        var sep = at === innerStart ? " " : (text[at - 1] === ";" ? " " : "; ");
+        return spliceText(text, [at, innerEnd], sep + newLine.replace(/\s*\n\s*/g, " ") + " ");
     }
-    // ensure we sit on a fresh line
-    var prefix = (insertAt > 0 && text[insertAt - 1] !== "\n") ? "\n" : "";
-    return spliceText(text, [insertAt, insertAt], prefix + indent + newLine + "\n");
+
+    // derive child indent from an existing line-owning child, else parent indent + 4
+    var kids = parent.children || [];
+    var last = kids.length ? kids[kids.length - 1] : null;
+    var indent = (last && startsLine(text, last.range[0]))
+        ? leadingIndent(text, last.range)
+        : leadingIndent(text, parent.range) + "    ";
+    // sit on a fresh line, before the closing brace's own indentation
+    if (at > 0 && text[at - 1] !== "\n") at = innerEnd;
+    var prefix = (at > 0 && text[at - 1] !== "\n") ? "\n" : "";
+    return spliceText(text, [at, at], prefix + indent + newLine.split("\n").join("\n" + indent) + "\n");
 }
 
 // Enable/disable a node in place by adding/removing a leading "/-" slashdash,
@@ -382,13 +412,126 @@ function appendNode(text, newText) {
     return text + sep + newText + (newText.endsWith("\n") ? "" : "\n");
 }
 
+// ── block editing (path-addressed children of a named root block) ────────────
+
+// First child named exactly `name`, or null.
+function childNamed(node, name) {
+    var kids = node && node.children ? node.children : null;
+    if (!kids) return null;
+    for (var i = 0; i < kids.length; i++) if (kids[i].name === name) return kids[i];
+    return null;
+}
+
+// Parse text, find the `rootName` node, then descend pathArr by child name.
+function blockPath(text, rootName, pathArr) {
+    var cur = findNode(parse(text), rootName);
+    var path = pathArr || [];
+    for (var i = 0; cur && i < path.length; i++) cur = childNamed(cur, path[i]);
+    return cur || null;
+}
+
+// Create every missing block along rootName + pathArr. Returns text unchanged
+// when the whole path already exists.
+function ensurePath(text, rootName, pathArr) {
+    var path = pathArr || [];
+    var root = findNode(parse(text), rootName);
+    if (!root) {
+        text = appendNode(text, rootName + " {\n}");
+        root = findNode(parse(text), rootName);
+    }
+    for (var i = 0; i < path.length; i++) {
+        var cur = root;
+        for (var j = 0; cur && j < i; j++) cur = childNamed(cur, path[j]);
+        if (!cur || childNamed(cur, path[i])) continue;
+        text = insertChildLine(text, cur, path[i] + " {\n}");
+        root = findNode(parse(text), rootName);
+    }
+    return text;
+}
+
+// Set the child `name` of the block at rootName + pathArr to the finished source
+// line `line` (numeric/string coercion is the caller's job). line === null removes
+// the child. Missing blocks along the path are created on demand.
+function setChildLine(text, rootName, pathArr, name, line) {
+    var block = blockPath(text, rootName, pathArr);
+    var existing = block ? childNamed(block, name) : null;
+    if (line === null) return existing ? removeNodeLine(text, existing) : text;
+    if (existing) return replaceNodeLine(text, existing, leadingIndent(text, existing.range) + line);
+    text = ensurePath(text, rootName, pathArr);
+    block = blockPath(text, rootName, pathArr);
+    return block ? insertChildLine(text, block, line) : text;
+}
+
+// Add/remove a bare flag node (e.g. `numlock`) in the block at rootName + pathArr.
+function setChildFlag(text, rootName, pathArr, name, on) {
+    var block = blockPath(text, rootName, pathArr);
+    var existing = block ? childNamed(block, name) : null;
+    if (!on) return existing ? removeNodeLine(text, existing) : text;
+    if (existing) return text;
+    text = ensurePath(text, rootName, pathArr);
+    block = blockPath(text, rootName, pathArr);
+    return block ? insertChildLine(text, block, name) : text;
+}
+
+// Apply many child edits to the same root block in one pass. `edits` is
+//   [{ path: ["keyboard", "xkb"], name: "layout", line: 'layout "us"' | null }]
+// The result is identical to folding
+//   setChildLine(text, rootName, e.path, e.name, e.line)
+// over `edits`, but the document is parsed ONCE for every edit whose target node
+// already exists — only a first-time insert (which may have to create blocks
+// along the path) falls back to the sequential primitive. `line === null` removes
+// the child; a bare flag is `line === name` (on) / null (off). The caller must
+// not pass two edits with the same (path, name).
+function applyChildEdits(text, rootName, edits) {
+    var list = edits || [];
+    if (!list.length) return text;
+
+    var root = findNode(parse(text), rootName);
+    if (!root) {
+        // Nothing exists yet: the sequential path creates the root block.
+        for (var f = 0; f < list.length; f++)
+            text = setChildLine(text, rootName, list[f].path, list[f].name, list[f].line);
+        return text;
+    }
+
+    var splices = [];   // { node, line } — line === null means "remove"
+    var deferred = [];  // edits whose target does not exist yet
+    for (var k = 0; k < list.length; k++) {
+        var e = list[k];
+        var cur = root, p = e.path || [];
+        for (var j = 0; cur && j < p.length; j++) cur = childNamed(cur, p[j]);
+        var existing = cur ? childNamed(cur, e.name) : null;
+        if (!existing) { if (e.line !== null) deferred.push(e); continue; }
+        splices.push({ node: existing, line: e.line });
+    }
+
+    // Descending by range start: every splice leaves the ranges before it intact.
+    // Targets are distinct nodes, so the ranges never overlap.
+    splices.sort(function (a, b) { return b.node.range[0] - a.node.range[0]; });
+    for (var s = 0; s < splices.length; s++) {
+        var sp = splices[s];
+        text = sp.line === null
+            ? removeNodeLine(text, sp.node)
+            : replaceNodeLine(text, sp.node, leadingIndent(text, sp.node.range) + sp.line);
+    }
+
+    // Inserts re-parse per edit — they only happen the first time a setting is written.
+    for (var d = 0; d < deferred.length; d++) {
+        var de = deferred[d];
+        text = setChildLine(text, rootName, de.path, de.name, de.line);
+    }
+    return text;
+}
+
 // node-only export (no-op under QML where `module` is undefined)
 if (typeof module !== "undefined" && module.exports) {
     module.exports = {
-        parse: parse, walk: walk, findNode: findNode, findNodes: findNodes,
+        parse: parse, walk: walk, findNode: findNode,
         lineSpan: lineSpan, leadingIndent: leadingIndent, spliceText: spliceText,
         replaceNodeLine: replaceNodeLine, removeNodeLine: removeNodeLine,
-        commentOutNodeLine: commentOutNodeLine, insertChildLine: insertChildLine,
-        setDisabled: setDisabled, appendNode: appendNode
+        insertChildLine: insertChildLine, setDisabled: setDisabled, appendNode: appendNode,
+        childNamed: childNamed, blockPath: blockPath, ensurePath: ensurePath,
+        setChildLine: setChildLine, setChildFlag: setChildFlag,
+        applyChildEdits: applyChildEdits
     };
 }

@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
@@ -23,7 +22,6 @@ Item {
     property string busyMessage: ""
     property string statusMessage: ""
     property color statusColor: Color.mOnSurfaceVariant
-    property string pendingDeleteFinger: ""
 
     function tr(k, fallback, params) {
         var s = null;
@@ -47,7 +45,7 @@ Item {
     }
 
     function requestDeleteFinger(name) {
-        pendingDeleteFinger = name;
+        confirmDeleteFinger.payload = name;
         confirmDeleteFinger.open();
     }
 
@@ -74,7 +72,7 @@ Item {
     Timer {
         interval: 30000
         repeat: true
-        running: root.fprintdInstalled
+        running: root.fprintdInstalled && root.visible
         onTriggered: root.refreshList()
     }
 
@@ -261,7 +259,7 @@ Item {
                             label: root.fingerLabel(modelData)
                             iconName: F.iconOf(modelData)
                             deleteTooltip: root.tr("action.delete", "Delete")
-                            onDeleteRequested: root.requestDeleteFinger(modelData)
+                            onDeleteRequested: (fingerName) => root.requestDeleteFinger(fingerName)
                         }
                     }
                 }
@@ -289,7 +287,7 @@ Item {
                     icon: "plus"
                     text: root.tr("action.enroll", "Enroll finger")
                     enabled: root.enrolledFingers.length < F.ALL_FINGERS.length && root.busyMessage === ""
-                    onClicked: fingerPickerPopup.open()
+                    onClicked: fingerPicker.open()
                 }
                 NButton {
                     icon: "fingerprint"
@@ -332,126 +330,33 @@ Item {
         }
     }
 
-    // ---------- Finger picker popup ----------
+    // ---------- Modals ----------
 
-    Popup {
-        id: fingerPickerPopup
-        modal: true
-        focus: true
-        anchors.centerIn: parent
-        padding: Style.marginM
-        background: Rectangle {
-            color: Color.mSurface
-            radius: Style.radiusM
-            border.color: Color.mOutline
-            border.width: 1
-        }
-
-        ColumnLayout {
-            spacing: Style.marginS
-            NText {
-                text: root.tr("picker.title", "Pick a finger to enroll")
-                font.weight: Style.fontWeightBold
-            }
-            Repeater {
-                model: F.availableForEnroll(root.enrolledFingers)
-                delegate: NButton {
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: 240
-                    icon: F.iconOf(modelData)
-                    text: root.fingerLabel(modelData)
-                    onClicked: {
-                        fingerPickerPopup.close();
-                        root.startEnroll(modelData);
-                    }
-                }
-            }
-        }
+    FingerPicker {
+        id: fingerPicker
+        anchors.fill: parent
+        pluginApi: root.pluginApi
+        enrolledFingers: root.enrolledFingers
+        onPicked: (name) => root.startEnroll(name)
     }
 
-    // ---------- Confirm delete-all ----------
-
-    Popup {
+    ConfirmPopup {
         id: confirmDeleteAll
-        modal: true
-        focus: true
-        anchors.centerIn: parent
-        padding: Style.marginM
-        background: Rectangle {
-            color: Color.mSurface
-            radius: Style.radiusM
-            border.color: Color.mError
-            border.width: 1
-        }
-        ColumnLayout {
-            spacing: Style.marginM
-            NText {
-                text: root.tr("confirm.delete-all", "Delete ALL enrolled fingerprints?")
-                font.weight: Style.fontWeightBold
-                color: Color.mError
-            }
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Style.marginS
-                Item { Layout.fillWidth: true }
-                NButton {
-                    text: root.tr("action.cancel", "Cancel")
-                    onClicked: confirmDeleteAll.close()
-                }
-                NButton {
-                    text: root.tr("action.delete", "Delete")
-                    backgroundColor: Color.mError
-                    textColor: Color.mOnError
-                    onClicked: { confirmDeleteAll.close(); root.deleteAll(); }
-                }
-            }
-        }
+        anchors.fill: parent
+        pluginApi: root.pluginApi
+        titleText: root.tr("confirm.delete-all", "Delete ALL enrolled fingerprints?")
+        confirmText: root.tr("action.delete", "Delete")
+        onConfirmed: root.deleteAll()
     }
 
-    // ---------- Confirm delete single finger ----------
-
-    Popup {
+    ConfirmPopup {
         id: confirmDeleteFinger
-        modal: true
-        focus: true
-        anchors.centerIn: parent
-        padding: Style.marginM
-        background: Rectangle {
-            color: Color.mSurface
-            radius: Style.radiusM
-            border.color: Color.mError
-            border.width: 1
-        }
-        onClosed: root.pendingDeleteFinger = ""
-        ColumnLayout {
-            spacing: Style.marginM
-            NText {
-                text: root.tr("confirm.delete-finger", "Delete the fingerprint for {finger}?", {
-                    finger: root.pendingDeleteFinger ? root.fingerLabel(root.pendingDeleteFinger) : ""
-                })
-                font.weight: Style.fontWeightBold
-                color: Color.mError
-                wrapMode: Text.WordWrap
-            }
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Style.marginS
-                Item { Layout.fillWidth: true }
-                NButton {
-                    text: root.tr("action.cancel", "Cancel")
-                    onClicked: confirmDeleteFinger.close()
-                }
-                NButton {
-                    text: root.tr("action.delete", "Delete")
-                    backgroundColor: Color.mError
-                    textColor: Color.mOnError
-                    onClicked: {
-                        var f = root.pendingDeleteFinger;
-                        confirmDeleteFinger.close();
-                        if (f) root.deleteFinger(f);
-                    }
-                }
-            }
-        }
+        anchors.fill: parent
+        pluginApi: root.pluginApi
+        titleText: root.tr("confirm.delete-finger", "Delete the fingerprint for {finger}?", {
+            finger: confirmDeleteFinger.payload ? root.fingerLabel(confirmDeleteFinger.payload) : ""
+        })
+        confirmText: root.tr("action.delete", "Delete")
+        onConfirmed: (payload) => { if (payload) root.deleteFinger(payload); }
     }
 }

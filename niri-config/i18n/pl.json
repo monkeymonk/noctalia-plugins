@@ -1,8 +1,6 @@
 {
   "title": "Konfiguracja niri",
   "subtitle": {
-    "preview": "Tryb podglądu · zmiany są widoczne, lecz nie zapisywane",
-    "apply": "Tryb zastosowania · zapisy są walidowane i tworzona jest kopia zapasowa",
     "pending": "{n} niezapisanych zmian — naciśnij Zastosuj",
     "clean": "Wszystkie zmiany zastosowane · zwalidowane i zapisano kopię zapasową"
   },
@@ -25,9 +23,7 @@
     "misc": "Różne"
   },
   "action": {
-    "reload": "Przeładuj konfigurację",
-    "close": "Zamknij",
-    "apply-once": "Zastosuj jednorazowo",
+    "reload": "Przeładuj / odrzuć oczekujące zmiany",
     "add-shortcut": "Dodaj",
     "enable": "Włącz",
     "disable": "Wyłącz",
@@ -45,24 +41,25 @@
     "open-folder": "Otwórz folder"
   },
   "status": {
-    "saving": "Zapisywanie {what}…",
-    "saved": "Zapisano {what} — niri przeładowane.",
     "saved-file": "Zapisano {what}.",
-    "save-failed": "Zapis odrzucony przez niri validate — przywrócono z kopii zapasowej.",
     "staged": "{what} w kolejce — naciśnij Zastosuj, aby zapisać.",
     "applying": "Stosowanie {n} zmian…",
     "applied": "Zastosowano — niri przeładowane.",
     "apply-failed": "Odrzucono przez niri validate — przywrócono z kopii zapasowej. Popraw i zastosuj ponownie.",
     "undone": "Przywrócono poprzednią konfigurację.",
+    "undo-empty": "Nie ma czego cofać — nie znaleziono kopii zapasowej.",
+    "undo-failed": "Cofanie nie powiodło się: {what}",
+    "undo-no-output": "brak danych wyjściowych ze skryptu przywracania",
+    "reloaded": "Przeładowano z dysku — {why}.",
+    "reload-blocked": "Pominięto przeładowanie — {n} oczekująca(-e) zmiana(-y) zostałyby utracone. Najpierw je zastosuj.",
     "write-failed": "Zapis nie powiódł się: {what}."
   },
-  "preview": {
-    "title": "Podgląd — nic nie zapisano",
-    "subtitle": "To jest pełna nowa zawartość {path}. Przełącz się na tryb zastosowania w ustawieniach, aby zapisać."
+  "reason": {
+    "refresh": "odświeżenie ręczne",
+    "profile-switch": "przełączenie profilu monitorów"
   },
   "shortcuts": {
     "count": "{n} skrótów",
-    "file": "powiązania w {p}",
     "none": "Nie znaleziono bloku binds {} w konfiguracji.",
     "search": "Filtruj skróty…"
   },
@@ -72,11 +69,6 @@
     "delete": "usuń {c}",
     "enable": "włącz {c}",
     "disable": "wyłącz {c}"
-  },
-  "raw": {
-    "header": "Widok tylko do odczytu",
-    "note": "Dedykowany edytor dla tej sekcji jest w przygotowaniu. Na razie treść jest wyświetlana dosłownie i nie jest modyfikowana.",
-    "empty": "Nie znaleziono konfiguracji dla tej sekcji."
   },
   "bindeditor": {
     "add": "Dodaj skrót",
@@ -109,8 +101,6 @@
     "raw": "…lub wpisz polecenie"
   },
   "monitors": {
-    "count": "Wykryto {n} monitorów",
-    "hint": "Podgląd stosuje się na żywo i cofa przy przeładowaniu. Zapisanie pisze do pliku definiującego wyjście (lub cfg/display.kdl).",
     "error": "Nie można pobrać informacji o wyjściach niri.",
     "mode": "Rozdzielczość i częstotliwość odświeżania",
     "scale": "Skala",
@@ -119,6 +109,7 @@
     "posy": "Pozycja Y",
     "vrr": "Zmienna częstotliwość odświeżania (VRR)",
     "preview": "Podgląd na żywo",
+    "preview-error": "Podgląd nie powiódł się — niri odrzucił zmianę monitora.",
     "summary": "monitor {n}",
     "count2": "{n} monitorów",
     "hint2": "Podgląd stosuje się na żywo (cofa przy przeładowaniu). Zapisanie zapisuje blok wyjścia; Dodaj pozwala skonfigurować odłączony monitor dla innej konfiguracji.",
@@ -144,7 +135,6 @@
     "enabled": "Włączone",
     "duration": "Czas trwania (ms)",
     "curve": "Krzywa",
-    "spring-hint": "Strojenie sprężyny — edytuj tłumienie/sztywność w pliku (przycisk ✎ w nagłówku).",
     "summary-global": "ustawienia animacji",
     "summary-event": "animacja {n}"
   },
@@ -166,7 +156,6 @@
     "capture": "Przechwyć okno",
     "appid": "app-id (wyrażenie regularne)",
     "title": "tytuł (wyrażenie regularne, opcjonalnie)",
-    "props": "Po otwarciu",
     "floating": "Otwórz pływające",
     "maximized": "Otwórz zmaksymalizowane",
     "fullscreen": "Otwórz na pełnym ekranie",
@@ -230,6 +219,9 @@
     "layout": "Układ",
     "variant": "Wariant",
     "options": "Opcje XKB",
+    "layout-add": "Dodaj układ",
+    "variant-add": "Dodaj wariant",
+    "options-add": "Dodaj opcję XKB",
     "repeat-delay": "Opóźnienie powtarzania (ms)",
     "repeat-rate": "Częstotliwość powtarzania",
     "numlock": "Włącz numlock przy starcie",
@@ -250,9 +242,7 @@
     "none": "Nie znaleziono bloku layout {}.",
     "gaps": "Odstępy (px)",
     "center": "Wyśrodkuj aktywną kolumnę",
-    "bg": "Kolor tła",
-    "focus-ring": "Szerokość pierścienia fokusu",
-    "border": "Szerokość obramowania"
+    "bg": "Kolor tła"
   },
   "error": {
     "no-niri": "niri nie znaleziony w PATH"
@@ -266,15 +256,9 @@
       "label": "Pokaż w centrum sterowania",
       "desc": "Wyświetlaj skrót w centrum sterowania."
     },
-    "writeMode": {
-      "label": "Tryb zapisu",
-      "desc": "Sposób, w jaki wtyczka stosuje zmiany. Podgląd nigdy nie zapisuje na dysk.",
-      "preview": "Tylko podgląd (nigdy nie zapisuje — najbezpieczniejszy)",
-      "apply": "Zastosuj w miejscu (.bak + bramka niri validate)"
-    },
     "editor": {
       "label": "Polecenie zewnętrznego edytora",
-      "desc": "Używane przez przyciski „Otwórz w edytorze” (Skrypty, Różne). np. 'ghostty -e nvim'. Puste = $VISUAL/$EDITOR lub xdg-open."
+      "desc": "Polecenie do edycji plików konfiguracyjnych, np. „ghostty -e nvim” (terminal + edytor). Pozostaw puste, aby zamiast tego otworzyć folder pliku w menedżerze plików."
     }
   }
 }

@@ -1,8 +1,6 @@
 {
   "title": "Niri Config",
   "subtitle": {
-    "preview": "Modalità anteprima · le modifiche sono visualizzate, mai scritte",
-    "apply": "Modalità applica · i salvataggi sono validati e copiati come backup",
     "pending": "{n} modifica/e non salvata/e — premi Applica",
     "clean": "Tutte le modifiche applicate · validate e copiate come backup"
   },
@@ -25,9 +23,7 @@
     "misc": "Altro"
   },
   "action": {
-    "reload": "Ricarica configurazione",
-    "close": "Chiudi",
-    "apply-once": "Applica una volta",
+    "reload": "Ricarica / scarta le modifiche in sospeso",
     "add-shortcut": "Aggiungi",
     "enable": "Abilita",
     "disable": "Disabilita",
@@ -45,24 +41,25 @@
     "open-folder": "Apri cartella"
   },
   "status": {
-    "saving": "Salvataggio di {what}…",
-    "saved": "Salvato {what} — niri ricaricato.",
     "saved-file": "Salvato {what}.",
-    "save-failed": "Salvataggio rifiutato da niri validate — ripristinato dal backup.",
     "staged": "{what} in coda — premi Applica per scrivere.",
     "applying": "Applicazione di {n} modifica/e…",
     "applied": "Applicato — niri ricaricato.",
     "apply-failed": "Rifiutato da niri validate — ripristinato dal backup. Correggi e riapplica.",
     "undone": "Ripristinata la configurazione precedente.",
+    "undo-empty": "Nulla da annullare — nessun backup trovato.",
+    "undo-failed": "Annullamento non riuscito: {what}",
+    "undo-no-output": "nessun output dallo script di ripristino",
+    "reloaded": "Ricaricato dal disco — {why}.",
+    "reload-blocked": "Ricaricamento ignorato — {n} modifica/modifiche in sospeso andrebbero perse. Applicale prima.",
     "write-failed": "Scrittura fallita: {what}."
   },
-  "preview": {
-    "title": "Anteprima — niente viene scritto",
-    "subtitle": "Questo è il nuovo contenuto completo di {path}. Passa alla modalità Applica nelle impostazioni per scriverlo."
+  "reason": {
+    "refresh": "aggiornamento manuale",
+    "profile-switch": "cambio del profilo monitor"
   },
   "shortcuts": {
     "count": "{n} scorciatoie",
-    "file": "bind in {p}",
     "none": "Nessun blocco binds {} trovato nella configurazione.",
     "search": "Filtra scorciatoie…"
   },
@@ -72,11 +69,6 @@
     "delete": "elimina {c}",
     "enable": "abilita {c}",
     "disable": "disabilita {c}"
-  },
-  "raw": {
-    "header": "Vista sola lettura",
-    "note": "Un editor dedicato per questa sezione è in arrivo. Per ora è mostrata verbatim e mai modificata.",
-    "empty": "Nessuna configurazione trovata per questa sezione."
   },
   "bindeditor": {
     "add": "Aggiungi scorciatoia",
@@ -109,8 +101,6 @@
     "raw": "…o digita un comando"
   },
   "monitors": {
-    "count": "{n} monitor rilevati",
-    "hint": "L'anteprima si applica in tempo reale e si ripristina al ricaricamento. Salva scrive nel file che definisce l'output (o cfg/display.kdl).",
     "error": "Impossibile interrogare gli output di niri.",
     "mode": "Risoluzione e frequenza",
     "scale": "Scala",
@@ -119,6 +109,7 @@
     "posy": "Posizione Y",
     "vrr": "Frequenza di aggiornamento variabile (VRR)",
     "preview": "Anteprima live",
+    "preview-error": "Anteprima non riuscita — niri ha rifiutato una modifica del monitor.",
     "summary": "monitor {n}",
     "count2": "{n} monitor",
     "hint2": "L'anteprima si applica in tempo reale (ripristinata al ricaricamento). Salva scrive il blocco output; Aggiungi permette di configurare un monitor non connesso per un altro setup.",
@@ -144,7 +135,6 @@
     "enabled": "Abilitato",
     "duration": "Durata (ms)",
     "curve": "Curva",
-    "spring-hint": "Regolazione molla — modifica smorzamento/rigidità nel file (pulsante ✎ nell'intestazione).",
     "summary-global": "impostazioni animazioni",
     "summary-event": "animazione {n}"
   },
@@ -166,7 +156,6 @@
     "capture": "Acquisisci finestra",
     "appid": "app-id (regex)",
     "title": "titolo (regex, opzionale)",
-    "props": "All'apertura",
     "floating": "Apri come mobile",
     "maximized": "Apri massimizzata",
     "fullscreen": "Apri a schermo intero",
@@ -230,6 +219,9 @@
     "layout": "Layout",
     "variant": "Variante",
     "options": "Opzioni XKB",
+    "layout-add": "Aggiungi layout",
+    "variant-add": "Aggiungi variante",
+    "options-add": "Aggiungi opzione XKB",
     "repeat-delay": "Ritardo ripetizione (ms)",
     "repeat-rate": "Velocità ripetizione",
     "numlock": "Abilita numlock all'avvio",
@@ -250,9 +242,7 @@
     "none": "Nessun blocco layout {} trovato.",
     "gaps": "Margini (px)",
     "center": "Centra colonna focalizzata",
-    "bg": "Colore sfondo",
-    "focus-ring": "Larghezza anello di focus",
-    "border": "Larghezza bordo"
+    "bg": "Colore sfondo"
   },
   "error": {
     "no-niri": "niri non trovato nel PATH"
@@ -266,15 +256,9 @@
       "label": "Mostra nel centro di controllo",
       "desc": "Visualizza un collegamento nel centro di controllo."
     },
-    "writeMode": {
-      "label": "Modalità di scrittura",
-      "desc": "Come il plugin applica le modifiche. Anteprima non scrive mai su disco.",
-      "preview": "Solo anteprima (non scrive mai — più sicuro)",
-      "apply": "Applica in loco (.bak + niri validate gate)"
-    },
     "editor": {
       "label": "Comando editor esterno",
-      "desc": "Usato dai pulsanti 'Apri nell'editor' (Script, Altro). Es. 'ghostty -e nvim'. Vuoto = $VISUAL/$EDITOR o xdg-open."
+      "desc": "Comando per modificare i file di configurazione, es. 'ghostty -e nvim' (un terminale + editor). Lascia vuoto per aprire la cartella del file nel gestore file."
     }
   }
 }

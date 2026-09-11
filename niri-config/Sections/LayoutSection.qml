@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import "../lib/kdl.js" as Kdl
+import "../lib/layout.js" as LayoutModel
 import qs.Commons
 import qs.Widgets
 
@@ -11,8 +12,8 @@ import qs.Widgets
 ColumnLayout {
     id: root
 
-    property var panel: null
-    property var configModel: null
+    required property var panel
+    required property var configModel
 
     property string layoutPath: ""
     property string sectionFile: layoutPath
@@ -68,106 +69,23 @@ ColumnLayout {
 
     spacing: Style.marginM
 
-    // ---- kdl helpers (rooted at "layout") ----
-    function childNamed(node, name) {
-        var k = node && node.children ? node.children : [];
-        for (var i = 0; i < k.length; i++) if (k[i].name === name) return k[i];
-        return null;
-    }
-    function block(text, pathArr) {
-        var cur = Kdl.findNode(Kdl.parse(text), "layout");
-        for (var i = 0; cur && i < pathArr.length; i++) cur = childNamed(cur, pathArr[i]);
-        return cur;
-    }
-    function ensureBlock(text, pathArr) {
-        if (!Kdl.findNode(Kdl.parse(text), "layout")) text = Kdl.appendNode(text, "layout {\n}");
-        for (var i = 0; i < pathArr.length; i++) {
-            var cur = Kdl.findNode(Kdl.parse(text), "layout");
-            for (var j = 0; cur && j < i; j++) cur = childNamed(cur, pathArr[j]);
-            if (cur && !childNamed(cur, pathArr[i])) text = Kdl.insertChildLine(text, cur, pathArr[i] + " {\n}");
-        }
-        return text;
-    }
-    function flagOf(node, name) { return !!childNamed(node, name); }
-    function strOf(node, name) { var c = childNamed(node, name); return (c && c.args[0]) ? String(c.args[0].value) : ""; }
-    function nestStr(text, pathArr, name) { var b = block(text, pathArr); return b ? strOf(b, name) : ""; }
-    function nestFlag(text, pathArr, name) { var b = block(text, pathArr); return b ? flagOf(b, name) : false; }
-
-    function presetToStr(node) {
-        if (!node) return "";
-        return (node.children || []).map(function (c) {
-            if (c.name === "proportion" && c.args[0]) return String(c.args[0].value);
-            if (c.name === "fixed" && c.args[0]) return c.args[0].value + "px";
-            return "";
-        }).filter(Boolean).join(", ");
-    }
-
     function recompute() {
         if (!(configModel && configModel.loaded)) return;
-        var own = configModel.owner("layout");
+        var own = configModel.ownerOf("layout");
         if (!own) { layoutPath = ""; return; }
         layoutPath = own.path;
-        var L = own.node;
-        gaps = strOf(L, "gaps");
-        centerFocused = strOf(L, "center-focused-column") || "never";
-        alwaysCenterSingle = flagOf(L, "always-center-single-column");
-        emptyWsAbove = flagOf(L, "empty-workspace-above-first");
-        defaultColDisplay = strOf(L, "default-column-display") || "normal";
-        background = strOf(L, "background-color");
-        presetCols = presetToStr(childNamed(L, "preset-column-widths"));
-        presetHeights = presetToStr(childNamed(L, "preset-window-heights"));
-        defaultColWidth = presetToStr(childNamed(L, "default-column-width"));
-
-        frDisabled = nestFlag(layoutPath ? configModel.textOf(layoutPath) : "", ["focus-ring"], "off");
-        frWidth = nestStr(configModel.textOf(layoutPath), ["focus-ring"], "width");
-        frActive = nestStr(configModel.textOf(layoutPath), ["focus-ring"], "active-color");
-        frInactive = nestStr(configModel.textOf(layoutPath), ["focus-ring"], "inactive-color");
-        frUrgent = nestStr(configModel.textOf(layoutPath), ["focus-ring"], "urgent-color");
-
-        var t = configModel.textOf(layoutPath);
-        borderEnabled = nestFlag(t, ["border"], "on");
-        borderWidth = nestStr(t, ["border"], "width");
-        borderActive = nestStr(t, ["border"], "active-color");
-        borderInactive = nestStr(t, ["border"], "inactive-color");
-
-        shadowEnabled = nestFlag(t, ["shadow"], "on");
-        shadowSoftness = nestStr(t, ["shadow"], "softness");
-        shadowSpread = nestStr(t, ["shadow"], "spread");
-        shadowColor = nestStr(t, ["shadow"], "color");
-        shadowBehind = nestFlag(t, ["shadow"], "draw-behind-window");
-
-        tabDisabled = nestFlag(t, ["tab-indicator"], "off");
-        tabWidth = nestStr(t, ["tab-indicator"], "width");
-        tabGap = nestStr(t, ["tab-indicator"], "gap");
-        tabPosition = nestStr(t, ["tab-indicator"], "position");
-        tabHideSingle = nestFlag(t, ["tab-indicator"], "hide-when-single-tab");
-        tabActive = nestStr(t, ["tab-indicator"], "active-color");
-        tabInactive = nestStr(t, ["tab-indicator"], "inactive-color");
-
-        insertDisabled = nestFlag(t, ["insert-hint"], "off");
-        insertColor = nestStr(t, ["insert-hint"], "color");
-
-        strutL = nestStr(t, ["struts"], "left");
-        strutR = nestStr(t, ["struts"], "right");
-        strutT = nestStr(t, ["struts"], "top");
-        strutB = nestStr(t, ["struts"], "bottom");
-
+        var m = LayoutModel.parse(own.nodes[0], Kdl);
+        for (var k in m) root[k] = m[k];
         orig = snapshot();
     }
     function snapshot() {
-        return {
-            gaps: gaps, centerFocused: centerFocused, alwaysCenterSingle: alwaysCenterSingle, emptyWsAbove: emptyWsAbove,
-            defaultColDisplay: defaultColDisplay, background: background, presetCols: presetCols, presetHeights: presetHeights,
-            defaultColWidth: defaultColWidth, frDisabled: frDisabled, frWidth: frWidth, frActive: frActive, frInactive: frInactive, frUrgent: frUrgent,
-            borderEnabled: borderEnabled, borderWidth: borderWidth, borderActive: borderActive, borderInactive: borderInactive,
-            shadowEnabled: shadowEnabled, shadowSoftness: shadowSoftness, shadowSpread: shadowSpread, shadowColor: shadowColor, shadowBehind: shadowBehind,
-            tabDisabled: tabDisabled, tabWidth: tabWidth, tabGap: tabGap, tabPosition: tabPosition, tabHideSingle: tabHideSingle, tabActive: tabActive, tabInactive: tabInactive,
-            insertDisabled: insertDisabled, insertColor: insertColor, strutL: strutL, strutR: strutR, strutT: strutT, strutB: strutB
-        };
+        var s = {}, defs = LayoutModel.SETTINGS;
+        for (var i = 0; i < defs.length; i++) s[defs[i].prop] = root[defs[i].prop];
+        return s;
     }
 
     Component.onCompleted: recompute()
-    Connections { target: root.configModel; function onLoadFinished() { root.recompute(); } }
+    Connections { target: root.configModel; function onConfigChanged() { root.recompute(); } }
 
     readonly property bool dirty: {
         if (!orig) return false;
@@ -176,87 +94,9 @@ ColumnLayout {
         return false;
     }
 
-    // ---- surgical setters ----
-    function existing(text, pathArr, name) { var b = block(text, pathArr); return b ? childNamed(b, name) : null; }
-    function setFlag(text, pathArr, name, on) {
-        if (!on) { var ex0 = existing(text, pathArr, name); return ex0 ? Kdl.removeNodeLine(text, ex0) : text; }
-        text = ensureBlock(text, pathArr);
-        return childNamed(block(text, pathArr), name) ? text : Kdl.insertChildLine(text, block(text, pathArr), name);
-    }
-    function setLine(text, pathArr, name, line) {
-        var ex0 = existing(text, pathArr, name);
-        if (line === null) return ex0 ? Kdl.removeNodeLine(text, ex0) : text;
-        if (ex0) return Kdl.replaceNodeLine(text, ex0, Kdl.leadingIndent(text, ex0.range) + line);
-        text = ensureBlock(text, pathArr);
-        return Kdl.insertChildLine(text, block(text, pathArr), line);
-    }
-    function setNum(text, pathArr, name, v) { return setLine(text, pathArr, name, (v === "" || isNaN(parseFloat(v))) ? null : (name + " " + parseFloat(v))); }
-    function setStr(text, pathArr, name, v) { return setLine(text, pathArr, name, v ? (name + ' "' + v + '"') : null); }
-    function setBool(text, pathArr, name, v) { return setLine(text, pathArr, name, name + " " + (v ? "true" : "false")); }
-    // replace/insert/remove a whole preset-style block from a "0.5, 1280px" string
-    function setPreset(text, name, valuesStr) {
-        var toks = valuesStr.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-        var L = Kdl.findNode(Kdl.parse(text), "layout");
-        var ex = L ? childNamed(L, name) : null;
-        if (!toks.length) return ex ? Kdl.removeNodeLine(text, ex) : text;
-        var inner = "    ";
-        var lines = [name + " {"];
-        toks.forEach(function (tk) {
-            if (/px$/i.test(tk)) lines.push(inner + "fixed " + parseInt(tk));
-            else lines.push(inner + "proportion " + parseFloat(tk));
-        });
-        lines.push("}");
-        var blockText = lines.join("\n");
-        if (ex) return Kdl.replaceNodeLine(text, ex, Kdl.leadingIndent(text, ex.range) + blockText);
-        text = ensureBlock(text, []);
-        return Kdl.insertChildLine(text, Kdl.findNode(Kdl.parse(text), "layout"), blockText);
-    }
-
+    // ---- write: one batched child-edit pass + the preset rewrites ----
     function save() {
-        var t = configModel.textOf(layoutPath), o = orig;
-        if (gaps !== o.gaps) t = setNum(t, [], "gaps", gaps);
-        if (centerFocused !== o.centerFocused) t = setStr(t, [], "center-focused-column", centerFocused);
-        if (alwaysCenterSingle !== o.alwaysCenterSingle) t = setFlag(t, [], "always-center-single-column", alwaysCenterSingle);
-        if (emptyWsAbove !== o.emptyWsAbove) t = setFlag(t, [], "empty-workspace-above-first", emptyWsAbove);
-        if (defaultColDisplay !== o.defaultColDisplay) t = setStr(t, [], "default-column-display", defaultColDisplay === "normal" ? "" : defaultColDisplay);
-        if (background !== o.background) t = setStr(t, [], "background-color", background);
-        if (presetCols !== o.presetCols) t = setPreset(t, "preset-column-widths", presetCols);
-        if (presetHeights !== o.presetHeights) t = setPreset(t, "preset-window-heights", presetHeights);
-        if (defaultColWidth !== o.defaultColWidth) t = setPreset(t, "default-column-width", defaultColWidth);
-
-        if (frDisabled !== o.frDisabled) t = setFlag(t, ["focus-ring"], "off", frDisabled);
-        if (frWidth !== o.frWidth) t = setNum(t, ["focus-ring"], "width", frWidth);
-        if (frActive !== o.frActive) t = setStr(t, ["focus-ring"], "active-color", frActive);
-        if (frInactive !== o.frInactive) t = setStr(t, ["focus-ring"], "inactive-color", frInactive);
-        if (frUrgent !== o.frUrgent) t = setStr(t, ["focus-ring"], "urgent-color", frUrgent);
-
-        if (borderEnabled !== o.borderEnabled) t = setFlag(t, ["border"], "on", borderEnabled);
-        if (borderWidth !== o.borderWidth) t = setNum(t, ["border"], "width", borderWidth);
-        if (borderActive !== o.borderActive) t = setStr(t, ["border"], "active-color", borderActive);
-        if (borderInactive !== o.borderInactive) t = setStr(t, ["border"], "inactive-color", borderInactive);
-
-        if (shadowEnabled !== o.shadowEnabled) t = setFlag(t, ["shadow"], "on", shadowEnabled);
-        if (shadowSoftness !== o.shadowSoftness) t = setNum(t, ["shadow"], "softness", shadowSoftness);
-        if (shadowSpread !== o.shadowSpread) t = setNum(t, ["shadow"], "spread", shadowSpread);
-        if (shadowColor !== o.shadowColor) t = setStr(t, ["shadow"], "color", shadowColor);
-        if (shadowBehind !== o.shadowBehind) t = setBool(t, ["shadow"], "draw-behind-window", shadowBehind);
-
-        if (tabDisabled !== o.tabDisabled) t = setFlag(t, ["tab-indicator"], "off", tabDisabled);
-        if (tabWidth !== o.tabWidth) t = setNum(t, ["tab-indicator"], "width", tabWidth);
-        if (tabGap !== o.tabGap) t = setNum(t, ["tab-indicator"], "gap", tabGap);
-        if (tabPosition !== o.tabPosition) t = setStr(t, ["tab-indicator"], "position", tabPosition);
-        if (tabHideSingle !== o.tabHideSingle) t = setFlag(t, ["tab-indicator"], "hide-when-single-tab", tabHideSingle);
-        if (tabActive !== o.tabActive) t = setStr(t, ["tab-indicator"], "active-color", tabActive);
-        if (tabInactive !== o.tabInactive) t = setStr(t, ["tab-indicator"], "inactive-color", tabInactive);
-
-        if (insertDisabled !== o.insertDisabled) t = setFlag(t, ["insert-hint"], "off", insertDisabled);
-        if (insertColor !== o.insertColor) t = setStr(t, ["insert-hint"], "color", insertColor);
-
-        if (strutL !== o.strutL) t = setNum(t, ["struts"], "left", strutL);
-        if (strutR !== o.strutR) t = setNum(t, ["struts"], "right", strutR);
-        if (strutT !== o.strutT) t = setNum(t, ["struts"], "top", strutT);
-        if (strutB !== o.strutB) t = setNum(t, ["struts"], "bottom", strutB);
-
+        var t = LayoutModel.apply(configModel.textOf(layoutPath), LayoutModel.diff(snapshot(), orig), Kdl);
         panel.requestSave(layoutPath, t, panel.tr("layout.summary", "layout settings"));
     }
 

@@ -12,13 +12,13 @@ import qs.Widgets
 Item {
     id: root
 
-    property var panel: null
+    property var translate: null
     property var windows: []
     property string filter: ""
 
     signal picked(string appId, string title)
 
-    function tr(k, f) { return panel ? panel.tr(k, f) : f; }
+    function tr(k, f, p) { return translate ? translate(k, f, p) : f; }
     function open() { loadProcess.running = true; popup.open(); }
 
     visible: false

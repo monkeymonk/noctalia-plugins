@@ -1,8 +1,8 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import "../lib/kdl.js" as Kdl
 import "../lib/binds.js" as Binds
+import "../lib/scripts.js" as Scripts
 import "../Components"
 import qs.Commons
 import qs.Widgets
@@ -10,51 +10,93 @@ import qs.Widgets
 ColumnLayout {
     id: root
 
-    property var panel: null
-    property var configModel: null
+    required property var panel
+    required property var configModel
 
-    property var owner: null          // { path, node, doc }
-    property var bindModels: []       // [{combo, attrs, actions, disabled, node}]
+    property var owner: null          // { path, doc, nodes }
+    property var bindModels: []       // [{combo, attrs, actions, disabled, node, desc}]
     property string filter: ""
-    property var pendingDelete: null
     property string sectionFile: owner ? owner.path : ""
+
+    // Filtered view fed to the Repeater: an excluded bind costs no delegate.
+    readonly property var visibleBinds: root.filterBinds(root.bindModels, root.filter)
+    readonly property var emptyBind: ({ combo: "", desc: "", attrs: null, actions: [], disabled: false, node: null, path: "" })
 
     spacing: Style.marginM
 
     function recompute() {
-        owner = (configModel && configModel.loaded) ? configModel.owner("binds") : null;
-        bindModels = owner ? Binds.parseBinds(owner.node) : [];
+        owner = (configModel && configModel.loaded) ? configModel.ownerOf("binds") : null;
+        var parsed = owner ? Binds.parseBinds(owner.nodes[0]) : [];
+        for (var i = 0; i < parsed.length; i++) {
+            parsed[i].desc = Binds.describeBind(parsed[i]);
+            parsed[i].path = owner.path;
+        }
+        bindModels = reconcile(bindModels, parsed);
+    }
+
+    // Content signature: everything a delegate renders. `node`/`path` are
+    // excluded — the source range shifts on every save and no binding reads them.
+    function rowKey(b) {
+        return b.combo + "\u0000" + (b.disabled ? "1" : "0") + "\u0000" + b.desc
+             + "\u0000" + JSON.stringify(b.attrs);
+    }
+
+    // Reuse the rows whose content is unchanged, so a one-bind mutation leaves the
+    // other delegates (and the scroll position) alone instead of rebuilding all N.
+    function reconcile(oldRows, newRows) {
+        var pools = {}, i, k;
+        for (i = 0; i < oldRows.length; i++) {
+            k = rowKey(oldRows[i]);
+            if (!pools[k]) pools[k] = [];
+            pools[k].push(oldRows[i]);
+        }
+        var out = [], changed = oldRows.length !== newRows.length;
+        for (i = 0; i < newRows.length; i++) {
+            var pool = pools[rowKey(newRows[i])];
+            var row = (pool && pool.length) ? pool.shift() : null;
+            if (row) { row.node = newRows[i].node; row.path = newRows[i].path; }
+            else row = newRows[i];
+            if (row !== oldRows[i]) changed = true;
+            out.push(row);
+        }
+        return changed ? out : oldRows;
     }
 
     Component.onCompleted: recompute()
     Connections {
         target: root.configModel
-        function onLoadFinished() { root.recompute(); }
+        function onConfigChanged() { root.recompute(); }
     }
 
     function fileText() { return owner ? configModel.textOf(owner.path) : ""; }
     function padTo() { return Binds.alignColumnFor(bindModels); }
     function shortPath() { return owner ? owner.path.replace(configModel.home, "~") : ""; }
 
-    function matches(b) {
-        if (!filter) return true;
-        var f = filter.toLowerCase();
-        return b.combo.toLowerCase().indexOf(f) !== -1 || Binds.describeBind(b).toLowerCase().indexOf(f) !== -1;
+    function filterBinds(list, f) {
+        if (!f) return list;
+        var needle = f.toLowerCase();
+        var out = [];
+        for (var i = 0; i < list.length; i++) {
+            var b = list[i];
+            if (b.combo.toLowerCase().indexOf(needle) !== -1 || b.desc.toLowerCase().indexOf(needle) !== -1)
+                out.push(b);
+        }
+        return out;
     }
 
     // ----- mutations (produce new file text, route through panel.requestSave) -----
 
     function addBind(bind) {
         var line = Binds.serializeBind(bind, { padTo: padTo() });
-        var text = Kdl.insertChildLine(fileText(), owner.node, line);
+        var text = Kdl.insertChildLine(fileText(), owner.nodes[0], line);
         panel.requestSave(owner.path, text, panel.tr("summary.add", "new shortcut {c}", { c: bind.combo }));
     }
-    function updateBind(node, bind) {
-        var src = fileText();
-        var indent = Kdl.leadingIndent(src, node.range);
+    function updateBind(target, bind) {
+        var src = configModel.textOf(target.path);
+        var indent = Kdl.leadingIndent(src, target.node.range);
         var line = Binds.serializeBind(bind, { padTo: padTo() });
-        var text = Kdl.replaceNodeLine(src, node, indent + line);
-        panel.requestSave(owner.path, text, panel.tr("summary.edit", "shortcut {c}", { c: bind.combo }));
+        var text = Kdl.replaceNodeLine(src, target.node, indent + line);
+        panel.requestSave(target.path, text, panel.tr("summary.edit", "shortcut {c}", { c: bind.combo }));
     }
     function deleteBind(b) {
         var text = Kdl.removeNodeLine(fileText(), b.node);
@@ -107,14 +149,15 @@ ColumnLayout {
             width: parent.width
             spacing: Style.marginXS
             Repeater {
-                model: root.bindModels
+                model: root.visibleBinds.length
                 delegate: Rectangle {
+                    property var bind: root.visibleBinds[index] || root.emptyBind
+
                     Layout.fillWidth: true
-                    visible: root.matches(modelData)
-                    implicitHeight: visible ? (rowL.implicitHeight + Style.marginS * 2) : 0
+                    implicitHeight: rowL.implicitHeight + Style.marginS * 2
                     radius: Style.radiusM
                     color: Color.mSurfaceVariant
-                    opacity: modelData.disabled ? 0.5 : 1.0
+                    opacity: bind.disabled ? 0.5 : 1.0
 
                     RowLayout {
                         id: rowL
@@ -133,7 +176,7 @@ ColumnLayout {
                                 id: comboT
                                 anchors.centerIn: parent
                                 width: parent.width - Style.marginS
-                                text: modelData.combo
+                                text: bind.combo
                                 horizontalAlignment: Text.AlignHCenter
                                 elide: Text.ElideRight
                                 font.family: "monospace"
@@ -142,24 +185,24 @@ ColumnLayout {
                         }
                         NText {
                             Layout.fillWidth: true
-                            text: (modelData.attrs && modelData.attrs["hotkey-overlay-title"]) || Binds.describeBind(modelData)
+                            text: (bind.attrs && bind.attrs["hotkey-overlay-title"]) || bind.desc
                             elide: Text.ElideRight
-                            font.strikeout: modelData.disabled
+                            font.strikeout: bind.disabled
                         }
                         NIconButton {
-                            icon: modelData.disabled ? "eye-off" : "eye"
-                            tooltipText: modelData.disabled ? panel.tr("action.enable", "Enable") : panel.tr("action.disable", "Disable")
-                            onClicked: root.toggleBind(modelData)
+                            icon: bind.disabled ? "eye-off" : "eye"
+                            tooltipText: bind.disabled ? panel.tr("action.enable", "Enable") : panel.tr("action.disable", "Disable")
+                            onClicked: root.toggleBind(bind)
                         }
                         NIconButton {
                             icon: "edit"
                             tooltipText: panel.tr("action.edit", "Edit")
-                            onClicked: bindEditor.openEdit(modelData, root.bindModels)
+                            onClicked: bindEditor.openEdit(bind, root.bindModels)
                         }
                         NIconButton {
                             icon: "trash"
                             tooltipText: panel.tr("action.delete", "Delete")
-                            onClicked: { root.pendingDelete = modelData; confirmDelete.open(); }
+                            onClicked: confirmPopup.openFor(bind, panel.tr("shortcuts.confirm-del", "Delete shortcut {c}?", { c: bind.combo }))
                         }
                     }
                 }
@@ -169,39 +212,17 @@ ColumnLayout {
 
     BindEditor {
         id: bindEditor
-        panel: root.panel
-        configModel: root.configModel
-        onAccepted: (node, bind) => {
-            if (node) root.updateBind(node, bind);
+        translate: root.panel.tr
+        scriptsDir: Scripts.scriptsDir(root.configModel.configDir)
+        onAccepted: (target, bind) => {
+            if (target) root.updateBind(target, bind);
             else root.addBind(bind);
         }
     }
 
-    Popup {
-        id: confirmDelete
-        modal: true; focus: true
-        parent: Overlay.overlay
-        anchors.centerIn: parent
-        width: 380; padding: Style.marginL
-        background: Rectangle { color: Color.mSurface; radius: Style.radiusM; border.color: Color.mError; border.width: 1 }
-        ColumnLayout {
-            anchors.fill: parent
-            spacing: Style.marginM
-            NText {
-                Layout.fillWidth: true
-                text: panel.tr("shortcuts.confirm-del", "Delete shortcut {c}?", { c: root.pendingDelete ? root.pendingDelete.combo : "" })
-                font.weight: Style.fontWeightBold; color: Color.mError; wrapMode: Text.WordWrap
-            }
-            RowLayout {
-                Layout.fillWidth: true
-                Item { Layout.fillWidth: true }
-                NButton { text: panel.tr("action.cancel", "Cancel"); onClicked: confirmDelete.close() }
-                NButton {
-                    text: panel.tr("action.delete", "Delete")
-                    backgroundColor: Color.mError; textColor: Color.mOnError
-                    onClicked: { var b = root.pendingDelete; confirmDelete.close(); if (b) root.deleteBind(b); }
-                }
-            }
-        }
+    ConfirmPopup {
+        id: confirmPopup
+        translate: root.panel.tr
+        onConfirmed: (bind) => root.deleteBind(bind)
     }
 }

@@ -2,11 +2,12 @@
 
 // ─────────────────────────────────────────────────────────────────────────────
 // scripts.js — templates + listing for user-managed niri helper scripts that
-// live in ~/.config/niri/scripts/ and are referenced from binds as spawn "name".
+// live in <config-dir>/scripts/ and are referenced from binds as spawn "name".
 // Pure: QML does the file IO. v5-portable core.
 // ─────────────────────────────────────────────────────────────────────────────
 
-function scriptsDir(home) { return home + "/.config/niri/scripts"; }
+// configDir: the already-resolved niri config directory (QML resolves it).
+function scriptsDir(configDir) { return configDir + "/scripts"; }
 
 // Parse the listing produced by listCmd ("<x|->\t<name>\n…") into records.
 function parseList(text, dir) {

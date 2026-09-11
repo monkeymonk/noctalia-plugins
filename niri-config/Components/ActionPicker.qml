@@ -9,12 +9,12 @@ import qs.Widgets
 Item {
     id: root
 
-    property var panel: null
+    property var translate: null
     property string filter: ""
 
     signal picked(string name, string argType)
 
-    function tr(k, f) { return panel ? panel.tr(k, f) : f; }
+    function tr(k, f, p) { return translate ? translate(k, f, p) : f; }
     function open() { popup.open(); }
 
     visible: false

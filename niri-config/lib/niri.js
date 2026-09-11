@@ -10,56 +10,62 @@
 
 function checkInstalledCmd() { return ["sh", "-c", "command -v niri"]; }
 function jsonCmd(kind) { return ["niri", "msg", "--json", kind]; }   // outputs|workspaces|windows|keyboard-layouts
-function actionCmd(name, args) { return ["niri", "msg", "action", name].concat(args || []); }
-function reloadCmd() { return ["niri", "msg", "action", "load-config-file"]; }
 function validateCmd(mainConfigPath) { return ["niri", "validate", "-c", mainConfigPath]; }
 
 // Live, non-destructive output preview (reverts on next config reload).
 // prop ∈ {mode,scale,transform,position,vrr,on,off}; value is pre-stringified.
 function outputCmd(name, prop, value) {
-    var c = ["niri", "msg", "output", name, prop];
-    // position uses `position set X Y` grammar
+    if (!name || !prop) return null;
+    // position uses `position set X Y` grammar — both coordinates are required
     if (prop === "position") {
-        if (Array.isArray(value) && value.length === 2 && value[0] !== "" && value[1] !== "")
-            return c.concat(["set", String(value[0]), String(value[1])]);
-        return c;
+        if (!Array.isArray(value) || value.length !== 2) return null;
+        if (value[0] === null || value[0] === undefined || value[0] === "") return null;
+        if (value[1] === null || value[1] === undefined || value[1] === "") return null;
+        return ["niri", "msg", "output", name, "position", "set", String(value[0]), String(value[1])];
     }
-    if (value !== undefined && value !== null && value !== "") {
-        if (Array.isArray(value)) c = c.concat(value.map(String));
-        else c.push(String(value));
+    var c = ["niri", "msg", "output", name, prop];
+    // bare switches take no argument
+    if (prop === "on" || prop === "off") return c;
+    if (value === undefined || value === null || value === "") return null;
+    if (Array.isArray(value)) {
+        if (value.length === 0) return null;
+        return c.concat(value.map(String));
     }
-    return c;
+    return c.concat([String(value)]);
 }
 
-// Validated save pipeline. `b64` is base64 of the new file content (use Qt.btoa
-// in QML). On success: writes file, validates the whole config, hot-reloads,
-// prints "OK". On failure: restores from .bak, prints "ERR" + validate stderr.
-var SAVE_SCRIPT =
-    'set -u; f="$1"; main="$2"; b64="$3"; ' +
-    'cp -f "$f" "$f.bak" 2>/dev/null || true; ' +
-    'printf %s "$b64" | base64 -d > "$f" || { echo ERR; echo "write failed" >&2; exit 0; }; ' +
-    'if niri validate -c "$main" 2>/tmp/niri-config-validate.err; then ' +
-    '  niri msg action load-config-file >/dev/null 2>&1 || true; echo OK; ' +
-    'else ' +
-    '  cp -f "$f.bak" "$f"; echo ERR; cat /tmp/niri-config-validate.err >&2; ' +
-    'fi';
-
-function saveCmd(filePath, mainConfigPath, b64Content) {
-    return ["sh", "-c", SAVE_SCRIPT, "_", filePath, mainConfigPath, b64Content];
-}
-
-// Apply MANY staged files atomically: .bak + write each, validate the whole
-// config once, reload on success, restore every .bak on failure. Prints OK/ERR.
+// Apply MANY staged files atomically. Each file's current contents are staged
+// aside first, then the new contents are written and the whole config validated
+// once. On success the staged copies are promoted to "$f.bak" and niri reloads;
+// on failure the tree is put back exactly as it was — a file that existed is
+// restored from its staged copy, a file this run CREATED is deleted again — and
+// the pre-existing ".bak" files are left untouched, so a failed apply never
+// destroys the backup of the last successful one.
+// Prints OK/ERR on stdout, validate errors on stderr.
 // pairs: [{ path, b64 }]; b64 is Qt.btoa(newText).
 var APPLY_SCRIPT =
-    'set -u; main="$1"; shift; written=""; ok=1; ' +
-    'while [ $# -ge 2 ]; do f="$1"; b="$2"; shift 2; ' +
-    '  cp -f "$f" "$f.bak" 2>/dev/null || true; ' +
-    '  if printf %s "$b" | base64 -d > "$f"; then written="$written $f"; else echo ERR; echo "write failed: $f" >&2; ok=0; break; fi; ' +
+    'set -u; main="$1"; shift; ' +
+    'tmp=$(mktemp -d) || { echo ERR; echo "mktemp failed" >&2; exit 0; }; ' +
+    ': > "$tmp/list"; n=0; ok=1; msg=""; ' +
+    'while [ $# -ge 2 ]; do f="$1"; b="$2"; shift 2; n=$((n + 1)); ' +
+    '  if [ -e "$f" ]; then cp -f "$f" "$tmp/$n.bak" 2>/dev/null || true; ' +
+    '  else : > "$tmp/$n.new"; fi; ' +
+    '  printf "%s\\n" "$f" >> "$tmp/list"; ' +
+    '  printf %s "$b" | base64 -d > "$f" || { ok=0; msg="write failed: $f"; break; }; ' +
     'done; ' +
-    'if [ "$ok" = 1 ] && niri validate -c "$main" 2>/tmp/nc-apply.err; then ' +
+    'if [ "$ok" = 1 ] && niri validate -c "$main" 2>"$tmp/err"; then ' +
+    '  i=0; while IFS= read -r f; do i=$((i + 1)); ' +
+    '    if [ -f "$tmp/$i.bak" ]; then cp -f "$tmp/$i.bak" "$f.bak"; fi; done < "$tmp/list"; ' +
     '  niri msg action load-config-file >/dev/null 2>&1 || true; echo OK; ' +
-    'else for f in $written; do cp -f "$f.bak" "$f"; done; echo ERR; cat /tmp/nc-apply.err >&2 2>/dev/null; fi';
+    'else ' +
+    '  i=0; while IFS= read -r f; do i=$((i + 1)); ' +
+    '    if [ -f "$tmp/$i.bak" ]; then cp -f "$tmp/$i.bak" "$f"; ' +
+    '    elif [ -f "$tmp/$i.new" ]; then rm -f "$f"; fi; done < "$tmp/list"; ' +
+    '  echo ERR; ' +
+    '  if [ -n "$msg" ]; then echo "$msg" >&2; fi; ' +
+    '  if [ -s "$tmp/err" ]; then cat "$tmp/err" >&2; fi; ' +
+    'fi; ' +
+    'rm -rf "$tmp"; exit 0';
 
 function applyCmd(mainConfigPath, pairs) {
     var args = ["sh", "-c", APPLY_SCRIPT, "_", mainConfigPath];
@@ -67,9 +73,20 @@ function applyCmd(mainConfigPath, pairs) {
     return args;
 }
 
-// Restore the .bak of each path (undo the last apply), then reload.
-var UNDO_SCRIPT = 'set -u; for f in "$@"; do [ -f "$f.bak" ] && cp -f "$f.bak" "$f"; done; ' +
-    'niri msg action load-config-file >/dev/null 2>&1 || true; echo OK';
+// Restore the .bak of each path (undo the last successful apply), then reload.
+// Prints "RESTORED <n>" with the number of files actually restored, or
+// "ERR <msg>" if a restore failed.
+var UNDO_SCRIPT =
+    'set -u; n=0; ' +
+    'for f in "$@"; do ' +
+    '  if [ -f "$f.bak" ]; then ' +
+    '    cp -f "$f.bak" "$f" || { echo "ERR restore failed: $f"; exit 0; }; ' +
+    '    n=$((n + 1)); ' +
+    '  fi; ' +
+    'done; ' +
+    'if [ "$n" -gt 0 ]; then niri msg action load-config-file >/dev/null 2>&1 || true; fi; ' +
+    'echo "RESTORED $n"';
+
 function undoCmd(paths) { return ["sh", "-c", UNDO_SCRIPT, "_"].concat(paths); }
 
 // Write an arbitrary file (e.g. a managed script) from base64; chmod +x when
@@ -140,18 +157,12 @@ function parseWindows(text) {
     });
 }
 
-function parseKeyboardLayouts(text) {
-    var raw = safeParse(text);
-    if (!raw) return { names: [], currentIdx: 0 };
-    return { names: raw.names || [], currentIdx: raw.current_idx || 0 };
-}
-
 if (typeof module !== "undefined" && module.exports) {
     module.exports = {
-        checkInstalledCmd: checkInstalledCmd, jsonCmd: jsonCmd, actionCmd: actionCmd,
-        reloadCmd: reloadCmd, validateCmd: validateCmd, outputCmd: outputCmd, saveCmd: saveCmd,
-        writeFileCmd: writeFileCmd, deleteFileCmd: deleteFileCmd, applyCmd: applyCmd, undoCmd: undoCmd,
-        modeString: modeString, parseOutputs: parseOutputs, parseWorkspaces: parseWorkspaces,
-        parseWindows: parseWindows, parseKeyboardLayouts: parseKeyboardLayouts
+        checkInstalledCmd: checkInstalledCmd, jsonCmd: jsonCmd, validateCmd: validateCmd,
+        outputCmd: outputCmd, applyCmd: applyCmd, undoCmd: undoCmd,
+        writeFileCmd: writeFileCmd, deleteFileCmd: deleteFileCmd,
+        modeString: modeString, parseOutputs: parseOutputs,
+        parseWorkspaces: parseWorkspaces, parseWindows: parseWindows
     };
 }
