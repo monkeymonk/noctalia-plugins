@@ -3,13 +3,22 @@ name: registry
 on:
   push:
     branches: [master, main]
-    paths:
-      - '*/manifest.json'
-      - 'scripts/build-registry.py'
-      - '.github/workflows/registry.yml'
-      - 'fingerprint-manager/**'
-      - 'niri-config/**'
+    # Every plugin directory must trigger this, so filter by exclusion rather
+    # than by naming each one — a new plugin is covered without editing this
+    # file. registry.json itself is excluded so the bot's own commit below
+    # cannot retrigger the workflow.
+    paths-ignore:
+      - 'registry.json'
+      - 'README.md'
+      - 'LICENSE'
+      - '.gitignore'
   workflow_dispatch:
+
+# Two pushes in quick succession would otherwise race to push registry.json,
+# and the loser fails on a non-fast-forward.
+concurrency:
+  group: registry-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
