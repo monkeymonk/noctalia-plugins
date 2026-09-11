@@ -1,0 +1,6 @@
+# Local-only agent context and working notes — never publish these.
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.claude/
+docs/
