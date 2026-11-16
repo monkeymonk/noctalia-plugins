@@ -1,0 +1,113 @@
+# Niri Config - phase 1 port (Shortcuts, Monitors, Input) of the v4 QML
+# plugin to Noctalia v5's Luau plugin API. See README.md for scope and the
+# safety model (staged edits, validate-backed Apply, auto-rollback, Undo).
+
+id = "monkeymonk/niri-config"
+name = "Niri Config"
+version = "0.1.0"
+plugin_api = 24
+author = "Stephan Zych"
+license = "MIT"
+repository = "https://github.com/monkeymonk/noctalia-plugins"
+description = "View and edit your niri configuration from a panel - shortcuts, monitors and input, with a safe validate-backed save."
+tags = ["system", "niri"]
+dependencies = ["niri"]
+
+[[setting]]
+key = "external_editor"
+type = "string"
+label_key = "settings.external_editor.label"
+description_key = "settings.external_editor.description"
+default = ""
+
+[[setting]]
+key = "icon_color"
+type = "color"
+label_key = "settings.icon_color.label"
+description_key = "settings.icon_color.description"
+default = "on_surface"
+
+[[setting]]
+key = "show_in_control_center"
+type = "bool"
+label_key = "settings.show_in_control_center.label"
+description_key = "settings.show_in_control_center.description"
+default = true
+
+[[panel]]
+id = "panel"
+entry = "panel.luau"
+width = 760
+height = 620
+placement = "floating"
+position = "center"
+capture_keys = [
+  "a", "ctrl+a", "alt+a", "shift+a", "b", "ctrl+b",
+  "alt+b", "shift+b", "c", "ctrl+c", "alt+c", "shift+c",
+  "d", "ctrl+d", "alt+d", "shift+d", "e", "ctrl+e",
+  "alt+e", "shift+e", "f", "ctrl+f", "alt+f", "shift+f",
+  "g", "ctrl+g", "alt+g", "shift+g", "h", "ctrl+h",
+  "alt+h", "shift+h", "i", "ctrl+i", "alt+i", "shift+i",
+  "j", "ctrl+j", "alt+j", "shift+j", "k", "ctrl+k",
+  "alt+k", "shift+k", "l", "ctrl+l", "alt+l", "shift+l",
+  "m", "ctrl+m", "alt+m", "shift+m", "n", "ctrl+n",
+  "alt+n", "shift+n", "o", "ctrl+o", "alt+o", "shift+o",
+  "p", "ctrl+p", "alt+p", "shift+p", "q", "ctrl+q",
+  "alt+q", "shift+q", "r", "ctrl+r", "alt+r", "shift+r",
+  "s", "ctrl+s", "alt+s", "shift+s", "t", "ctrl+t",
+  "alt+t", "shift+t", "u", "ctrl+u", "alt+u", "shift+u",
+  "v", "ctrl+v", "alt+v", "shift+v", "w", "ctrl+w",
+  "alt+w", "shift+w", "x", "ctrl+x", "alt+x", "shift+x",
+  "y", "ctrl+y", "alt+y", "shift+y", "z", "ctrl+z",
+  "alt+z", "shift+z", "0", "ctrl+0", "alt+0", "shift+0",
+  "1", "ctrl+1", "alt+1", "shift+1", "2", "ctrl+2",
+  "alt+2", "shift+2", "3", "ctrl+3", "alt+3", "shift+3",
+  "4", "ctrl+4", "alt+4", "shift+4", "5", "ctrl+5",
+  "alt+5", "shift+5", "6", "ctrl+6", "alt+6", "shift+6",
+  "7", "ctrl+7", "alt+7", "shift+7", "8", "ctrl+8",
+  "alt+8", "shift+8", "9", "ctrl+9", "alt+9", "shift+9",
+  "F1", "ctrl+F1", "alt+F1", "shift+F1", "F2", "ctrl+F2",
+  "alt+F2", "shift+F2", "F3", "ctrl+F3", "alt+F3", "shift+F3",
+  "F4", "ctrl+F4", "alt+F4", "shift+F4", "F5", "ctrl+F5",
+  "alt+F5", "shift+F5", "F6", "ctrl+F6", "alt+F6", "shift+F6",
+  "F7", "ctrl+F7", "alt+F7", "shift+F7", "F8", "ctrl+F8",
+  "alt+F8", "shift+F8", "F9", "ctrl+F9", "alt+F9", "shift+F9",
+  "F10", "ctrl+F10", "alt+F10", "shift+F10", "F11", "ctrl+F11",
+  "alt+F11", "shift+F11", "F12", "ctrl+F12", "alt+F12", "shift+F12",
+  "Return", "ctrl+Return", "alt+Return", "shift+Return", "BackSpace", "ctrl+BackSpace",
+  "alt+BackSpace", "shift+BackSpace", "Escape", "ctrl+Escape", "alt+Escape", "shift+Escape",
+  "Tab", "ctrl+Tab", "alt+Tab", "shift+Tab", "space", "ctrl+space",
+  "alt+space", "shift+space", "Home", "ctrl+Home", "alt+Home", "shift+Home",
+  "End", "ctrl+End", "alt+End", "shift+End", "Left", "ctrl+Left",
+  "alt+Left", "shift+Left", "Right", "ctrl+Right", "alt+Right", "shift+Right",
+  "Up", "ctrl+Up", "alt+Up", "shift+Up", "Down", "ctrl+Down",
+  "alt+Down", "shift+Down", "Prior", "ctrl+Prior", "alt+Prior", "shift+Prior",
+  "Next", "ctrl+Next", "alt+Next", "shift+Next", "Insert", "ctrl+Insert",
+  "alt+Insert", "shift+Insert", "Delete", "ctrl+Delete", "alt+Delete", "shift+Delete",
+  "Print", "ctrl+Print", "alt+Print", "shift+Print", "minus", "ctrl+minus",
+  "alt+minus", "shift+minus", "equal", "ctrl+equal", "alt+equal", "shift+equal",
+  "slash", "ctrl+slash", "alt+slash", "shift+slash", "backslash", "ctrl+backslash",
+  "alt+backslash", "shift+backslash", "comma", "ctrl+comma", "alt+comma", "shift+comma",
+  "period", "ctrl+period", "alt+period", "shift+period", "semicolon", "ctrl+semicolon",
+  "alt+semicolon", "shift+semicolon", "apostrophe", "ctrl+apostrophe", "alt+apostrophe", "shift+apostrophe",
+  "grave", "ctrl+grave", "alt+grave", "shift+grave", "bracketleft", "ctrl+bracketleft",
+  "alt+bracketleft", "shift+bracketleft", "bracketright", "ctrl+bracketright", "alt+bracketright", "shift+bracketright",
+]
+
+[[widget]]
+id = "widget"
+entry = "widget.luau"
+
+  # Entry-level duplicate of the plugin-level icon_color above: without this,
+  # the Bar widget list has nothing of its own to show a settings gear for.
+  # The widget entry's value wins over the plugin-level one when both are set.
+  [[widget.setting]]
+  key              = "icon_color"
+  type             = "color"
+  label_key        = "settings.icon_color.label"
+  description_key  = "settings.icon_color.description"
+  default          = "on_surface"
+
+[[shortcut]]
+id = "shortcut"
+entry = "shortcut.luau"

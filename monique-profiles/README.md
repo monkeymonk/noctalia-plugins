@@ -4,7 +4,7 @@ A minimal Noctalia v5 plugin: a bar widget showing the active
 [Monique](https://github.com/ToRvaLDz/monique) monitor profile, and a panel
 listing every profile with a click to switch.
 
-Extracted from `niri-config-v5`'s Monitors tab - this is the one piece of
+Extracted from the Niri Config plugin's Monitors tab - this is the one piece of
 that tool actually used day to day, pulled into its own plugin so there's
 far less to break: no KDL parsing, no save/apply/undo pipeline, no niri
 logic at all. It only drives `monique --list-profiles` / `--current-profile`

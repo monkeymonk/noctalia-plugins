@@ -1,129 +1,212 @@
 # Niri Config
 
-A Noctalia panel to **view and edit your [niri](https://github.com/YaLTeR/niri)
-configuration** from a GUI — shortcuts, monitors, input, workspaces, window
-rules, layout, animations, autostart, misc, and a managed scripts folder.
+A Noctalia **v5** (Luau plugin API) panel to view and edit your
+[niri](https://github.com/YaLTeR/niri) configuration from a GUI.
 
-It shells out to `niri` (`niri msg`, `niri validate`) and edits your existing
-`*.kdl` files **surgically**: only the node you change is touched, and every
-comment, blank line and column alignment around it is preserved byte-for-byte.
+This is a **phase-1 port** of an earlier v4 QML plugin. Phase 1 wires
+**3 of the eventual 10 tabs** - Shortcuts, Monitors, Input - plus the full
+KDL engine and the validate-backed save pipeline. The plugin is built so
+adding the remaining tabs later is a self-contained addition, not a
+rearchitecture (see [Architecture](#architecture)).
+
+## What's in this phase
+
+| Tab | What you can do |
+| --- | --- |
+| **Shortcuts** | Browse/filter all binds; add/edit/delete; enable/disable (KDL slashdash). Live **key capture** for non-Super combos (the host never delivers Super/Mod chords to a plugin - type those), a special-key picker (media/brightness/system/wheel), an action picker over niri's action vocabulary, and an app/script picker for `spawn`. Conflict detection. |
+| **Monitors** | Live detection via `niri msg outputs`; per-monitor mode/scale/transform/position/VRR/off/backdrop, with non-destructive **live preview** (`niri msg output`). Add a config for a disconnected monitor. Optional **Monique** profile switching when the `monique` CLI is installed. |
+| **Input** | Keyboard (xkb layout/variant/options/model, track-layout, numlock, repeat), touchpad (tap, dwt/dwtp, natural-scroll, drag, accel speed/profile, scroll & click method, tap-button-map, ...), mouse, and general (mod-key, warp-mouse, focus-follows-mouse, ...). |
+
+## Deferred to a later phase
+
+Workspaces, Window rules, Layout, Animation, Autostart, Misc, Scripts. These
+are simply not in the left nav yet - no "coming soon" placeholders. Adding
+one is: write `lib/tabs/<name>.luau` against the tab contract documented at
+the top of `panel.luau`, append one entry to `panel.luau`'s `TAB_MODULES`
+list, done.
 
 ## How edits are applied (the safety model)
 
-Changes you make are **staged**, not written immediately:
+Unchanged from v4: changes are **staged**, not written immediately.
 
-1. Editing anything (toggle, field, add/edit/delete an item) updates the live
-   view but **not the file**. The header shows *“N unsaved changes”* and the
-   **Apply** button lights up.
-2. **Apply** writes every staged file atomically: it `.bak`s each file, writes,
-   runs **`niri validate`** on the whole config, then hot-reloads niri — and if
-   validation fails it **restores every `.bak`** and shows the error (your staged
-   edits are kept so you can fix and re-apply).
+1. Editing anything updates the live view but **not the file**. The header
+   shows *"N unsaved change(s)"* and the **Apply** button lights up.
+2. **Apply** writes every staged file: it backs each up to `.bak`, writes,
+   runs **`niri validate`** on the whole config, then hot-reloads niri - and
+   if validation fails it **restores every `.bak`** and shows the error
+   (your staged edits are kept so you can fix and re-apply).
 3. **Undo** (after an Apply) restores the backups and reloads.
-4. The **reload** button discards staged changes and re-reads from disk.
+4. The **reload** button discards staged changes and re-reads from disk
+   (refuses while changes are staged, so it can never silently discard
+   work).
 
-So a bad edit can never reach a running niri, and nothing is reformatted.
+So a bad edit can never reach a running niri, and nothing is reformatted -
+only the node you change is touched; every comment, blank line and column
+alignment elsewhere is preserved byte-for-byte.
 
 ## Requirements
 
 - **niri** on `PATH` (uses `niri msg` and `niri validate`).
-- **Noctalia** ≥ 4.4.3.
+- **Noctalia** v5.2.0+ in practice (uses `plugin_api = 24`: argv-array
+  `noctalia.runAsync`, `require()` modules, `capture_keys`/`onKey`, and
+  function-closure UI callbacks - see [Architecture](#architecture) for why
+  this level and not higher).
+- **monique** (optional) - if installed, the Monitors tab shows a Profiles
+  list instead of per-monitor editing.
 
-Install from Noctalia: **Settings → Plugins → Sources**, add this repository's
-URL, then enable **Niri Config** under **Available** and assign it to a bar slot.
+Install: **Settings -> Plugins -> Sources**, add this repository, enable
+**Niri Config**, assign the bar widget or the control-center shortcut.
 
-Your config layout is auto-detected — the plugin resolves your `config.kdl`
-`include` graph and edits each section in the file that already owns it
-(`cfg/keybinds.kdl`, `cfg/input.kdl`, …, following the niri/noctalia convention).
-
-## What's in each tab
-
-| Tab | What you can do |
-| --- | --- |
-| **Shortcuts** | Browse/filter all binds; add/edit/delete; enable/disable (KDL slashdash). Live **key capture**, special-key list (media/wheel), action picker over niri's action vocabulary, and an app/script picker for `spawn`. Conflict detection. |
-| **Monitors** | Live detection via `niri msg outputs`; per-monitor mode/scale/transform/position/VRR/off/backdrop, with non-destructive **live preview** (`niri msg output`). Add a config for a disconnected monitor. Optional **Monique** profile switching (see below). |
-| **Input** | Keyboard (xkb layout/variant/options/model, track-layout, numlock, repeat), touchpad (tap, dwt/dwtp, natural-scroll, drag, accel speed/profile, scroll & click method, tap-button-map, …), mouse, and general (mod-key, warp-mouse, focus-follows-mouse, …). |
-| **Workspaces** | Named workspaces (live status from `niri msg workspaces`); add/rename/delete; per-workspace `open-on-output`. |
-| **Window rules** | List/add/edit/delete/enable-disable; **capture a live window** (`niri msg windows`) to prefill `match`; open behavior, placement, sizing, opacity, corner-radius, block-out-from, and more. Unmodeled props are preserved on edit. |
-| **Layout** | Gaps, centering, presets, focus-ring/border/shadow/tab-indicator/insert-hint, struts, colors. |
-| **Animation** | Global disable/slowdown, per-event enable + easing duration/curve, and spring tuning (damping/stiffness/epsilon). |
-| **Autostart** | `spawn-at-startup` / `spawn-sh-at-startup` entries; add/edit/delete/toggle via app picker or raw command. |
-| **Misc** | prefer-no-csd, screenshot-path, cursor, hotkey-overlay, clipboard, overview. |
-| **Scripts** | Create/edit/delete named helper scripts in `~/.config/niri/scripts/` (auto-`chmod +x`), with a focus-or-spawn (app-toggle) template. Scripts show up in the Shortcuts action picker. |
-
-Every tab shows the **file it edits** with an **Edit file** button (opens it in
-your file manager, or an editor if you set one — see Settings), and a **doc
-link** to the matching niri wiki page.
-
-## Monique integration (optional)
-
-If the [`monique`](https://github.com/noctalia-dev/noctalia-plugins) CLI (monitor
-profile manager) is installed, the Monitors tab shows a **Profiles** list instead
-of per-monitor editing: switch profiles in place, or **New / edit** to open the
-Monique GUI. With Monique absent, the plugin manages monitors itself, writing to
-the niri/noctalia default `cfg/display.kdl`. (You can disable the standalone
-Monique bar plugin — switching lives here.)
+Your config layout is auto-detected - the plugin resolves your
+`config.kdl` `include` graph and edits each section in the file that
+already owns it (`cfg/keybinds.kdl`, `cfg/input.kdl`, ..., following the
+niri/noctalia convention).
 
 ## Settings
 
-- **Icon color**, **Show in control center**.
-- **External editor command** — e.g. `ghostty -e nvim`. Leave empty and the
-  *Edit file* buttons open the file's folder in your file manager instead (a bare
-  terminal `$EDITOR` can't launch without a TTY).
+- **External editor command** - e.g. `ghostty -e nvim`. Leave empty and the
+  *Edit file* buttons open the file's folder in your file manager instead.
+- **Icon color** - bar widget glyph color.
+- **Show in control center** - v5's widget/shortcut placement is entirely
+  host/user-owned (add or remove the control-center tile the same way as
+  any other widget, from Settings -> Control Center shortcuts); this setting
+  is the closest honest equivalent available through the `shortcut.*` API -
+  it enables/disables the tile rather than hiding it.
 
 ## Architecture
 
-All niri logic lives in pure, framework-agnostic `lib/*.js` (`.pragma library`)
-modules with **zero QML/Noctalia dependencies** — they take text in and return
-text/data out. The QML only does file IO, runs processes, and renders. This is
-deliberate: Noctalia v5 is a C++/Luau rewrite where v4 QML plugins won't run, so
-when its plugin API lands only the thin UI shell needs re-implementing.
-
-| Module | Responsibility |
-| --- | --- |
-| `lib/kdl.js` | tolerant KDL v2 parser with source ranges + surgical edit primitives |
-| `lib/config.js` | resolve the `include` graph, map sections → owning file |
-| `lib/fileblob.js` | read N files in one process, split the marker-delimited blob |
-| `lib/binds.js` | bind model/serialization, conflict detection, action vocabulary |
-| `lib/keys.js` | Qt key event → niri keysym; special-key list |
-| `lib/niri.js` | `niri msg` builders, JSON parsers, validated multi-file apply/undo |
-| `lib/input.js`, `lib/layout.js` | descriptor-driven parse/diff/apply for the Input and Layout tabs |
-| `lib/rules.js`, `outputs.js`, `desktop.js`, `scripts.js`, `monique.js` | per-section models/serialization + external-tool integration |
-| `lib/xkb.js` | parses the system's xkb layout/variant/model/option list from `evdev.lst`; drives the Input tab's pickers (the layout/variant/option fields stay free text so comma-separated multi-layout setups survive) |
-
-## IPC
-
-```txt
-target plugin:niri-config
-  function openPanel(): void
-  function toggle(): void
+```
+plugin.toml          manifest: panel/widget/shortcut entries, settings,
+                      capture_keys (300 non-Super key/modifier combos)
+panel.luau            chrome: header (Apply/Undo/Reload/docs), file-path row,
+                      data-driven left nav, dispatches into one tab's render()
+widget.luau            bar glyph, toggles the panel
+shortcut.luau          control-center tile, toggles the panel
+lib/
+  kdl.luau             tolerant KDL v2 parser + surgical edit primitives -
+                       the safety-critical core everything else is built on
+  config.luau           include-graph resolution (config.kdl -> owning file)
+  state.luau             load (sync, no subprocess) / stage / apply / undo
+                         orchestration - the read+write pipeline
+  niri.luau               `niri msg`/`validate` command builders, JSON
+                         parsers, the embedded backup+validate+rollback and
+                         undo shell scripts
+  binds.luau               bind model, conflict detection, serialization,
+                         the niri action vocabulary
+  keys.luau                 special-key list (XF86/Wheel), onKey-chord ->
+                         niri-combo-token translation
+  outputs.luau               `output {}` block model + KDL serialization
+  monique.luau                 monique CLI command builders + JSON parser
+  xkb.luau                       evdev.lst layout/variant/model/option parser
+  input.luau                       `input {}` settings descriptor table +
+                         parse/diff/apply
+  desktop.luau                      .desktop entry parsing, command<->action
+  scripts.luau                       managed-scripts directory listing (+
+                         templates, ready for the deferred Scripts tab)
+  tabs/
+    shortcuts.luau                   Shortcuts tab (list/add/edit/delete/
+                         enable-disable, capture, pickers)
+    monitors.luau                      Monitors tab (live detection, edit,
+                         preview, Monique profiles)
+    input_tab.luau                       Input tab (settings form)
+translations/en.json                       mandatory label_key/description_key
+                         text for the 3 plugin settings (runtime panel UI
+                         text is plain English literals, matching the
+                         official example plugins' actual practice - v5
+                         does not require `noctalia.tr()` for ordinary
+                         `ui.label` text the way v4 required i18n for all
+                         QML strings)
 ```
 
-```bash
-qs -c noctalia-shell ipc call plugin:niri-config openPanel
-```
+### What changed porting QML -> Luau (beyond syntax)
 
-## Tests
+- **No subprocess batching needed for reads.** v4's `ConfigModel.qml` read
+  every config file through a single `cat`-with-markers `Process` (see v4's
+  `lib/fileblob.js`) specifically to avoid spawning one process per file.
+  `noctalia.readFile(path)` is a synchronous **in-process** call, so
+  `state.luau`'s `load()` just reads the main file + every include directly
+  - no subprocess, no `lib/fileblob.js` port exists.
+- **No subprocess needed for `command -v niri`/`command -v monique`.**
+  `noctalia.commandExists(name)` replaces both of v4's `checkInstalledCmd`/
+  `checkCmd` Process calls with a synchronous in-process check.
+- **No base64 needed for file content.** v4 used `Qt.btoa(text)` when
+  handing file contents to a QML `Process.command`, because QML's argv
+  handling needed that safety margin. `noctalia.runAsync({...}, cb)`'s
+  argv-array form (`plugin_api = 24`) passes each array element as one
+  literal argument with **no shell parsing**, so raw KDL text travels
+  straight through to the embedded `sh -c` apply/undo/write scripts as a
+  real argv slot (`"$2"` etc.) - those scripts write it with
+  `printf %s "$c" > "$f"` instead of `base64 -d`.
+- **The KDL scanner reads byte codes, not substrings.** The straightforward
+  port of `kdl.js`'s character-by-character `text[i]` scanning (1-char
+  `string.sub` per test) measurably exceeded the Luau host's per-callback
+  CPU budget on a real ~10KB `keybinds.kdl` - a few hundred binds' worth of
+  quoted args/props means hundreds of thousands of single-character
+  `string.sub` allocations per parse. `lib/kdl.luau` scans with
+  `string.byte` (no allocation) and reads quoted-string bodies in chunks
+  (find the next backslash/closer, slice once) instead of one
+  `table.insert` per character - verified with `noctalia.nowMs()` at ~15ms
+  for a full real-world `keybinds.kdl` parse, comfortably inside budget.
+- **No popup/dialog primitive.** Every v4 `Popup` (BindEditor, ActionPicker,
+  AppPicker, MonitorEditor, MonitorAddDialog, ConfirmPopup) becomes an
+  in-tab screen swap - see the tab-module contract at the top of
+  `panel.luau`.
+- **Live key capture is structurally limited.** v4 used a generic Qt
+  keyboard grab (`Keys.onPressed`) that could see every physical key,
+  including the Super/Mod key practically every real niri bind uses. v5
+  panels can only receive a **pre-declared, finite** list of chords via
+  `capture_keys`/`onKey`, and the host **unconditionally rejects any Super
+  chord** ("those belong to the compositor") - there is no manifest trick
+  around this. `plugin.toml` declares 300 chords (every letter/digit/
+  F-key/named-key, bare + ctrl/alt/shift) so live capture works for
+  everything *except* Super combos; the combo text field remains the
+  primary entry method, exactly as it already was in v4 ("stays editable as
+  a fallback for other layouts").
 
-The pure core is unit-tested against your **real** config and live `niri msg`,
-and the write path is exercised entirely in a `/tmp` **sandbox copy** — it never
-touches `~/.config/niri`:
+### `plugin_api = 24` - why this level
 
-```bash
-node test/kdl.test.js          # parser safety + batched child edits vs your real *.kdl
-node test/libs.test.js         # binds/keys/niri/desktop/outputs/xkb vs live data
-node test/input.test.js        # input model: parse / diff / edit serialization / apply
-node test/layout.test.js       # layout model incl. preset blocks
-node test/save.sandbox.test.js # apply + niri validate gate + auto-restore + undo (sandboxed)
-```
+Cumulative capabilities actually used: argv-array `noctalia.runAsync`
+(level 24, avoids shell-quoting entirely for the apply/undo/write scripts'
+dynamic paths and content), `require()` relative modules (22), the
+`capture_keys` panel option + `onKey` (13), function-closure `ui.*`
+callbacks (9), the `dismiss_on_outside_click` panel default (8) - all below
+24, so 24 is the binding constraint. No feature introduced by a level above
+24 is used (no `tooltip` on non-button containers, no `ui.colorPicker`, no
+`height = "content"`, etc.), so the plugin stays compatible with the widest
+practical range of v5 releases above its floor.
 
-## Generating the registry preview
+## What a next phase should reuse vs. rebuild
 
-```bash
-./scripts/make-preview.sh   # opens the panel via IPC, slurp to select, crops to 960×540
-```
+**Reuse as-is** (stable, tested, zero UI dependency): `lib/kdl.luau`,
+`lib/config.luau`, `lib/state.luau`, `lib/niri.luau`, `lib/desktop.luau`,
+`lib/scripts.luau`. A Workspaces/Rules/Layout/Animation/Autostart/Misc/
+Scripts tab needs **zero changes** to any of these - Scripts in particular
+already has its full data layer (`lib/scripts.luau`'s template builders)
+sitting unused, waiting only for a `lib/tabs/scripts.luau` UI.
 
-## Translations
+**New small descriptor/model modules per tab**, following the pattern
+`lib/input.luau` and `lib/outputs.luau` already establish (a flat
+`SETTINGS`-style table + parse/diff/apply, or a `parseX`/`serializeX` pair
+operating on `kdl.luau` nodes) - expect one of these per new tab for
+Layout/Animation/Misc (settings-table shaped, like Input) and Workspaces/
+Window-rules/Autostart (block-list shaped, like Shortcuts/Monitors).
 
-User-facing strings live in `i18n/en.json`. Copy to `i18n/<locale>.json` and
-translate the values; keep `{placeholders}` intact.
+**`panel.luau`'s chrome needs zero changes** to add a tab - append one
+`TAB_MODULES` entry and, if the new tab needs a doc link, one `DOC_URLS`
+entry.
+
+## Testing discipline
+
+There is no Luau unit-test runner equivalent to v4's `node test/*.test.js`
+shipped with this plugin (nothing to install, nothing to run - Luau plugins
+have no package manager or test harness of their own). Every `lib/*.luau`
+module was instead verified, during development, with a throwaway
+self-test **service** entry enabled against the real, running Noctalia
+instance: parser invariants mirroring `test/kdl.test.js` (byte-identical
+round-trip edits against every file in a real `~/.config/niri`), and the
+full apply -> validate-reject-and-rollback -> undo sequence mirroring
+`test/save.sandbox.test.js`, run **exclusively against a `/tmp` sandbox
+copy** (`lib/state.luau`'s `State.new(configRoot)` takes an explicit
+config-directory override for exactly this purpose - never exposed as a
+user-facing setting). Those harness files are not part of the shipped
+plugin; see the task's final report for the exact commands and results.

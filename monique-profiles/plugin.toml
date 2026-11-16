@@ -1,7 +1,7 @@
 # Monique Profiles - minimal bar widget + panel for switching monitor
 # layouts via the `monique` CLI (https://github.com/ToRvaLDz/monique).
 #
-# Extracted from niri-config-v5's Monitors tab: this is the one piece of
+# Extracted from the Niri Config plugin's Monitors tab: this is the one piece of
 # that tool actually in daily use, pulled out on its own so there is far
 # less surface area to break - no KDL parsing, no save/apply/undo pipeline,
 # no niri-specific logic at all. Just list profiles, show the active one,
