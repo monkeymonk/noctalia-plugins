@@ -1,0 +1,8 @@
+{
+  "settings.external_editor.label": "External editor command",
+  "settings.external_editor.description": "Command to edit config files, e.g. 'ghostty -e nvim' (a terminal + editor). Leave empty to open the file's folder in your file manager instead.",
+  "settings.icon_color.label": "Icon color",
+  "settings.icon_color.description": "Color of the icon in the bar widget.",
+  "settings.show_in_control_center.label": "Show in control center",
+  "settings.show_in_control_center.description": "Enable the control center shortcut tile (place it from Settings → Control Center shortcuts)."
+}
