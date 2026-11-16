@@ -1,0 +1,6 @@
+{
+  "settings.icon_color.label": "Icon color",
+  "settings.icon_color.description": "Color of the bar glyph and panel icon.",
+  "settings.show_label.label": "Show label",
+  "settings.show_label.description": "Show the active profile name next to the bar glyph."
+}

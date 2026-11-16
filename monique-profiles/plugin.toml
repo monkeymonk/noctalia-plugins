@@ -1,0 +1,54 @@
+# Monique Profiles - minimal bar widget + panel for switching monitor
+# layouts via the `monique` CLI (https://github.com/ToRvaLDz/monique).
+#
+# Extracted from niri-config-v5's Monitors tab: this is the one piece of
+# that tool actually in daily use, pulled out on its own so there is far
+# less surface area to break - no KDL parsing, no save/apply/undo pipeline,
+# no niri-specific logic at all. Just list profiles, show the active one,
+# switch on click.
+
+id           = "monkeymonk/monique-profiles"
+name         = "Monique Profiles"
+version      = "1.0.0"
+plugin_api   = 24
+author       = "Stephan Zych"
+license      = "MIT"
+icon         = "device-desktop"
+description  = "Switch monitor layouts via Monique profiles from the bar."
+tags         = ["bar", "panel", "hardware", "utility"]
+dependencies = ["monique"]
+
+# Shared by the bar widget and the panel.
+[[setting]]
+key              = "icon_color"
+type             = "color"
+label_key        = "settings.icon_color.label"
+description_key  = "settings.icon_color.description"
+default          = "on_surface"
+
+[[widget]]
+id    = "widget"
+entry = "widget.luau"
+
+  [[widget.setting]]
+  key              = "icon_color"
+  type             = "color"
+  label_key        = "settings.icon_color.label"
+  description_key  = "settings.icon_color.description"
+  default          = "on_surface"
+
+  [[widget.setting]]
+  key              = "show_label"
+  type             = "bool"
+  label_key        = "settings.show_label.label"
+  description_key  = "settings.show_label.description"
+  default          = false
+
+[[panel]]
+id              = "panel"
+entry           = "panel.luau"
+width           = 320
+height          = 320
+placement       = "attached"
+position        = "auto"
+open_near_click = true
